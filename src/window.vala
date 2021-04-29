@@ -26,18 +26,35 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.ToggleButton search_button;
 	    [GtkChild]
-	    unowned Gtk.ToggleButton search_button2;
-	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
 	    [GtkChild]
-	    unowned Gtk.Revealer search_revealer;
+	    unowned Gtk.Button back_button;
 	    [GtkChild]
-	    unowned Gtk.Revealer search_revealer2;
+	    unowned Gtk.Revealer search_revealer;
 
+        [GtkChild]
+	    unowned Adw.HeaderBar palette_headerbar;
+	    [GtkChild]
+	    unowned Adw.HeaderBar color_headerbar;
+	    [GtkChild]
+	    unowned Gtk.Label color_label;
+	    [GtkChild]
+	    unowned Gtk.Stack header_stack;
+	    [GtkChild]
+	    unowned Gtk.Stack main_stack;
+
+        [GtkChild]
+	    unowned Gtk.GridView palette_fb;
 	    [GtkChild]
 	    unowned Gtk.SingleSelection palette_model;
 
+	    [GtkChild]
+	    unowned Gtk.GridView color_fb;
+	    [GtkChild]
+	    unowned Gtk.SingleSelection color_model;
+
 	    public GLib.ListStore palettestore;
+	    public GLib.ListStore colorstore;
 
 	    public signal void clicked ();
 	    public signal void toggled ();
@@ -65,12 +82,37 @@ namespace Emulsion {
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_model.set_model (palettestore);
 
-            search_button.toggled.connect (() => {
-               search_revealer.set_reveal_child (search_button.get_active());
+            palette_fb.activate.connect ((pos) => {
+                header_stack.set_visible_child_name ("colheader");
+                main_stack.set_visible_child_name ("colbody");
+
+                int j = 0;
+                uint i, n = palettestore.get_n_items ();
+                for (i = 0; i < n; i++) {
+                    var item = palettestore.get_item (pos);
+
+                    colorstore.remove_all ();
+
+                    for (j = 0; j < ((PaletteInfo)item).colors.length; j++) {
+                        var a = new ColorInfo ();
+                        a.name = ((PaletteInfo)item).colors[j];
+                        a.color = ((PaletteInfo)item).colors[j];
+                        colorstore.append (a);
+                    }
+                    color_label.label = ((PaletteInfo)item).name;
+                }
             });
 
-            search_button2.toggled.connect (() => {
-               search_revealer2.set_reveal_child (search_button2.get_active());
+            colorstore = new GLib.ListStore (typeof (ColorInfo));
+            color_model.set_model (colorstore);
+
+            back_button.clicked.connect (() => {
+                header_stack.set_visible_child_name ("palheader");
+                main_stack.set_visible_child_name ("palbody");
+            });
+
+            search_button.toggled.connect (() => {
+               search_revealer.set_reveal_child (search_button.get_active());
             });
 
             // Some palettes to start

@@ -49,6 +49,7 @@ sources = files(
    'src/main.vala',
    'src/window.vala',
    'src/palette.vala',
+   'src/color.vala',
 )
 
 dependencies = [

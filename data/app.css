@@ -141,3 +141,33 @@ gridview child:selected .palette-box {
   background: alpha(@theme_fg_color, 0.05);
   border: 2px solid @theme_selected_bg_color;
 }
+
+.color {
+  outline: 1px solid alpha(white, 0.25);
+	outline-offset: -1px;
+}
+
+.color {
+	box-shadow: none;
+	padding: 0;
+	margin: 0;
+	border: none;
+	background: none;
+	border-radius: 8px;
+	min-height: 32px;
+	min-width: 32px;
+}
+
+gridview child .color-box {
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+gridview child:selected {
+  background: none;
+}
+
+gridview child:selected .color-box {
+  background: alpha(@theme_fg_color, 0.05);
+  border: 2px solid @theme_selected_bg_color;
+}
