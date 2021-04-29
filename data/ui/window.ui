@@ -152,52 +152,42 @@
                 <property name="child">
                   <object class="GtkScrolledWindow">
                     <child>
-                      <object class="AdwClamp" id="palette_clamp">
-                        <property name="vexpand">1</property>
-                        <property name="maximum-size">800</property>
+                      <object class="GtkBox" id="palette_box">
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="palette_box">
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkLabel" id="palette_label">
-                                <property name="halign">start</property>
-                                <property name="margin-top">40</property>
-                                <property name="margin-start">10</property>
-                                <property name="margin-bottom">20</property>
-                                <property name="label" translatable="true">Palettes</property>
-                                <style>
-                                  <class name="title-1"/>
-                                </style>
+                          <object class="GtkLabel" id="palette_label">
+                            <property name="halign">start</property>
+                            <property name="margin-top">30</property>
+                            <property name="margin-start">30</property>
+                            <property name="margin-bottom">20</property>
+                            <property name="label" translatable="true">Palettes</property>
+                            <style>
+                              <class name="title-1"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkGridView" id="palette_fb">
+                            <property name="min-columns">1</property>
+                            <property name="max-columns">4</property>
+                            <property name="margin-start">20</property>
+                            <property name="margin-end">20</property>
+                            <property name="vexpand">1</property>
+                            <property name="model">
+                              <object class="GtkSingleSelection" id="palette_model">
                               </object>
-                            </child>
-                            <child>
-                              <object class="GtkGridView" id="palette_fb">
-                                <property name="margin-top">12</property>
-                                <property name="margin-start">12</property>
-                                <property name="margin-end">12</property>
-                                <property name="margin-bottom">12</property>
-                                <property name="max-columns">4</property>
-                                <property name="hexpand">1</property>
-                                <property name="vexpand">1</property>
-                                <property name="single-click-activate">0</property>
-                                <property name="model">
-                                  <object class="GtkSingleSelection" id="palette_model">
-                                  </object>
-                                </property>
-                                <property name="factory">
-                                  <object class="GtkBuilderListItemFactory" id="palette_factory">
-                                    <property name="bytes"><![CDATA[
+                            </property>
+                            <property name="factory">
+                              <object class="GtkBuilderListItemFactory" id="palette_factory">
+                                <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GtkListItem">
     <property name="child">
       <object class="GtkBox">
-        <property name="width-request">180</property>
         <property name="orientation">vertical</property>
-        <property name="margin-top">12</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-bottom">12</property>
+        <property name="hexpand">0</property>
+        <property name="width-request">130</property>
         <style>
           <class name="palette-box"/>
         </style>
@@ -205,19 +195,16 @@
           <object class="EmulsionPaletteRenderer" id="palette_renderer">
             <property name="orientation">horizontal</property>
             <binding name="palette">
-                <lookup name="item">GtkListItem</lookup>
+              <lookup name="item">GtkListItem</lookup>
             </binding>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="margin-top">6</property>
-            <property name="margin-bottom">6</property>
             <child>
               <object class="GtkLabel" id="palette_name">
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
-                <property name="margin-start">6</property>
                 <binding name="label">
                   <lookup type="EmulsionPaletteInfo" name="name">
                       <lookup name="item">GtkListItem</lookup>
@@ -234,8 +221,6 @@
                     <lookup name="item">GtkListItem</lookup>
                   </closure>
                 </binding>
-                <property name="halign">end</property>
-                <property name="margin-end">6</property>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
@@ -248,11 +233,9 @@
     </property>
   </template>
 </interface>
-                                    ]]></property>
-                                  </object>
-                                </property>
+                                ]]></property>
                               </object>
-                            </child>
+                            </property>
                           </object>
                         </child>
                       </object>
@@ -268,6 +251,7 @@
                     <child>
                       <object class="AdwClamp" id="color_clamp">
                         <property name="vexpand">1</property>
+                        <property name="maximum-size">800</property>
                         <child>
                           <object class="GtkBox" id="color_box">
                             <property name="orientation">vertical</property>
@@ -284,10 +268,6 @@
                             </child>
                             <child>
                               <object class="GtkGridView" id="color_fb">
-                                <property name="margin-top">12</property>
-                                <property name="margin-start">12</property>
-                                <property name="margin-end">12</property>
-                                <property name="margin-bottom">12</property>
                               </object>
                             </child>
                           </object>

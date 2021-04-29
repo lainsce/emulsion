@@ -10,7 +10,12 @@ namespace Emulsion {
 
 			set {
 				_hex = value;
-				provider.load_from_data("* { background: %s; }".printf(value).data);
+				provider.load_from_data("""
+		        * {
+		            background: %s;
+		            margin: 0;
+		        }
+				""".printf(value).data);
 			}
 		}
 

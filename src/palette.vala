@@ -32,16 +32,15 @@ namespace Emulsion {
 
             set {
                 _palette = value;
+                foreach (string c in palette.colors) {
+                    var p = new PaletteButton (c);
+                    this.append(p);
+                }
             }
         }
 
         construct {
             this.get_style_context().add_class ("palette");
-
-            foreach (string c in palette.colors) {
-                var p = new PaletteButton (c);
-                this.append(p);
-            }
 	    }
     }
 }

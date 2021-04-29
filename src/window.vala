@@ -80,7 +80,7 @@ namespace Emulsion {
                 var rand = new GLib.Rand ();
                 string[] cmyk = {};
 
-                for (int i = 0; i <= 6; i++) {
+                for (int i = 0; i <= rand.int_range (4, 15); i++) {
                     var rc = "#" + "%x".printf(((uint)Math.floor(((int)rand.next_int ())*16777215)));
                     cmyk += rc;
                 }
@@ -118,15 +118,29 @@ namespace Emulsion {
 
             var b = new PaletteInfo ();
             b.name = "GNOME";
-            b.colors = {"#e01b24","#ff7800","#f6d32d","#33d17a","#3584e4","#9141ac", "#986a44"};
+            b.colors = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
 
             palettestore.append (b);
 
             var c = new PaletteInfo ();
             c.name = "Sandy";
-            c.colors = {"#b27777","#dacaac","#b9cbab","#bfc8e9"};
+            c.colors = {"#b27777", "#dacaac", "#b9cbab", "#bfc8e9"};
 
             palettestore.append (c);
+
+            var d = new PaletteInfo ();
+            d.name = "Game Boy";
+            d.colors = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
+
+            palettestore.append (d);
+
+            // var e = new PaletteInfo ();
+            // e.name = "Pico-8";
+            // e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
+            //             "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
+            //             "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
+
+            // palettestore.append (e);
         }
 	}
 }
