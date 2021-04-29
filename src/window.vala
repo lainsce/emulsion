@@ -101,36 +101,30 @@ namespace Emulsion {
 
 	    void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
 	        var self = widget as MainWindow;
-            self.palettestore.remove (param as uint);
+            self.palettestore.remove (param as uint32);
         }
 
         [GtkCallback]
-        private GLib.Variant get_pos (uint pos) {
+        private GLib.Variant get_pos (uint32 pos) {
             return new Variant.uint32 (pos);
         }
 
         void populate_palettes_view () {
-            string[] cmyk = {"#00FFFF","#FF00FF","#FFFF00","#000000"};
-
             var a = new PaletteInfo ();
-            a.name = "CMYK";
-            a.colors = cmyk;
+            a.name = "Flat";
+            a.colors = {"#e65353", "#e6b453", "#94e653", "#53e6c3", "#6b89d4", "#c181cb"};
 
             palettestore.append (a);
 
-            string[] gnome = {"#deddda", "#e01b24","#ff7800","#f6d32d","#33d17a","#3584e4","#9141ac", "#986a44", "#3d3846"};
-
             var b = new PaletteInfo ();
             b.name = "GNOME";
-            b.colors = gnome;
+            b.colors = {"#e01b24","#ff7800","#f6d32d","#33d17a","#3584e4","#9141ac", "#986a44"};
 
             palettestore.append (b);
 
-            string[] rgb = {"#FF0000","#00FF00","#0000FF"};
-
             var c = new PaletteInfo ();
-            c.name = "RGB";
-            c.colors = rgb;
+            c.name = "Sandy";
+            c.colors = {"#b27777","#dacaac","#b9cbab","#bfc8e9"};
 
             palettestore.append (c);
         }

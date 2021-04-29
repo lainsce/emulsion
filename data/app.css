@@ -139,26 +139,30 @@ headerbar.flat:backdrop {
 	border-bottom-right-radius: 8px;
 }
 
-gridview child {
+.palette-box {
   border-radius: 8px;
   border: 2px solid transparent;
   padding: 0;
 }
 
+
 gridview child:selected {
+  background: none;
+}
+
+gridview child:selected .palette-box {
   background: alpha(@theme_fg_color, 0.05);
   border: 2px solid @theme_selected_bg_color;
 }
 
-gridview child:selected .palette button:first-child {
+.palette button:first-child {
   border-bottom-left-radius: 0;
 }
-gridview child:selected .palette button:last-child {
+.palette button:last-child {
   border-bottom-right-radius: 0;
 }
-gridview child:selected .palette {
+.palette {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   outline: none;
-  border-bottom: 1px solid alpha(white, 0.25);
 }

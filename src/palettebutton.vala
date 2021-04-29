@@ -9,9 +9,6 @@ namespace Emulsion {
 			}
 
 			set {
-                if (_hex == value) {
-                    return;
-                }
 				_hex = value;
 				provider.load_from_data("* { background: %s; }".printf(value).data);
 			}
