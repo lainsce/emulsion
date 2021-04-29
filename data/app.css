@@ -1,0 +1,164 @@
+/* Neowaita */
+
+.text-button.suggested-action {
+    background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.8);
+    color: @theme_fg_color;
+    border: 1px solid transparent;
+    box-shadow: none;
+}
+
+.text-button.suggested-action:disabled {
+    color: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
+    background: none;
+    border: 1px solid mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
+}
+
+.text-button.suggested-action:hover {
+    background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.7);
+}
+
+.text-button.suggested-action:active,
+.text-button.suggested-action:active:checked {
+    background: mix(#1c71d8, alpha(@theme_bg_color, 0.05), 0.9);
+    box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
+}
+
+.text-button.destructive-action {
+    background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.8);
+    color: @theme_fg_color;
+    border: 1px solid transparent;
+}
+
+.text-button.destructive-action:hover {
+    background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.7);
+}
+
+.text-button.destructive-action:active,
+.text-button.destructive-action:active:checked {
+    background: mix(#e01b24, alpha(@theme_bg_color, 0.05), 0.9);
+    box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
+}
+
+headerbar,
+headerbar.flat {
+  background-color: @theme_bg_color;
+  background-image: none;
+  transition: 100ms ease-in-out;
+  border-bottom: 1px solid transparent;
+}
+
+headerbar.flat:backdrop {
+  background-image: none;
+  background-color: @theme_base_color;
+}
+
+.outline {
+  outline: 1px solid alpha(@theme_fg_color, 0.25);
+  outline-offset: -1px;
+}
+
+.header-button,
+.header-toggle-button > button,
+.toggle {
+    border-radius: 8px;
+    background: alpha(@theme_fg_color, 0.1);
+    border: none;
+    box-shadow: none;
+    transition: 100ms ease-in-out;
+}
+
+.text-button {
+    background: alpha(@theme_fg_color, 0.1);
+    border: none;
+    box-shadow: none;
+    transition: 100ms ease-in-out;
+}
+
+.header-button image {
+  padding: 0;
+  margin: 0;
+}
+
+.header-toggle-button button {
+  margin: 0;
+}
+
+.header-button:hover,
+.text-button:hover,
+.toggle:checked {
+  background: alpha(@theme_fg_color, 0.2);
+}
+
+.header-button:active,
+.text-button:active,
+.toggle:active {
+  background: alpha(@theme_fg_color, 0.05);
+  box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
+}
+
+.header-toggle-button > button:hover {
+  background: alpha(@theme_fg_color, 0.2);
+}
+
+.header-toggle-button > button:active {
+  background: alpha(@theme_fg_color, 0.05);
+  box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
+}
+
+
+/* app */
+
+.view {
+  background-color: shade(@theme_base_color, 0.4);
+}
+
+.palette {
+  border-radius: 8px;
+	outline: 1px solid alpha(white, 0.25);
+  outline-offset: -1px;
+}
+
+.palette button {
+	box-shadow: none;
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-radius: 0;
+	min-height: 36px;
+	min-width: 36px;
+	background: none;
+}
+
+.palette button:first-child {
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+
+.palette button:last-child {
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+
+gridview child {
+  border-radius: 8px;
+  border: 2px solid transparent;
+  padding: 0;
+}
+
+gridview child:selected {
+  background: alpha(@theme_fg_color, 0.05);
+  border: 2px solid @theme_selected_bg_color;
+}
+
+gridview child:selected .palette button:first-child {
+  border-bottom-left-radius: 0;
+}
+gridview child:selected .palette button:last-child {
+  border-bottom-right-radius: 0;
+}
+gridview child:selected .palette {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  outline: none;
+  border-bottom: 1px solid alpha(white, 0.25);
+}

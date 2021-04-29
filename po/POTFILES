@@ -1,0 +1,7 @@
+data/io.github.lainsce.Emulsion.desktop.in
+data/io.github.lainsce.Emulsion.appdata.xml.in
+data/io.github.lainsce.Emulsion.gschema.xml
+data/ui/window.ui
+src/main.vala
+src/window.vala
+

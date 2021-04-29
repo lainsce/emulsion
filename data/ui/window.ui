@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EmulsionMainWindow" parent="AdwApplicationWindow">
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="title">Emulsion</property>
+    <style>
+      <class name="outline"/>
+    </style>
+    <child>
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+        <property name="visible">1</property>
+        <child>
+          <object class="GtkStack" id="header_stack">
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="AdwHeaderBar" id="palette_headerbar">
+                    <property name="valign">start</property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <child type="end">
+                      <object class="GtkMenuButton" id="menu_button2">
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-toggle-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="add_palette_button">
+                        <property name="icon-name">list-add-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkToggleButton" id="search_button2">
+                        <property name="icon-name">edit-find-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="AdwHeaderBar" id="color_headerbar">
+                    <property name="valign">start</property>
+                    <style>
+                      <class name="flat"/>
+                    </style>
+                    <child type="end">
+                      <object class="GtkMenuButton" id="menu_button">
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-toggle-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkToggleButton" id="search_button">
+                        <property name="icon-name">edit-find-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="back_button">
+                        <property name="icon-name">go-previous-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="search_stack">
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="GtkRevealer" id="search_revealer2">
+                    <child>
+                      <object class="GtkBox" id="search_box2">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkSearchEntry" id="search_entry2">
+                            <property name="halign">end</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="margin-end">6</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="GtkRevealer" id="search_revealer">
+                    <child>
+                      <object class="GtkBox" id="search_box">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkSearchEntry" id="search_entry">
+                            <property name="halign">end</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="margin-end">6</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="main_stack">
+            <property name="vexpand">1</property>
+            <style>
+              <class name="view"/>
+            </style>
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <child>
+                      <object class="AdwClamp" id="palette_clamp">
+                        <property name="vexpand">1</property>
+                        <property name="maximum-size">800</property>
+                        <child>
+                          <object class="GtkBox" id="palette_box">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="palette_label">
+                                <property name="halign">start</property>
+                                <property name="margin-top">40</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-bottom">20</property>
+                                <property name="label" translatable="true">Palettes</property>
+                                <style>
+                                  <class name="title-1"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGridView" id="palette_fb">
+                                <property name="margin-top">12</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="max-columns">4</property>
+                                <property name="hexpand">1</property>
+                                <property name="vexpand">1</property>
+                                <property name="single-click-activate">0</property>
+                                <property name="model">
+                                  <object class="GtkSingleSelection" id="palette_model">
+                                  </object>
+                                </property>
+                                <property name="factory">
+                                  <object class="GtkBuilderListItemFactory" id="palette_factory">
+                                    <property name="bytes"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GtkListItem">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="width-request">180</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="EmulsionPaletteRenderer" id="palette_renderer">
+            <binding name="palette">
+              <lookup name="item">GtkListItem</lookup>
+            </binding>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="margin-top">6</property>
+            <property name="margin-bottom">6</property>
+            <child>
+              <object class="GtkLabel" id="palette_name">
+                <property name="halign">start</property>
+                <property name="hexpand">1</property>
+                <property name="margin-start">6</property>
+                <binding name="label">
+                  <lookup type="EmulsionPaletteInfo" name="name">
+                      <lookup name="item">GtkListItem</lookup>
+                  </lookup>
+                </binding>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="palette_remove_button">
+                <property name="icon-name">user-trash-symbolic</property>
+                <property name="action-name">delete-palette</property>
+                <binding name="action-target">
+                  <closure type="GVariant" function="get_pos">
+                    <lookup name="item">GtkListItem</lookup>
+                  </closure>
+                </binding>
+                <property name="halign">end</property>
+                <property name="margin-end">6</property>
+                <style>
+                  <class name="header-button"/>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>
+                                    ]]></property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <child>
+                      <object class="AdwClamp" id="color_clamp">
+                        <property name="vexpand">1</property>
+                        <child>
+                          <object class="GtkBox" id="color_box">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="color_label">
+                                <property name="halign">start</property>
+                                <property name="margin-top">40</property>
+                                <property name="margin-start">10</property>
+                                <property name="margin-bottom">20</property>
+                                <style>
+                                  <class name="title-1"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGridView" id="color_fb">
+                                <property name="margin-top">12</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">12</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+
