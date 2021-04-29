@@ -32,10 +32,6 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Revealer search_revealer;
 
-        [GtkChild]
-	    unowned Adw.HeaderBar palette_headerbar;
-	    [GtkChild]
-	    unowned Adw.HeaderBar color_headerbar;
 	    [GtkChild]
 	    unowned Gtk.Label color_label;
 	    [GtkChild]
@@ -154,7 +150,7 @@ namespace Emulsion {
         void populate_palettes_view () {
             var a = new PaletteInfo ();
             a.name = "Flat";
-            a.colors = {"#e65353", "#e6b453", "#94e653", "#53e6c3", "#6b89d4", "#c181cb"};
+            a.colors = {"#e65353", "#e6b453", "#94e653", "#53e6c3", "#6b89d4"};
 
             palettestore.append (a);
 
@@ -166,7 +162,7 @@ namespace Emulsion {
 
             var c = new PaletteInfo ();
             c.name = "Sandy";
-            c.colors = {"#b27777", "#dacaac", "#b9cbab", "#bfc8e9", "#abadcb", "#c4abcb"};
+            c.colors = {"#b27777", "#dacaac", "#bacaba"};
 
             palettestore.append (c);
 
@@ -180,7 +176,7 @@ namespace Emulsion {
             e.name = "Pico-8";
             e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
                         "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
-                        "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA", "#FFFFFF"};
+                        "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
 
             palettestore.append (e);
         }

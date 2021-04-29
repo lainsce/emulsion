@@ -73,7 +73,7 @@ namespace Emulsion {
                         this.set_size_request (i * 32, 64);
                         break;
                     default:
-                        if (i <= 8) {
+                        if (i < 8) {
                            snapshot.append_color (gc, {{i * 32, 0}, {32, 32}});
                            this.set_size_request (i * 32, 32);
                         } else {
