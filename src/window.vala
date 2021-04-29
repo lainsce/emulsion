@@ -119,10 +119,11 @@ namespace Emulsion {
             });
 
             // Some palettes to start
-            if (palettestore.get_n_items () != -1) {
-                m.load_from_file.begin ();
-            } else {
+            if (Emulsion.Application.gsettings.get_boolean("first-time")) {
                 populate_palettes_view ();
+                Emulsion.Application.gsettings.set_boolean("first-time", false);
+            } else {
+                m.load_from_file.begin ();
             }
 
             add_palette_button.clicked.connect (() => {
