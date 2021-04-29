@@ -25,6 +25,8 @@ namespace Emulsion {
             this.set_overflow(Gtk.Overflow.HIDDEN);
             this.set_orientation (Gtk.Orientation.HORIZONTAL);
             this.set_halign (Gtk.Align.START);
+            this.set_valign (Gtk.Align.END);
+            this.set_vexpand (true);
             this.set_margin_start (6);
             this.set_margin_top (6);
             this.set_margin_end (6);

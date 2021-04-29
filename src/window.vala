@@ -124,7 +124,7 @@ namespace Emulsion {
 
             var c = new PaletteInfo ();
             c.name = "Sandy";
-            c.colors = {"#b27777", "#dacaac", "#b9cbab", "#bfc8e9"};
+            c.colors = {"#b27777", "#dacaac", "#b9cbab", "#bfc8e9", "#abadcb", "#c4abcb"};
 
             palettestore.append (c);
 

@@ -23,6 +23,10 @@
                     <style>
                       <class name="flat"/>
                     </style>
+                    <child type="title">
+                      <object class="GtkBox">
+                      </object>
+                    </child>
                     <child type="end">
                       <object class="GtkMenuButton" id="menu_button2">
                         <property name="icon-name">open-menu-symbolic</property>
