@@ -1,6 +1,6 @@
 # ![icon](data/icon.png) Emulsion
 
-## Stupidly simple notes app
+## Stock up on colors
 
 <!-- <a href='https://flathub.org/apps/details/io.github.lainsce.Emulsion'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a> -->
 
