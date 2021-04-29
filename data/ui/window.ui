@@ -187,13 +187,11 @@
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <property name="hexpand">0</property>
-        <property name="width-request">130</property>
         <style>
           <class name="palette-box"/>
         </style>
         <child>
           <object class="EmulsionPaletteRenderer" id="palette_renderer">
-            <property name="orientation">horizontal</property>
             <binding name="palette">
               <lookup name="item">GtkListItem</lookup>
             </binding>

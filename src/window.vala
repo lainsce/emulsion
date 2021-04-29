@@ -101,7 +101,7 @@ namespace Emulsion {
 
 	    void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
 	        var self = widget as MainWindow;
-            self.palettestore.remove (param as uint32);
+            self.palettestore.remove ((uint32) get_pos(param.get_uint32 ()));
         }
 
         [GtkCallback]
@@ -134,13 +134,13 @@ namespace Emulsion {
 
             palettestore.append (d);
 
-            // var e = new PaletteInfo ();
-            // e.name = "Pico-8";
-            // e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
-            //             "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
-            //             "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
+            var e = new PaletteInfo ();
+            e.name = "Pico-8";
+            e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
+                        "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
+                        "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA", "#FFFFFF"};
 
-            // palettestore.append (e);
+            palettestore.append (e);
         }
 	}
 }
