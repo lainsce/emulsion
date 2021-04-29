@@ -1,0 +1,13 @@
+_build/
+build/
+~*
+*~
+.flatpak-builder/
+app-dir/
+debian/com.github.lainsce.emulsion.debhelper.log
+debian/com.github.lainsce.emulsion.substvars
+debian/com.github.lainsce.emulsion/
+debian/debhelper-build-stamp
+debian/files
+obj-x86_64-linux-gnu/
+builddir/
