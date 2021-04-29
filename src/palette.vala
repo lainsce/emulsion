@@ -35,10 +35,6 @@ namespace Emulsion {
             }
         }
 
-        public PaletteRenderer (PaletteInfo? palette) {
-			Object(palette: palette);
-		}
-
         construct {
             this.get_style_context().add_class ("palette");
 

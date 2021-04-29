@@ -203,8 +203,9 @@
         </style>
         <child>
           <object class="EmulsionPaletteRenderer" id="palette_renderer">
+            <property name="orientation">horizontal</property>
             <binding name="palette">
-              <lookup name="item">GtkListItem</lookup>
+                <lookup name="item">GtkListItem</lookup>
             </binding>
           </object>
         </child>
