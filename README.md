@@ -21,9 +21,7 @@ Please make sure you have these dependencies first before building.
 
 ```bash
 gtk4
-gtksourceview-3.0
 libjson-glib
-libgee-0.8
 libadwaita-1
 meson
 vala
