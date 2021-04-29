@@ -47,6 +47,7 @@ asresources = gnome.compile_resources(
 
 sources = files(
    'src/main.vala',
+   'src/manager.vala',
    'src/window.vala',
    'src/palette.vala',
    'src/color.vala',

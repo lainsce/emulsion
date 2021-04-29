@@ -51,6 +51,7 @@ namespace Emulsion {
 
 	    public GLib.ListStore palettestore;
 	    public GLib.ListStore colorstore;
+	    public Manager m;
 
 	    public signal void clicked ();
 	    public signal void toggled ();
@@ -64,6 +65,8 @@ namespace Emulsion {
         construct {
 			// Initial settings
             Adw.init ();
+            m = new Manager (this);
+
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/io/github/lainsce/Emulsion/app.css");
             Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -111,8 +114,16 @@ namespace Emulsion {
                search_revealer.set_reveal_child (search_button.get_active());
             });
 
+            palettestore.items_changed.connect (() => {
+                m.save_palettes.begin (palettestore);
+            });
+
             // Some palettes to start
-            populate_palettes_view ();
+            if (palettestore.get_n_items () != -1) {
+                m.load_from_file.begin ();
+            } else {
+                populate_palettes_view ();
+            }
 
             add_palette_button.clicked.connect (() => {
                 var rand = new GLib.Rand ();
