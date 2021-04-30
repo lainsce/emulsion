@@ -39,6 +39,9 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Stack main_stack;
 
+	    [GtkChild]
+	    unowned Gtk.Box color_box;
+
         [GtkChild]
 	    public unowned Gtk.GridView palette_fb;
 	    [GtkChild]
@@ -52,6 +55,8 @@ namespace Emulsion {
 	    public GLib.ListStore colorstore;
 	    public Manager m;
 	    public ColorInfo win_color_info;
+	    private double cur_x;
+		private double cur_y;
 
 	    public signal void clicked ();
 	    public signal void toggled ();
@@ -78,7 +83,7 @@ namespace Emulsion {
 		    // TODO: Figure out what to do with these so they work.
 		    //       There's abysmal demo/examples count online.
 
-		    //install_action ("win.delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
+		    install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
             //install_action ("win.delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
@@ -127,6 +132,7 @@ namespace Emulsion {
                         var a = new ColorInfo ();
                         a.name = ((PaletteInfo)item).colors[j];
                         a.color = ((PaletteInfo)item).colors[j];
+                        a.uid = ((PaletteInfo)item).name;
                         colorstore.append (a);
                     }
                     color_label.label = ((PaletteInfo)item).name;
@@ -136,32 +142,42 @@ namespace Emulsion {
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
 
+            var evconmo = new Gtk.EventControllerMotion ();
+		    color_box.add_controller (evconmo);
+
+            evconmo.motion.connect ((e, x, y) => {
+                int h = color_box.get_allocated_height ();
+			    int w = color_box.get_allocated_width ();
+			    cur_x = x.clamp (25, (double)(w));
+			    cur_y = y.clamp (25, (double)(w));
+		    });
+
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);
 
                 var item = colorstore.get_item (pos);
                 cep.color_info = ((ColorInfo)item);
 
-                Gtk.Allocation allocation;
-                color_fb.get_allocation (out allocation);
+                Gtk.Allocation alloc;
+                color_box.get_allocation (out alloc);
+                alloc.contains_point ((int)cur_x, (int)cur_y);
 
-                cep.set_pointing_to (allocation);
-                cep.show ();
+                cep.set_pointing_to (alloc);
+                cep.popup ();
 
                 cep.closed.connect (() => {
                     colorstore.remove (pos);
                     colorstore.insert (pos, cep.color_info);
 
-                    int j = 0;
+                    int j;
                     uint i, n = palettestore.get_n_items ();
                     for (i = 0; i < n; i++) {
                         var pitem = palettestore.get_item (i);
 
-                        if (color_label.label == ((PaletteInfo)pitem).name) {
-                            foreach (string color in ((PaletteInfo)pitem).colors) {
-                                if (color != ((ColorInfo)item).color) {
+                        for (j = 0; j < ((PaletteInfo)pitem).colors.length; j++) {
+                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).name) {
+                                if (((PaletteInfo)pitem).colors[j] != ((ColorInfo)item).color) {
                                     ((PaletteInfo)pitem).colors[pos] = cep.color_info.color;
-                                    palette_fb.queue_draw ();
                                     m.save_palettes.begin (palettestore);
                                 }
                             }
@@ -170,6 +186,7 @@ namespace Emulsion {
                 });
 
                 color_fb.queue_draw ();
+                palette_fb.queue_draw ();
             });
 
             back_button.clicked.connect (() => {
@@ -219,19 +236,19 @@ namespace Emulsion {
 			this.show ();
 		}
 
-	    void delete_palette (Gtk.Widget w, string a, GLib.Variant p) {
-	        var selfe = w as MainWindow;
-            selfe.palettestore.remove ((uint)p_pos(p.get_uint32()));
-        }
-
-        void delete_color (Gtk.Widget w, string a, GLib.Variant p) {
-            var selfe = w as MainWindow;
-            selfe.colorstore.remove ((uint)c_pos(p.get_uint32()));
+	    void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
+	        var selfe = widget as MainWindow;
+            selfe.palettestore.remove (param.get_uint32());
         }
 
         [GtkCallback]
-        private GLib.Variant p_pos (uint pos) {
+        private GLib.Variant p_pos (uint32 pos) {
             return new GLib.Variant.uint32 (pos);
+        }
+
+        void delete_color (Gtk.Widget widget, string action, GLib.Variant param) {
+            var selfe = widget as MainWindow;
+            selfe.colorstore.remove (param.get_uint32());
         }
 
         [GtkCallback]

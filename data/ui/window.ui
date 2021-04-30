@@ -163,8 +163,6 @@
                                 <property name="margin-start">20</property>
                                 <property name="margin-end">20</property>
                                 <property name="vexpand">1</property>
-                                <property name="hscroll_policy">natural</property>
-                                <property name="vscroll_policy">natural</property>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="palette_model">
                                   </object>
@@ -209,7 +207,7 @@
             <child>
               <object class="GtkButton" id="palette_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">win.delete_palette</property>
+                <property name="action-name">delete_palette</property>
                 <binding name="action-target">
                   <closure type="GVariant" function="p_pos">
                     <lookup name="item">GtkListItem</lookup>
@@ -272,8 +270,6 @@
                                 <property name="margin-end">20</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
-                                <property name="hscroll_policy">natural</property>
-                                <property name="vscroll_policy">natural</property>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"></object>
                                 </property>
@@ -317,7 +313,7 @@
             <child>
               <object class="GtkButton" id="color_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">win.delete_color</property>
+                <property name="action-name">delete_color</property>
                 <binding name="action-target">
                   <closure type="GVariant" function="c_pos">
                     <lookup name="item">GtkListItem</lookup>
