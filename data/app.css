@@ -132,6 +132,7 @@ stackswitcher button:last-child {
 
 .title-box {
   background: none;
+  border-bottom: 1px solid alpha(white, 0.10);
 }
 
 .palette {

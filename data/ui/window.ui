@@ -7,8 +7,8 @@
   <object class="GtkAdjustment" id="coloradj">
   </object>
   <template class="EmulsionMainWindow" parent="AdwApplicationWindow">
-    <property name="default-width">800</property>
-    <property name="default-height">600</property>
+    <property name="default-width">950</property>
+    <property name="default-height">650</property>
     <property name="title">Emulsion</property>
     <style>
       <class name="outline"/>
