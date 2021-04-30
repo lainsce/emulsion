@@ -56,6 +56,20 @@ namespace Emulsion {
 	    public signal void clicked ();
 	    public signal void toggled ();
 
+	    public SimpleActionGroup actions { get; construct; }
+        public const string ACTION_PREFIX = "win.";
+        public const string ACTION_ABOUT = "about";
+        public const string ACTION_KEYS = "keys";
+        public const string ACTION_DELETE_PALETTE = "delete_palette";
+        public const string ACTION_DELETE_COLOR = "delete_color";
+        public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
+        private const GLib.ActionEntry[] ACTION_ENTRIES = {
+              {ACTION_ABOUT, action_about },
+              {ACTION_KEYS, action_keys},
+              {ACTION_DELETE_PALETTE, delete_palette, "u"},
+              {ACTION_DELETE_COLOR, delete_color, "u"},
+        };
+
 		public MainWindow (Gtk.Application app) {
 			Object (
 			    application: app
@@ -105,6 +119,17 @@ namespace Emulsion {
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
 
+            color_fb.activate.connect ((pos) => {
+                var cep = new ColorEditPopover (this);
+
+                uint i, n = colorstore.get_n_items ();
+                for (i = 0; i < n; i++) {
+                    var item = colorstore.get_item (pos);
+                    cep.color_info = ((ColorInfo)item);
+                }
+                cep.popup ();
+            });
+
             back_button.clicked.connect (() => {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
@@ -130,8 +155,8 @@ namespace Emulsion {
                 var rand = new GLib.Rand ();
                 string[] cmyk = {};
 
-                for (int i = 0; i <= rand.int_range (4, 15); i++) {
-                    var rc = "#" + "%x".printf(((uint)Math.floor(((int)rand.next_int ())*16777215)));
+                for (int i = 0; i <= rand.int_range (1, 15); i++) {
+                    var rc = "#" + "%01.1x%01.1x%01.1x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     cmyk += rc;
                 }
 
@@ -142,21 +167,44 @@ namespace Emulsion {
                 palettestore.append (a);
             });
 
-            install_action ("delete-palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
-
             this.set_size_request (360, 500);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
 		}
 
-	    void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
-	        var self = widget as MainWindow;
-            self.palettestore.remove ((uint32) get_pos(param.get_uint32 ()));
+	    public void delete_palette (GLib.SimpleAction action, GLib.Variant? param) {
+	        palettestore.remove (param.get_uint32());
         }
 
-        [GtkCallback]
-        private GLib.Variant get_pos (uint32 pos) {
-            return new Variant.uint32 (pos);
+        public void delete_color (GLib.SimpleAction action, GLib.Variant? param) {
+            colorstore.remove (param.get_uint32());
+        }
+
+        public void action_keys () {
+
+        }
+
+        public void action_about () {
+            const string COPYRIGHT = "Copyright \xc2\xa9 2017-2021 Paulo \"Lains\" Galardi\n";
+
+            const string? AUTHORS[] = {
+                "Paulo \"Lains\" Galardi",
+                null
+            };
+
+            var program_name = Config.NAME_PREFIX + _("Emulsion");
+            Gtk.show_about_dialog (this,
+                                   "program-name", program_name,
+                                   "logo-icon-name", Config.APP_ID,
+                                   "version", Config.VERSION,
+                                   "comments", _("Stock up on colors."),
+                                   "copyright", COPYRIGHT,
+                                   "authors", AUTHORS,
+                                   "artists", null,
+                                   "license-type", Gtk.License.GPL_3_0,
+                                   "wrap-license", false,
+                                   "translator-credits", _("translator-credits"),
+                                   null);
         }
 
         void populate_palettes_view () {
@@ -174,7 +222,7 @@ namespace Emulsion {
 
             var c = new PaletteInfo ();
             c.name = "Sandy";
-            c.colors = {"#b27777", "#dacaac", "#bacaba"};
+            c.colors = {"#b27777", "#dabab1", "#bacaba"};
 
             palettestore.append (c);
 

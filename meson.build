@@ -51,6 +51,7 @@ sources = files(
    'src/window.vala',
    'src/palette.vala',
    'src/color.vala',
+   'src/coloreditpopover.vala',
 )
 
 dependencies = [

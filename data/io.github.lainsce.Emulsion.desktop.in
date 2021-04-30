@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=io.github.lainsce.Emulsion
 Exec=io.github.lainsce.Emulsion
-Icon=io.github.lainsce.Emulsion
+Icon=@icon@
 Terminal=false
 Type=Application
 Categories=GTK;

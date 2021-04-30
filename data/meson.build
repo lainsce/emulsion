@@ -1,43 +1,68 @@
-desktop_file = i18n.merge_file(
-  input: 'io.github.lainsce.Emulsion.desktop.in',
-  output: 'io.github.lainsce.Emulsion.desktop',
-  type: 'desktop',
-  po_dir: '../po',
+install_data(
+    join_paths('icons', '128', meson.project_name() + '.svg'),
+    install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
+)
+
+install_data(
+    join_paths('icons', '128', meson.project_name() + 'Devel.svg'),
+    install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps')
+)
+
+install_data(
+    join_paths('icons', '16', meson.project_name() + '-symbolic.svg'),
+    install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'symbolic', 'apps')
+)
+
+install_data(
+    join_paths('icons', 'scalable', 'rgb-symbolic.svg'),
+    install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'actions')
+)
+
+install_data(
+    join_paths('icons', 'scalable', 'hex-symbolic.svg'),
+    install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'actions')
+)
+
+install_data(
+    meson.project_name() + '.gschema.xml',
+    install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
+)
+
+msgfmt = find_program('msgfmt')
+podir = join_paths(meson.source_root(), 'po')
+desktop_conf = configuration_data()
+desktop_conf.set('icon', app_id)
+desktop_file = custom_target('desktop-file',
+  input: configure_file(
+    input: meson.project_name() + '.desktop.in',
+    output: '@BASENAME@' + '.desktop.in',
+    configuration: desktop_conf
+  ),
+  output: '@0@.desktop'.format(app_id),
   install: true,
-  install_dir: join_paths(get_option('datadir'), 'applications')
+  install_dir: join_paths(get_option('datadir'), 'applications'),
+  command: [msgfmt, '--desktop',
+    '--template', '@INPUT@', '-d', podir, '-o', '@OUTPUT@',
+    '--keyword=X-GNOME-FullName', '--keyword=X-Geoclue-Reason',
+    '--keyword=Name', '--keyword=GenericName', '--keyword=Comment', '--keyword=Keywords'
+  ]
 )
-
-desktop_utils = find_program('desktop-file-validate', required: false)
-if desktop_utils.found()
-  test('Validate desktop file', desktop_utils,
-    args: [desktop_file]
+# Validate Desktop file
+desktop_file_validate = find_program('desktop-file-validate', required: false)
+if desktop_file_validate.found()
+  test(
+    'validate-desktop',
+    desktop_file_validate,
+    args: [
+      desktop_file.full_path()
+    ]
   )
 endif
 
-appstream_file = i18n.merge_file(
-  input: 'io.github.lainsce.Emulsion.appdata.xml.in',
-  output: 'io.github.lainsce.Emulsion.appdata.xml',
-  po_dir: '../po',
-  install: true,
-  install_dir: join_paths(get_option('datadir'), 'appdata')
+i18n.merge_file(
+    input: meson.project_name() + '.appdata.xml.in',
+    output: meson.project_name() + '.appdata.xml',
+    po_dir: join_paths(meson.source_root(), 'po', 'extra'),
+    install: true,
+    install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
-
-appstream_util = find_program('appstream-util', required: false)
-if appstream_util.found()
-  test('Validate appstream file', appstream_util,
-    args: ['validate', appstream_file]
-  )
-endif
-
-install_data('io.github.lainsce.Emulsion.gschema.xml',
-  install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
-)
-
-compile_schemas = find_program('glib-compile-schemas', required: false)
-if compile_schemas.found()
-  test('Validate schema file', compile_schemas,
-    args: ['--strict', '--dry-run', meson.current_source_dir()]
-  )
-endif
-
-subdir('icons')
