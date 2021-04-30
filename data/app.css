@@ -52,6 +52,10 @@ headerbar.flat:backdrop {
   background-color: @theme_base_color;
 }
 
+entry {
+  background-color: shade(@theme_base_color, 0.4);
+}
+
 .outline {
   outline: 1px solid alpha(@theme_fg_color, 0.25);
   outline-offset: -1px;
@@ -103,6 +107,13 @@ headerbar.flat:backdrop {
 .header-toggle-button > button:active {
   background: alpha(@theme_fg_color, 0.05);
   box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
+}
+
+viewswitcher button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+viewswitcher button:last-child {
+  border-radius: 0 8px 8px 0;
 }
 
 
@@ -172,15 +183,28 @@ gridview child:selected .color-box {
   border: 2px solid @theme_selected_bg_color;
 }
 
-.red trough {
+.red slider,
+.blue slider,
+.green slider {
+        background: shade(@theme_base_color, 1.88);
+        border: none;
+        border: 1px solid alpha(white, 0.25);
+}
+
+.red trough{
         background-image:
             linear-gradient(
                 to right,
                 #000,
                 #e01b24
             );
-        padding: 4px;
-        border-radius: 8px;
+        padding: 8px;
+        border-radius: 9999px;
+}
+
+.red highlight {
+        background: none;
+        border: none;
 }
 
 .green trough {
@@ -190,8 +214,13 @@ gridview child:selected .color-box {
                 #000,
                 #33d17a
             );
-        padding: 4px;
-        border-radius: 8px;
+        padding: 8px;
+        border-radius: 9999px;
+}
+
+.green highlight {
+        background: none;
+        border: none;
 }
 
 .blue trough {
@@ -201,6 +230,11 @@ gridview child:selected .color-box {
                 #000,
                 #3584e4
             );
-        padding: 4px;
-        border-radius: 8px;
+        padding: 8px;
+        border-radius: 9999px;
+}
+
+.blue highlight {
+        background: none;
+        border: none;
 }

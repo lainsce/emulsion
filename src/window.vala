@@ -52,6 +52,7 @@ namespace Emulsion {
 	    public GLib.ListStore palettestore;
 	    public GLib.ListStore colorstore;
 	    public Manager m;
+	    public ColorInfo win_color_info;
 
 	    public signal void clicked ();
 	    public signal void toggled ();
@@ -60,26 +61,38 @@ namespace Emulsion {
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_ABOUT = "about";
         public const string ACTION_KEYS = "keys";
-        public const string ACTION_DELETE_PALETTE = "delete_palette";
-        public const string ACTION_DELETE_COLOR = "delete_color";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
         private const GLib.ActionEntry[] ACTION_ENTRIES = {
               {ACTION_ABOUT, action_about },
               {ACTION_KEYS, action_keys},
-              {ACTION_DELETE_PALETTE, delete_palette, "u"},
-              {ACTION_DELETE_COLOR, delete_color, "u"},
         };
 
+        public Gtk.Application app { get; construct; }
 		public MainWindow (Gtk.Application app) {
 			Object (
-			    application: app
+			    application: app,
+			    app: app
 			);
+
+			install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
+			install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
         construct {
 			// Initial settings
             Adw.init ();
             m = new Manager (this);
+
+            actions = new SimpleActionGroup ();
+            actions.add_action_entries (ACTION_ENTRIES, this);
+            insert_action_group ("win", actions);
+
+            foreach (var action in action_accelerators.get_keys ()) {
+                var accels_array = action_accelerators[action].to_array ();
+                accels_array += null;
+
+                app.set_accels_for_action (ACTION_PREFIX + action, accels_array);
+            }
 
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/io/github/lainsce/Emulsion/app.css");
@@ -116,23 +129,44 @@ namespace Emulsion {
                 }
             });
 
-            colorstore = new GLib.ListStore (typeof (ColorInfo));
-            color_model.set_model (colorstore);
-
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);
 
-                uint i, n = colorstore.get_n_items ();
-                for (i = 0; i < n; i++) {
-                    var item = colorstore.get_item (pos);
-                    cep.color_info = ((ColorInfo)item);
-                }
+                var item = colorstore.get_item (pos);
+                cep.color_info = ((ColorInfo)item);
+
                 cep.popup ();
+
+                cep.closed.connect (() => {
+                    colorstore.remove (pos);
+                    colorstore.insert (pos, cep.color_info);
+
+                    int j = 0;
+                    uint i, n = palettestore.get_n_items ();
+                    for (i = 0; i < n; i++) {
+                        var pitem = palettestore.get_item (i);
+                        for (j = 0; j < ((PaletteInfo)pitem).colors.length; j++) {
+                            if (((PaletteInfo)pitem).colors[j] != ((ColorInfo)item).color) {
+                                ((PaletteInfo)pitem).colors[pos] = "";
+                                ((PaletteInfo)pitem).colors[pos] = cep.color_info.color;
+                                palette_fb.queue_draw ();
+                                m.save_palettes.begin (palettestore);
+                            }
+                        }
+                    }
+                });
+
+                color_fb.queue_draw ();
             });
+
+            colorstore = new GLib.ListStore (typeof (ColorInfo));
+            color_model.set_model (colorstore);
 
             back_button.clicked.connect (() => {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
+
+                palette_fb.queue_draw ();
             });
 
             search_button.toggled.connect (() => {
@@ -140,6 +174,10 @@ namespace Emulsion {
             });
 
             palettestore.items_changed.connect (() => {
+                m.save_palettes.begin (palettestore);
+            });
+
+            colorstore.items_changed.connect (() => {
                 m.save_palettes.begin (palettestore);
             });
 
@@ -172,12 +210,24 @@ namespace Emulsion {
 			this.show ();
 		}
 
-	    public void delete_palette (GLib.SimpleAction action, GLib.Variant? param) {
-	        palettestore.remove (param.get_uint32());
+	    public void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
+	        var self = widget as MainWindow;
+            self.palettestore.remove ((uint32) set_palette_pos(param.get_uint32 ()));
         }
 
-        public void delete_color (GLib.SimpleAction action, GLib.Variant? param) {
-            colorstore.remove (param.get_uint32());
+        public void delete_color (Gtk.Widget widget, string action, GLib.Variant param) {
+            var self = widget as MainWindow;
+            self.colorstore.remove ((uint32) set_color_pos(param.get_uint32 ()));
+        }
+
+        [GtkCallback]
+        private GLib.Variant set_palette_pos (uint32 pos) {
+            return new Variant.uint32 (pos);
+        }
+
+        [GtkCallback]
+        private GLib.Variant set_color_pos (uint32 pos) {
+            return new Variant.uint32 (pos);
         }
 
         public void action_keys () {

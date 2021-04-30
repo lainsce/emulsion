@@ -62,6 +62,9 @@ namespace Emulsion {
         private void on_quit() {
             win.destroy();
         }
+        public MainWindow get_window () {
+            return win;
+        }
         protected override void activate () {
             if (win != null) {
                 win.present ();

@@ -195,6 +195,11 @@
               <object class="GtkButton" id="palette_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_palette</property>
+                <binding name="action-target">
+                  <closure type="GVariant" function="set_palette_pos">
+                    <lookup name="item">GtkListItem</lookup>
+                  </closure>
+                </binding>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
@@ -285,6 +290,11 @@
               <object class="GtkButton" id="color_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_color</property>
+                <binding name="action-target">
+                  <closure type="GVariant" function="set_color_pos">
+                    <lookup name="item">GtkListItem</lookup>
+                  </closure>
+                </binding>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
