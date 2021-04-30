@@ -145,12 +145,14 @@ namespace Emulsion {
                     uint i, n = palettestore.get_n_items ();
                     for (i = 0; i < n; i++) {
                         var pitem = palettestore.get_item (i);
-                        for (j = 0; j < ((PaletteInfo)pitem).colors.length; j++) {
-                            if (((PaletteInfo)pitem).colors[j] != ((ColorInfo)item).color) {
-                                ((PaletteInfo)pitem).colors[pos] = "";
-                                ((PaletteInfo)pitem).colors[pos] = cep.color_info.color;
-                                palette_fb.queue_draw ();
-                                m.save_palettes.begin (palettestore);
+
+                        if (color_label.label == ((PaletteInfo)pitem).name) {
+                            foreach (string color in ((PaletteInfo)pitem).colors) {
+                                if (color != ((ColorInfo)item).color) {
+                                    ((PaletteInfo)pitem).colors[pos] = cep.color_info.color;
+                                    palette_fb.queue_draw ();
+                                    m.save_palettes.begin (palettestore);
+                                }
                             }
                         }
                     }
@@ -165,8 +167,6 @@ namespace Emulsion {
             back_button.clicked.connect (() => {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
-
-                palette_fb.queue_draw ();
             });
 
             search_button.toggled.connect (() => {
