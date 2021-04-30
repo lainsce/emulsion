@@ -289,7 +289,7 @@ namespace Emulsion {
 
             var c = new PaletteInfo ();
             c.name = "Sandy";
-            c.colors = {"#b27777", "#dabab1", "#bacaba"};
+            c.colors = {"#f6efdc", "#dabab1", "#bacaba"};
 
             palettestore.append (c);
 
@@ -306,6 +306,26 @@ namespace Emulsion {
                         "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
 
             palettestore.append (e);
+
+            var f = new PaletteInfo ();
+            f.name = "Monochroma";
+            f.colors = {"#171219", "#f2fbeb"};
+
+            palettestore.append (f);
+
+            var g = new PaletteInfo ();
+            g.name = "Endesga 8";
+            g.colors = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
+                        "#7b53ad", "#fdfdf8"};
+
+            palettestore.append (g);
+
+            var h = new PaletteInfo ();
+            h.name = "CGA";
+            h.colors = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
+                        "#AA00AA", "#FFFFFF"};
+
+            palettestore.append (h);
         }
 	}
 }

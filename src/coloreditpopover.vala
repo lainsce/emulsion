@@ -101,6 +101,32 @@ namespace Emulsion {
 
                 win.m.save_palettes.begin (win.palettestore);
             });
+
+            red_entry.activate.connect (() => {
+                color.red = (float)(double.parse(red_entry.get_text ()) / 255);
+                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                _color_info.color = hex_entry.get_text ();
+                _color_info.name = hex_entry.get_text ();
+            });
+
+            green_entry.activate.connect (() => {
+                color.green = (float)(double.parse(green_entry.get_text ()) / 255);
+                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                _color_info.color = hex_entry.get_text ();
+                _color_info.name = hex_entry.get_text ();
+            });
+
+            blue_entry.activate.connect (() => {
+                color.blue = (float)(double.parse(blue_entry.get_text ()) / 255);
+                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                _color_info.color = hex_entry.get_text ();
+                _color_info.name = hex_entry.get_text ();
+            });
+
+            hex_entry.activate.connect (() => {
+                _color_info.color = hex_entry.get_text ();
+                _color_info.name = hex_entry.get_text ();
+            });
         }
 
         public double get_srgb(double c) {
