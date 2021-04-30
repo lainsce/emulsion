@@ -40,7 +40,9 @@ namespace Emulsion {
 	    unowned Gtk.Stack main_stack;
 
 	    [GtkChild]
-	    unowned Gtk.Box color_box;
+	    unowned Gtk.ScrolledWindow palette_window;
+	    [GtkChild]
+	    unowned Gtk.ScrolledWindow color_window;
 
         [GtkChild]
 	    public unowned Gtk.GridView palette_fb;
@@ -82,7 +84,7 @@ namespace Emulsion {
 		    //       There's abysmal demo/examples count online.
 
 		    install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
-            //install_action ("win.delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
+            install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
         construct {

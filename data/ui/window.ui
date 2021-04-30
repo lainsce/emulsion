@@ -135,9 +135,7 @@
               <object class="GtkStackPage">
                 <property name="name">palbody</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow">
-                    <property name="hscrollbar_policy">natural</property>
-                    <property name="vscrollbar_policy">natural</property>
+                  <object class="GtkScrolledWindow" id="palette_window">
                     <child>
                       <object class="AdwClamp">
                         <property name="maximum-size">1200</property>
@@ -162,7 +160,6 @@
                                 <property name="max-columns">4</property>
                                 <property name="margin-start">20</property>
                                 <property name="margin-end">20</property>
-                                <property name="vexpand">1</property>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="palette_model">
                                   </object>
@@ -242,9 +239,7 @@
               <object class="GtkStackPage">
                 <property name="name">colbody</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow">
-                    <property name="hscrollbar_policy">natural</property>
-                    <property name="vscrollbar_policy">natural</property>
+                  <object class="GtkScrolledWindow" id="color_window">
                     <child>
                       <object class="AdwClamp">
                         <property name="maximum-size">900</property>
