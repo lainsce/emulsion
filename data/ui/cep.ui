@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.0"/>
+  <object class="GtkAdjustment" id="blue">
+    <property name="upper">255</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="green">
+    <property name="upper">255</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="red">
+    <property name="upper">255</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <template class="EmulsionColorEditPopover" parent="GtkPopover">
+    <property name="child">
+      <object class="GtkBox">
+        <property name="homogeneous">1</property>
+        <property name="visible">1</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="AdwViewSwitcher" id="vs">
+                <property name="vexpand">1</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
+                <property name="stack">stack</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStack" id="stack">
+                <property name="vexpand">1</property>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">rgb</property>
+                    <property name="title" translatable="yes">RGB</property>
+                    <property name="icon-name">rgb-symbolic</property>
+                    <property name="child">
+                      <object class="GtkBox" id="rgb">
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">end</property>
+                            <property name="spacing">6</property>
+                            <property name="visible">1</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">end</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">Red</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="red_entry">
+                                <property name="max-width-chars">3</property>
+                                <property name="input-purpose">digits</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">end</property>
+                            <property name="spacing">6</property>
+                            <property name="visible">1</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">end</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">Green</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="green_entry">
+                                <property name="max-width-chars">3</property>
+                                <property name="input-purpose">digits</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">end</property>
+                            <property name="spacing">6</property>
+                            <property name="visible">1</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">end</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">Blue</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="blue_entry">
+                                <property name="max-width-chars">3</property>
+                                <property name="input-purpose">digits</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">hex</property>
+                    <property name="title" translatable="yes">Hex</property>
+                    <property name="icon-name">hex-symbolic</property>
+                    <property name="child">
+                      <object class="GtkBox" id="hex">
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
+                        <property name="visible">1</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="halign">end</property>
+                            <property name="spacing">6</property>
+                            <property name="visible">1</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="halign">end</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">Color Hexcode</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="hex_entry">
+                                <property name="max-width-chars">7</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
+            <property name="visible">1</property>
+            <child>
+              <object class="GtkFixed">
+                <property name="margin-top">40</property>
+                <property name="vexpand">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="red_scale">
+                <property name="vexpand">1</property>
+                <property name="adjustment">red</property>
+                <property name="show-fill-level">1</property>
+                <property name="round-digits">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="green_scale">
+                <property name="vexpand">1</property>
+                <property name="adjustment">green</property>
+                <property name="show-fill-level">1</property>
+                <property name="round-digits">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="blue_scale">
+                <property name="vexpand">1</property>
+                <property name="adjustment">blue</property>
+                <property name="show-fill-level">1</property>
+                <property name="round-digits">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>
