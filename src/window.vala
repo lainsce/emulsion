@@ -55,8 +55,6 @@ namespace Emulsion {
 	    public GLib.ListStore colorstore;
 	    public Manager m;
 	    public ColorInfo win_color_info;
-	    private double cur_x;
-		private double cur_y;
 
 	    public signal void clicked ();
 	    public signal void toggled ();
@@ -142,16 +140,6 @@ namespace Emulsion {
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
 
-            var evconmo = new Gtk.EventControllerMotion ();
-		    color_box.add_controller (evconmo);
-
-            evconmo.motion.connect ((e, x, y) => {
-                int h = color_box.get_allocated_height ();
-			    int w = color_box.get_allocated_width ();
-			    cur_x = x.clamp (25, (double)(w));
-			    cur_y = y.clamp (25, (double)(w));
-		    });
-
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);
 
@@ -159,10 +147,9 @@ namespace Emulsion {
                 cep.color_info = ((ColorInfo)item);
 
                 Gtk.Allocation alloc;
-                color_box.get_allocation (out alloc);
-                alloc.contains_point ((int)cur_x, (int)cur_y);
-
+                color_fb.get_focus_child ().get_allocation (out alloc);
                 cep.set_pointing_to (alloc);
+                cep.set_offset (100, 100);
                 cep.popup ();
 
                 cep.closed.connect (() => {
