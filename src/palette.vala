@@ -38,8 +38,6 @@ namespace Emulsion {
                 gc.parse (palette.colors[i]);
 
                 switch (palette.colors.length) {
-                    case 0:
-                        break;
                     case 1:
                         snapshot.append_color (gc, {{i * 256, 0}, {256, 64}});
                         this.set_size_request (i * 256, 64);

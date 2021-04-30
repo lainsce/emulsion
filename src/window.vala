@@ -78,9 +78,11 @@ namespace Emulsion {
 			    application: app,
 			    app: app
 			);
+		}
 
-			install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
-			install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
+		static construct {
+		    install_action ("delete-palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
+            install_action ("delete-color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
         construct {
@@ -144,7 +146,7 @@ namespace Emulsion {
                 color_fb.get_allocation (out allocation);
 
                 cep.set_pointing_to (allocation);
-                cep.popup ();
+                cep.show ();
 
                 cep.closed.connect (() => {
                     colorstore.remove (pos);
