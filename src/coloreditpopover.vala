@@ -47,6 +47,27 @@ namespace Emulsion {
                     return;
                 }
                 _color_info = value;
+
+                Gdk.RGBA color = {};
+                color.parse(_color_info.color);
+
+                var reg = new Regex("""^rgb\((?<red>.*),(?<green>.*),(?<blue>.*)\)$""");
+                GLib.MatchInfo match;
+
+                if (reg.match (color.to_string (), 0, out match)) {
+                    red_entry.set_text ("%s".printf(match.fetch_named ("red")));
+                    green_entry.set_text ("%s".printf(match.fetch_named ("green")));
+                    blue_entry.set_text ("%s".printf(match.fetch_named ("blue")));
+                }
+
+                red_scale.set_fill_level (color.red);
+                green_scale.set_fill_level (color.green);
+                blue_scale.set_fill_level (color.blue);
+
+                hex_entry.set_text ("%s".printf(_color_info.name));
+
+                print ("HEX: %s\n", _color_info.name);
+                print ("RGB: %s\n", color.to_string ());
             }
         }
 
@@ -54,21 +75,6 @@ namespace Emulsion {
             Object( win: win );
             this.set_parent (win);
             this.present ();
-
-            Gdk.RGBA color = {};
-            color.parse(color_info.color);
-
-            red_entry.set_text ("%f".printf(color.red));
-            green_entry.set_text ("%f".printf(color.green));
-            blue_entry.set_text ("%f".printf(color.blue));
-
-            red_scale.set_fill_level (color.red);
-            green_scale.set_fill_level (color.green);
-            blue_scale.set_fill_level (color.blue);
-
-            hex_entry.set_text ("%s".printf(color_info.name));
-
-            print ("%s", color_info.name);
         }
     }
 }
