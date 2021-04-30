@@ -24,18 +24,17 @@ namespace Emulsion {
             this.get_style_context().add_class ("color");
             this.set_overflow(Gtk.Overflow.HIDDEN);
             this.set_orientation (Gtk.Orientation.HORIZONTAL);
-            this.set_halign (Gtk.Align.START);
+            this.set_halign (Gtk.Align.CENTER);
             this.set_margin_start (6);
             this.set_margin_top (6);
             this.set_margin_end (6);
-            this.set_margin_bottom (6);
+            this.set_size_request (128, 128);
 	    }
 
 	    protected override void snapshot (Gtk.Snapshot snapshot) {
             Gdk.RGBA gc = {};
             gc.parse (color.color);
             snapshot.append_color (gc, {{0, 0}, {128, 128}});
-            this.set_size_request (128, 128);
         }
     }
 }

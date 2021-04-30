@@ -127,7 +127,7 @@ stackswitcher button:last-child {
 /* app */
 
 .view {
-  background-color: shade(@theme_base_color, 0.4);
+  background-color: shade(@theme_base_color, 0.5);
 }
 
 .palette {
