@@ -60,6 +60,8 @@ namespace Emulsion {
                 blue_scale.set_value (get_srgb(color.blue));
 
                 hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
                 queue_draw ();
             }
         }
@@ -68,7 +70,8 @@ namespace Emulsion {
             Object( win: win );
             this.set_parent (win);
             this.present ();
-            queue_draw ();
+            win.palette_fb.queue_draw ();
+            win.color_fb.queue_draw ();
         }
 
         construct {
@@ -80,6 +83,8 @@ namespace Emulsion {
                 _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             green_scale.value_changed.connect (() => {
@@ -90,6 +95,8 @@ namespace Emulsion {
                 _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             blue_scale.value_changed.connect (() => {
@@ -100,6 +107,8 @@ namespace Emulsion {
                 _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             red_entry.activate.connect (() => {
@@ -107,6 +116,10 @@ namespace Emulsion {
                 hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             green_entry.activate.connect (() => {
@@ -114,6 +127,10 @@ namespace Emulsion {
                 hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             blue_entry.activate.connect (() => {
@@ -121,11 +138,19 @@ namespace Emulsion {
                 hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
 
             hex_entry.activate.connect (() => {
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
             });
         }
 

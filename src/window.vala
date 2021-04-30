@@ -40,11 +40,11 @@ namespace Emulsion {
 	    unowned Gtk.Stack main_stack;
 
         [GtkChild]
-	    unowned Gtk.GridView palette_fb;
+	    public unowned Gtk.GridView palette_fb;
 	    [GtkChild]
 	    unowned Gtk.SingleSelection palette_model;
 	    [GtkChild]
-	    unowned Gtk.GridView color_fb;
+	    public unowned Gtk.GridView color_fb;
 	    [GtkChild]
 	    unowned Gtk.SingleSelection color_model;
 
@@ -277,7 +277,7 @@ namespace Emulsion {
         void populate_palettes_view () {
             var a = new PaletteInfo ();
             a.name = "Flat";
-            a.colors = {"#e65353", "#e6b453", "#94e653", "#53e6c3", "#6b89d4"};
+            a.colors = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
 
             palettestore.append (a);
 
