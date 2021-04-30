@@ -135,12 +135,10 @@
               <object class="GtkStackPage">
                 <property name="name">palbody</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow" id="palette_window">
-                    <child>
-                      <object class="AdwClamp">
-                        <property name="maximum-size">1200</property>
+                      <object class="GtkBox" id="palette_box">
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="palette_box">
+                          <object class="GtkBox" id="palette_label_box">
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="palette_label">
@@ -154,19 +152,27 @@
                                 </style>
                               </object>
                             </child>
+                            <style>
+                              <class name="title-box"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="palette_window">
+                            <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkGridView" id="palette_fb">
-                                <property name="min-columns">1</property>
-                                <property name="max-columns">4</property>
-                                <property name="margin-start">20</property>
-                                <property name="margin-end">20</property>
-                                <property name="model">
-                                  <object class="GtkSingleSelection" id="palette_model">
-                                  </object>
-                                </property>
-                                <property name="factory">
-                                  <object class="GtkBuilderListItemFactory" id="palette_factory">
-                                    <property name="bytes"><![CDATA[
+                            <object class="GtkGridView" id="palette_fb">
+                              <property name="min-columns">1</property>
+                              <property name="max-columns">4</property>
+                              <property name="margin-start">20</property>
+                              <property name="margin-end">20</property>
+                              <property name="model">
+                                <object class="GtkSingleSelection" id="palette_model">
+                                </object>
+                              </property>
+                              <property name="factory">
+                                <object class="GtkBuilderListItemFactory" id="palette_factory">
+                                  <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GtkListItem">
@@ -230,8 +236,6 @@
                           </object>
                         </child>
                       </object>
-                    </child>
-                  </object>
                 </property>
               </object>
             </child>
@@ -239,12 +243,10 @@
               <object class="GtkStackPage">
                 <property name="name">colbody</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow" id="color_window">
-                    <child>
-                      <object class="AdwClamp">
-                        <property name="maximum-size">900</property>
+                      <object class="GtkBox" id="color_box">
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="color_box">
+                          <object class="GtkBox" id="color_label_box">
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="color_label">
@@ -257,6 +259,14 @@
                                 </style>
                               </object>
                             </child>
+                            <style>
+                              <class name="title-box"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="color_window">
+                            <property name="vexpand">1</property>
                             <child>
                               <object class="GtkGridView" id="color_fb">
                                 <property name="min-columns">1</property>
@@ -266,7 +276,7 @@
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="model">
-                                  <object class="GtkSingleSelection" id="color_model"></object>
+                                  <object class="GtkSingleSelection" id="color_model"/>
                                 </property>
                                 <property name="factory">
                                   <object class="GtkBuilderListItemFactory" id="color_factory">
@@ -326,11 +336,9 @@
     </property>
   </template>
 </interface>
-                                    ]]></property>
-                                  </object>
-                                </property>
+                                ]]></property>
                               </object>
-                            </child>
+                            </property>
                           </object>
                         </child>
                       </object>
@@ -345,4 +353,3 @@
     </child>
   </template>
 </interface>
-

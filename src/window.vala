@@ -83,8 +83,8 @@ namespace Emulsion {
 		    // TODO: Figure out what to do with these so they work.
 		    //       There's abysmal demo/examples count online.
 
-		    install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
-            install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
+		    //install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
+            //install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
         construct {
@@ -116,6 +116,8 @@ namespace Emulsion {
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_model.set_model (palettestore);
+            palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
+            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
@@ -141,6 +143,8 @@ namespace Emulsion {
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
+            color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
+            color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
 
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);

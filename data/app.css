@@ -130,6 +130,10 @@ stackswitcher button:last-child {
   background-color: shade(@theme_base_color, 0.5);
 }
 
+.title-box {
+  background: none;
+}
+
 .palette {
   outline: 1px solid alpha(white, 0.25);
 	outline-offset: -1px;
