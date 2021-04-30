@@ -114,6 +114,7 @@ namespace Emulsion {
         }
 
         public string make_hex (float red, float green, float blue) {
-            return "#" + "%01.1x%01.1x%01.1x".printf ((uint)red, (uint)green, (uint)blue);
-        }    }
+            return "#" + "%02x%02x%02x".printf ((uint)red, (uint)green, (uint)blue);
+        }
+    }
 }

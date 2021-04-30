@@ -116,6 +116,13 @@ viewswitcher button:last-child {
   border-radius: 0 8px 8px 0;
 }
 
+stackswitcher button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+stackswitcher button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
 
 /* app */
 
@@ -204,7 +211,7 @@ gridview child:selected .color-box {
 
 .red highlight {
         background: none;
-        border: none;
+        border: 1px solid transparent;
 }
 
 .green trough {
@@ -220,7 +227,7 @@ gridview child:selected .color-box {
 
 .green highlight {
         background: none;
-        border: none;
+        border: 1px solid transparent;
 }
 
 .blue trough {
@@ -236,5 +243,5 @@ gridview child:selected .color-box {
 
 .blue highlight {
         background: none;
-        border: none;
+        border: 1px solid transparent;
 }

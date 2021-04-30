@@ -45,6 +45,11 @@ namespace Emulsion {
 	    unowned Gtk.SingleSelection palette_model;
 
 	    [GtkChild]
+	    unowned Gtk.Adjustment paletteadj;
+	    [GtkChild]
+	    unowned Gtk.Adjustment coloradj;
+
+	    [GtkChild]
 	    unowned Gtk.GridView color_fb;
 	    [GtkChild]
 	    unowned Gtk.SingleSelection color_model;
@@ -59,8 +64,8 @@ namespace Emulsion {
 
 	    public SimpleActionGroup actions { get; construct; }
         public const string ACTION_PREFIX = "win.";
-        public const string ACTION_ABOUT = "about";
-        public const string ACTION_KEYS = "keys";
+        public const string ACTION_ABOUT = "action_about";
+        public const string ACTION_KEYS = "action_keys";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
         private const GLib.ActionEntry[] ACTION_ENTRIES = {
               {ACTION_ABOUT, action_about },
@@ -135,6 +140,10 @@ namespace Emulsion {
                 var item = colorstore.get_item (pos);
                 cep.color_info = ((ColorInfo)item);
 
+                Gtk.Allocation allocation;
+                color_fb.get_allocation (out allocation);
+
+                cep.set_pointing_to (allocation);
                 cep.popup ();
 
                 cep.closed.connect (() => {
@@ -191,21 +200,23 @@ namespace Emulsion {
 
             add_palette_button.clicked.connect (() => {
                 var rand = new GLib.Rand ();
-                string[] cmyk = {};
+                string[] n = {};
 
-                for (int i = 0; i <= rand.int_range (1, 15); i++) {
-                    var rc = "#" + "%01.1x%01.1x%01.1x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
-                    cmyk += rc;
+                for (int i = 0; i <= rand.int_range (1, 16); i++) {
+                    var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
+                    n += rc;
                 }
 
                 var a = new PaletteInfo ();
-                a.name = "Random";
-                a.colors = cmyk;
+                a.name = "New Palette";
+                a.colors = n;
 
                 palettestore.append (a);
             });
 
             this.set_size_request (360, 500);
+
+            paletteadj.set_upper (200);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
 		}
@@ -231,11 +242,19 @@ namespace Emulsion {
         }
 
         public void action_keys () {
-
+            try {
+                var build = new Gtk.Builder ();
+                build.add_from_resource ("/io/github/lainsce/Emulsion/keys.ui");
+                var window =  (Gtk.ShortcutsWindow) build.get_object ("shortcuts-emulsion");
+                window.set_transient_for (this);
+                window.show ();
+            } catch (Error e) {
+                warning ("Failed to open shortcuts window: %s\n", e.message);
+            }
         }
 
         public void action_about () {
-            const string COPYRIGHT = "Copyright \xc2\xa9 2017-2021 Paulo \"Lains\" Galardi\n";
+            const string COPYRIGHT = "Copyright \xc2\xa9 2021 Paulo \"Lains\" Galardi\n";
 
             const string? AUTHORS[] = {
                 "Paulo \"Lains\" Galardi",
