@@ -46,7 +46,7 @@ namespace Emulsion {
         public Application () {
             Object (
                 flags: ApplicationFlags.FLAGS_NONE,
-                application_id: "io.github.lainsce.Emulsion"
+                application_id: Config.APP_ID
             );
             add_action_entries(app_entries, this);
         }

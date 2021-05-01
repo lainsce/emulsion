@@ -1,9 +1,10 @@
 {
-    "app-id" : "io.github.lainsce.Emulsion",
+    "app-id" : "io.github.lainsce.EmulsionDevel",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "40",
     "sdk" : "org.gnome.Sdk",
     "command" : "io.github.lainsce.Emulsion",
+    "rename-icon" : "io.github.lainsce.EmulsionDevel",
     "finish-args" : [
         "--filesystem=xdg-documents",
         "--filesystem=xdg-download",
@@ -69,7 +70,7 @@
                     "type" : "git",
                     "url" : "https://gitlab.gnome.org/GNOME/libadwaita.git",
                     "branch" : "main",
-                    "commit" : "9a52895fcd5a906791606400db1028fa0e527854"
+                    "commit" : "4b633f1fb7d3973b3f8bc4dcd41fb676670ccd21"
                 }
             ]
         },
