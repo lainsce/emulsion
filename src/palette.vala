@@ -72,15 +72,55 @@ namespace Emulsion {
                         break;
                     default:
                         if (i < 8) {
-                           snapshot.append_color (gc, {{i * 32, 0}, {32, 32}});
-                           this.set_size_request (i * 32, 32);
+                            snapshot.append_color (gc, {{i * 32, 0}, {32, 32}});
+                            this.set_size_request (i * 32, 32);
                         } else {
-                           snapshot.append_color (gc, {{j++ * 32, 32}, {32, 32}});
-                           this.set_size_request (8 * 32, 64);
+                            if (i <= 15) {
+                                snapshot.append_color (gc, {{j++ * 32, 32}, {32, 32}});
+                            } else if (i > 15) {
+                                if (contrast_ratio(gc, {0,0,0,1}) > contrast_ratio(gc, {1,1,1,1}) + 3) {
+                                    snapshot.append_color ({0,0,0,1}, {{232, 48}, {16, 2}});
+                                    snapshot.append_color ({0,0,0,1}, {{239, 41}, {2, 16}});
+                                } else {
+                                    snapshot.append_color ({1,1,1,1}, {{232, 48}, {16, 2}});
+                                    snapshot.append_color ({1,1,1,1}, {{239, 41}, {2, 16}});
+                                }
+                            }
+                            this.set_size_request (8 * 32, 64);
                         }
                         break;
                 }
             }
+        }
+
+        private static double contrast_ratio (Gdk.RGBA bg_color, Gdk.RGBA fg_color) {
+            // From WCAG 2.0 https://www.w3.org/TR/WCAG20/#contrast-ratiodef
+            var bg_luminance = get_luminance (bg_color);
+            var fg_luminance = get_luminance (fg_color);
+
+            if (bg_luminance > fg_luminance) {
+                return (bg_luminance + 0.05) / (fg_luminance + 0.05);
+            }
+
+            return (fg_luminance + 0.05) / (bg_luminance + 0.05);
+        }
+
+        private static double get_luminance (Gdk.RGBA color) {
+            // Values from WCAG 2.0 https://www.w3.org/TR/WCAG20/#relativeluminancedef
+            var red = sanitize_color (color.red) * 0.2126;
+            var green = sanitize_color (color.green) * 0.7152;
+            var blue = sanitize_color (color.blue) * 0.0722;
+
+            return red + green + blue;
+        }
+
+        private static double sanitize_color (double color) {
+            // From WCAG 2.0 https://www.w3.org/TR/WCAG20/#relativeluminancedef
+            if (color <= 0.03928) {
+                return color / 12.92;
+            }
+
+            return Math.pow ((color + 0.055) / 1.055, 2.4);
         }
     }
 }
