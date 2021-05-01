@@ -261,7 +261,7 @@ namespace Emulsion {
                 var rand = new GLib.Rand ();
                 string[] n = {};
 
-                for (int i = 0; i <= rand.int_range (1, 8); i++) {
+                for (int i = 0; i <= rand.int_range (1, 16); i++) {
                     var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     n += rc;
                 }
@@ -282,21 +282,17 @@ namespace Emulsion {
                 a.name = rc;
                 a.color = rc;
 
-                uint i, n = palettestore.get_n_items ();
-                int j;
-                for (i = 0; i < n; i++) {
-                    var pitem = palettestore.get_item (i);
-                    a.uid = ((PaletteInfo)pitem).name;
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                a.uid = ((PaletteInfo)pitem).name;
 
-                    if (a.uid == ((PaletteInfo)pitem).name) {
-                        var arrco = ((PaletteInfo)pitem).colors.to_array();
-                        for (j = 0; j <= arrco.length; j++) {
-                            ((PaletteInfo)pitem).colors.add(a.color);
-                        }
+                if (a.uid == ((PaletteInfo)pitem).name) {
+                    var arrco = ((PaletteInfo)pitem).colors.to_array();
+                    for (j = 0; j <= arrco.length; j++) {
+                        ((PaletteInfo)pitem).colors.add(a.color);
                     }
                 }
-                m.save_palettes.begin (palettestore);
 
+                m.save_palettes.begin (palettestore);
                 colorstore.append (a);
                 color_fb.queue_draw ();
                 palette_fb.queue_draw ();
