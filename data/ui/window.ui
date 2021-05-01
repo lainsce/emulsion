@@ -246,6 +246,7 @@
               <object class="GtkButton" id="palette_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_palette</property>
+                <property name="tooltip-text" translatable="yes">Delete Palette</property>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
@@ -354,6 +355,7 @@
               <object class="GtkButton" id="color_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_color</property>
+                <property name="tooltip-text" translatable="yes">Delete Palette Color</property>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
