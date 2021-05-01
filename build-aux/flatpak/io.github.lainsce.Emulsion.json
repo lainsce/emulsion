@@ -10,6 +10,7 @@
         "--filesystem=xdg-download",
         "--socket=wayland",
         "--socket=fallback-x11",
+        "--socket=session-bus",
         "--share=network",
         "--share=ipc",
         "--device=dri"

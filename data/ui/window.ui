@@ -47,6 +47,7 @@
                     <child>
                       <object class="GtkButton" id="add_palette_button">
                         <property name="icon-name">list-add-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Add Palette</property>
                         <style>
                           <class name="image-button"/>
                           <class name="header-button"/>
@@ -56,6 +57,7 @@
                     <child type="end">
                       <object class="GtkToggleButton" id="search_button">
                         <property name="icon-name">edit-find-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Search Palette Names</property>
                         <style>
                           <class name="image-button"/>
                           <class name="header-button"/>
@@ -91,6 +93,7 @@
                     <child>
                       <object class="GtkButton" id="back_button">
                         <property name="icon-name">go-previous-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Go Back to Palettes View</property>
                         <style>
                           <class name="image-button"/>
                           <class name="header-button"/>
@@ -100,6 +103,7 @@
                     <child>
                       <object class="GtkButton" id="add_color_button">
                         <property name="icon-name">list-add-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
                         <style>
                           <class name="image-button"/>
                           <class name="header-button"/>
@@ -113,26 +117,22 @@
           </object>
         </child>
         <child>
-          <object class="GtkStack" id="search_stack">
+          <object class="GtkRevealer" id="search_revealer">
             <child>
-              <object class="GtkStackPage">
-                <property name="child">
-                  <object class="GtkRevealer" id="search_revealer">
-                    <child>
-                      <object class="GtkBox" id="search_box">
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkSearchEntry" id="search_entry">
-                            <property name="halign">end</property>
-                            <property name="margin-top">6</property>
-                            <property name="margin-bottom">6</property>
-                            <property name="margin-end">6</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+              <object class="GtkBox" id="search_box">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkSearchEntry" id="search_entry">
+                    <property name="halign">center</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="placeholder-text" translatable="yes">Search for palettes</property>
                   </object>
-                </property>
+                </child>
+                <style>
+                  <class name="search-box"/>
+                </style>
               </object>
             </child>
           </object>
@@ -140,7 +140,6 @@
         <child>
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
-            <property name="transition-type">crossfade</property>
             <style>
               <class name="view"/>
             </style>
@@ -176,7 +175,6 @@
                         <child>
                           <object class="GtkStack" id="palette_stack">
                             <property name="vexpand">1</property>
-                            <property name="transition-type">crossfade</property>
                             <style>
                               <class name="view"/>
                             </style>

@@ -41,15 +41,14 @@
 
 headerbar,
 headerbar.flat {
-  background-color: @theme_bg_color;
-  background-image: none;
+  background: @theme_bg_color;
   transition: 100ms ease-in-out;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid alpha(white, 0.10);
 }
 
 headerbar.flat:backdrop {
   background-image: none;
-  background-color: @theme_base_color;
+  background: @theme_base_color;
 }
 
 entry {
@@ -133,6 +132,15 @@ stackswitcher button:last-child {
 .title-box {
   background: none;
   border-bottom: 1px solid alpha(white, 0.10);
+}
+
+.search-box {
+  background: shade(@theme_base_color, 0.66);
+  border-bottom: 1px solid alpha(white, 0.10);
+}
+
+.search-box entry {
+  border: 1px solid alpha(white, 0.10);
 }
 
 .palette {
