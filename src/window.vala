@@ -33,6 +33,8 @@ namespace Emulsion {
 	    unowned Gtk.Button back_button;
 	    [GtkChild]
 	    unowned Gtk.Revealer search_revealer;
+        [GtkChild]
+	    unowned Gtk.SearchEntry searchentry;
 
 	    [GtkChild]
 	    unowned Gtk.Label palette_hlabel;
@@ -204,6 +206,17 @@ namespace Emulsion {
 
             search_button.toggled.connect (() => {
                search_revealer.set_reveal_child (search_button.get_active());
+            });
+
+            searchentry.search_changed.connect (() => {
+                uint i, n = palettestore.get_n_items ();
+                for (i = 0; i < n; i++) {
+                    var pitem = palettestore.get_item (i);
+
+                    if (searchentry.get_text () == ((PaletteInfo)pitem).name) {
+                        palette_model.set_selected (i);
+                    }
+                }
             });
 
             palettestore.items_changed.connect (() => {

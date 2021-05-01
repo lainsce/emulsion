@@ -122,7 +122,7 @@
               <object class="GtkBox" id="search_box">
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkSearchEntry" id="search_entry">
+                  <object class="GtkSearchEntry" id="searchentry">
                     <property name="halign">center</property>
                     <property name="margin-top">6</property>
                     <property name="margin-bottom">6</property>
