@@ -217,6 +217,9 @@ namespace Emulsion {
             // Some palettes to start
             if (Emulsion.Application.gsettings.get_boolean("first-time")) {
                 populate_palettes_view ();
+                palette_label.set_visible(true);
+                palette_stack.set_visible_child_name ("palfull");
+                palette_hlabel.set_text("");
                 Emulsion.Application.gsettings.set_boolean("first-time", false);
             } else {
                 m.load_from_file.begin ();

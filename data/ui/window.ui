@@ -202,6 +202,7 @@
                                     <property name="max-columns">4</property>
                                     <property name="margin-start">20</property>
                                     <property name="margin-end">20</property>
+                                    <property name="single-click-activate">1</property>
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
                                       </object>
@@ -310,6 +311,7 @@
                                 <property name="margin-end">20</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
+                                <property name="single-click-activate">1</property>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"/>
                                 </property>
