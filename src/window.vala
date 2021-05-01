@@ -36,6 +36,10 @@ namespace Emulsion {
 	    unowned Gtk.Revealer search_revealer;
         [GtkChild]
 	    unowned Gtk.SearchBar searchbar;
+	    [GtkChild]
+	    unowned Gtk.SearchEntry searchentry;
+	    [GtkChild]
+	    unowned Gtk.StringFilter palette_filter;
 
 	    [GtkChild]
 	    unowned Gtk.Label palette_hlabel;
@@ -134,11 +138,14 @@ namespace Emulsion {
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_model.set_model (palettestore);
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
-            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.MINIMUM;
+            palette_filter.bind_property ("search", searchentry, "text", BindingFlags.BIDIRECTIONAL);
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
                 main_stack.set_visible_child_name ("colbody");
+                search_revealer.set_reveal_child (false);
+                search_button.set_active (false);
 
                 int j = 0;
                 uint i, n = palettestore.get_n_items ();
@@ -225,7 +232,7 @@ namespace Emulsion {
 
             // Some palettes to start
             if (Emulsion.Application.gsettings.get_boolean("first-time")) {
-                //populate_palettes_view ();
+                populate_palettes_view ();
                 palette_label.set_visible(true);
                 palette_stack.set_visible_child_name ("palfull");
                 palette_hlabel.set_text("");
@@ -370,58 +377,74 @@ namespace Emulsion {
                                    null);
         }
 
-        // void populate_palettes_view () {
-        //     var a = new PaletteInfo ();
-        //     a.name = "Flat";
-        //     a.colors = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
+        void populate_palettes_view () {
+            var a = new PaletteInfo ();
+            a.name = "Flat";
+            string[] ar = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
+            a.colors = new Gee.TreeSet<string> ();
+            a.colors.add_all_array (ar);
 
-        //     palettestore.append (a);
+            palettestore.append (a);
 
-        //     var b = new PaletteInfo ();
-        //     b.name = "GNOME";
-        //     b.colors = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
+            var b = new PaletteInfo ();
+            b.name = "GNOME";
+            string[] br = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
+            b.colors = new Gee.TreeSet<string> ();
+            b.colors.add_all_array (br);
 
-        //     palettestore.append (b);
+            palettestore.append (b);
 
-        //     var c = new PaletteInfo ();
-        //     c.name = "Sandy";
-        //     c.colors = {"#f6efdc", "#dabab1", "#bacaba"};
+            var c = new PaletteInfo ();
+            c.name = "Sandy";
+            string[] cr = {"#f6efdc", "#dabab1", "#bacaba"};
+            c.colors = new Gee.TreeSet<string> ();
+            c.colors.add_all_array (cr);
 
-        //     palettestore.append (c);
+            palettestore.append (c);
 
-        //     var d = new PaletteInfo ();
-        //     d.name = "Game Boy";
-        //     d.colors = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
+            var d = new PaletteInfo ();
+            d.name = "Game Boy";
+            string[] dr = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
+            d.colors = new Gee.TreeSet<string> ();
+            d.colors.add_all_array (dr);
 
-        //     palettestore.append (d);
+            palettestore.append (d);
 
-        //     var e = new PaletteInfo ();
-        //     e.name = "Pico-8";
-        //     e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
-        //                 "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
-        //                 "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
+            var e = new PaletteInfo ();
+            e.name = "Pico-8";
+            string[] er = "#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
+                          "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
+                          "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
+            e.colors = new Gee.TreeSet<string> ();
+            e.colors.add_all_array (er);
 
-        //     palettestore.append (e);
+            palettestore.append (e);
 
-        //     var f = new PaletteInfo ();
-        //     f.name = "Monochroma";
-        //     f.colors = {"#171219", "#f2fbeb"};
+            var f = new PaletteInfo ();
+            f.name = "Monochroma";
+            string[] fr = {"#171219", "#f2fbeb"};
+            f.colors = new Gee.TreeSet<string> ();
+            f.colors.add_all_array (fr);
 
-        //     palettestore.append (f);
+            palettestore.append (f);
 
-        //     var g = new PaletteInfo ();
-        //     g.name = "Endesga 8";
-        //     g.colors = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
-        //                 "#7b53ad", "#fdfdf8"};
+            var g = new PaletteInfo ();
+            g.name = "Endesga 8";
+            string[] gr = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
+                          "#7b53ad", "#fdfdf8"};
+            g.colors = new Gee.TreeSet<string> ();
+            g.colors.add_all_array (gr);
 
-        //     palettestore.append (g);
+            palettestore.append (g);
 
-        //     var h = new PaletteInfo ();
-        //     h.name = "CGA";
-        //     h.colors = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
-        //                 "#AA00AA", "#FFFFFF"};
+            var h = new PaletteInfo ();
+            h.name = "CGA";
+            string[] hr = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
+                        "#AA00AA", "#FFFFFF"};
+            h.colors = new Gee.TreeSet<string> ();
+            h.colors.add_all_array (hr);
 
-        //     palettestore.append (h);
-        // }
+            palettestore.append (h);
+        }
 	}
 }

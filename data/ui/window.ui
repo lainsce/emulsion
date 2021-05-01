@@ -209,16 +209,13 @@
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
                                         <property name="model">
-                                          <object class="GtkFilterListModel" id="palette_filter_model">
+                                          <object class="GtkFilterListModel">
                                             <property name="incremental">1</property>
                                             <property name="filter">
-                                              <object class="GtkStringFilter">
+                                              <object class="GtkStringFilter" id="palette_filter">
                                                 <property name="expression">
-                                                  <lookup name="name" type="EmulsionPaletteInfo"/>
+                                                  <lookup type="EmulsionPaletteInfo" name="name"/>
                                                 </property>
-                                                <binding name="search">
-                                                  <lookup name="text" type="GtkSearchEntry">searchentry</lookup>
-                                                </binding>
                                               </object>
                                             </property>
                                           </object>

@@ -53,6 +53,7 @@ headerbar.flat:backdrop {
 
 entry {
   background-color: shade(@theme_base_color, 0.4);
+  border-radius: 8px;
 }
 
 .outline {
