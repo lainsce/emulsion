@@ -8,7 +8,7 @@ namespace Emulsion {
          */
 
         public string name { get; set; }
-        public string[] colors { get; set; }
+        public Gee.TreeSet<string> colors { get; set; }
     }
 
     public class PaletteRenderer : Gtk.Box {
@@ -40,11 +40,12 @@ namespace Emulsion {
 
 	    protected override void snapshot (Gtk.Snapshot snapshot) {
 	        int j = 0;
-            for (int i = 0; i < palette.colors.length; i++) {
+	        var arrco = palette.colors.to_array ();
+            for (int i = 0; i < arrco.length; i++) {
                 Gdk.RGBA gc = {};
-                gc.parse (palette.colors[i]);
+                gc.parse (arrco[i]);
 
-                switch (palette.colors.length) {
+                switch (arrco.length) {
                     case 1:
                         snapshot.append_color (gc, {{i * 256, 0}, {256, 64}});
                         break;

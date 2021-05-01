@@ -122,17 +122,22 @@
               <object class="GtkBox" id="search_box">
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkSearchEntry" id="searchentry">
-                    <property name="halign">center</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
-                    <property name="margin-end">6</property>
-                    <property name="placeholder-text" translatable="yes">Search for palettes</property>
+                  <object class="GtkSearchBar" id="searchbar">
+                    <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
+                    <child>
+                      <object class="GtkSearchEntry" id="searchentry">
+                        <property name="halign">center</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="placeholder-text" translatable="yes">Search for palettes</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="search-box"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="search-box"/>
-                </style>
               </object>
             </child>
           </object>
@@ -203,6 +208,21 @@
                                     <property name="single-click-activate">1</property>
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
+                                        <property name="model">
+                                          <object class="GtkFilterListModel" id="palette_filter_model">
+                                            <property name="incremental">1</property>
+                                            <property name="filter">
+                                              <object class="GtkStringFilter">
+                                                <property name="expression">
+                                                  <lookup name="name" type="EmulsionPaletteInfo"/>
+                                                </property>
+                                                <binding name="search">
+                                                  <lookup name="text" type="GtkSearchEntry">searchentry</lookup>
+                                                </binding>
+                                              </object>
+                                            </property>
+                                          </object>
+                                        </property>
                                       </object>
                                     </property>
                                     <property name="factory">
@@ -310,7 +330,6 @@
                                 <property name="margin-end">20</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
-                                <property name="single-click-activate">1</property>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"/>
                                 </property>

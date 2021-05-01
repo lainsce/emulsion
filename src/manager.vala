@@ -93,7 +93,8 @@ namespace Emulsion {
                         });
 
                         a.name = name;
-                        a.colors = arrco;
+                        a.colors = new Gee.TreeSet<string> ();
+                        a.colors.add_all_array (arrco);
                         win.palettestore.append (a);
                     }
                 }

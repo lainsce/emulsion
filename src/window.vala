@@ -31,10 +31,11 @@ namespace Emulsion {
 	    unowned Gtk.Button add_color_button;
 	    [GtkChild]
 	    unowned Gtk.Button back_button;
+
 	    [GtkChild]
 	    unowned Gtk.Revealer search_revealer;
         [GtkChild]
-	    unowned Gtk.SearchEntry searchentry;
+	    unowned Gtk.SearchBar searchbar;
 
 	    [GtkChild]
 	    unowned Gtk.Label palette_hlabel;
@@ -146,10 +147,11 @@ namespace Emulsion {
 
                     colorstore.remove_all ();
 
-                    for (j = 0; j < ((PaletteInfo)item).colors.length; j++) {
+                    for (j = 0; j < ((PaletteInfo)item).colors.size; j++) {
                         var a = new ColorInfo ();
-                        a.name = ((PaletteInfo)item).colors[j];
-                        a.color = ((PaletteInfo)item).colors[j];
+                        var arrco = ((PaletteInfo)item).colors.to_array();
+                        a.name = arrco[j];
+                        a.color = arrco[j];
                         a.uid = ((PaletteInfo)item).name;
                         colorstore.append (a);
                     }
@@ -183,11 +185,15 @@ namespace Emulsion {
                     for (i = 0; i < n; i++) {
                         var pitem = palettestore.get_item (i);
 
-                        for (j = 0; j < ((PaletteInfo)pitem).colors.length; j++) {
+                        var arrco = ((PaletteInfo)pitem).colors.to_array();
+                        for (j = 0; j < arrco.length; j++) {
                             if (((ColorInfo)item).uid == ((PaletteInfo)pitem).name) {
-                                if (((PaletteInfo)pitem).colors[j] != ((ColorInfo)item).color) {
-                                    ((PaletteInfo)pitem).colors[pos] = cep.color_info.color;
+                                if (arrco[j] != ((ColorInfo)item).color) {
+                                    ((PaletteInfo)pitem).colors.remove (arrco[pos]);
+                                    ((PaletteInfo)pitem).colors.add (cep.color_info.color);
                                     m.save_palettes.begin (palettestore);
+                                    color_fb.queue_draw ();
+                                    palette_fb.queue_draw ();
                                 }
                             }
                         }
@@ -204,19 +210,9 @@ namespace Emulsion {
                 palette_fb.queue_draw ();
             });
 
+            searchbar.set_key_capture_widget (this);
             search_button.toggled.connect (() => {
                search_revealer.set_reveal_child (search_button.get_active());
-            });
-
-            searchentry.search_changed.connect (() => {
-                uint i, n = palettestore.get_n_items ();
-                for (i = 0; i < n; i++) {
-                    var pitem = palettestore.get_item (i);
-
-                    if (searchentry.get_text () == ((PaletteInfo)pitem).name) {
-                        palette_model.set_selected (i);
-                    }
-                }
             });
 
             palettestore.items_changed.connect (() => {
@@ -229,7 +225,7 @@ namespace Emulsion {
 
             // Some palettes to start
             if (Emulsion.Application.gsettings.get_boolean("first-time")) {
-                populate_palettes_view ();
+                //populate_palettes_view ();
                 palette_label.set_visible(true);
                 palette_stack.set_visible_child_name ("palfull");
                 palette_hlabel.set_text("");
@@ -240,10 +236,12 @@ namespace Emulsion {
                     palette_label.set_visible(false);
                     palette_stack.set_visible_child_name ("palempty");
                     palette_hlabel.set_text("Emulsion");
+                    search_button.set_visible(false);
                 } else {
                     palette_label.set_visible(true);
                     palette_stack.set_visible_child_name ("palfull");
                     palette_hlabel.set_text("");
+                    search_button.set_visible(true);
                 }
             }
 
@@ -251,6 +249,7 @@ namespace Emulsion {
                 palette_stack.set_visible_child_name ("palfull");
                 palette_label.set_visible(true);
                 palette_hlabel.set_text("");
+                search_button.set_visible(true);
 
                 var rand = new GLib.Rand ();
                 string[] n = {};
@@ -262,7 +261,8 @@ namespace Emulsion {
 
                 var a = new PaletteInfo ();
                 a.name = "New Palette " + "%d".printf(uid_counter++);
-                a.colors = n;
+                a.colors = new Gee.TreeSet<string> ();
+                a.colors.add_all_array (n);
 
                 palettestore.append (a);
             });
@@ -272,21 +272,23 @@ namespace Emulsion {
                 var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
 
                 var a = new ColorInfo ();
+                a.name = rc;
+                a.color = rc;
 
                 uint i, n = palettestore.get_n_items ();
+                int j;
                 for (i = 0; i < n; i++) {
                     var pitem = palettestore.get_item (i);
                     a.uid = ((PaletteInfo)pitem).name;
 
                     if (a.uid == ((PaletteInfo)pitem).name) {
-                        m.save_palettes.begin (palettestore);
-                        color_fb.queue_draw ();
-                        palette_fb.queue_draw ();
+                        var arrco = ((PaletteInfo)pitem).colors.to_array();
+                        for (j = 0; j <= arrco.length; j++) {
+                            ((PaletteInfo)pitem).colors.add(a.color);
+                        }
                     }
                 }
-
-                a.name = rc;
-                a.color = rc;
+                m.save_palettes.begin (palettestore);
 
                 colorstore.append (a);
                 color_fb.queue_draw ();
@@ -304,12 +306,33 @@ namespace Emulsion {
             if (palettestore.get_item(0) == null) {
                 palette_stack.set_visible_child_name ("palempty");
                 palette_label.set_visible(false);
+                search_button.set_visible(false);
                 palette_hlabel.set_text("Emulsion");
             }
         }
 
         public void delete_color () {
-            colorstore.remove (color_model.selected);
+            var pitem = palettestore.get_item (palette_model.get_selected());
+            var citem = colorstore.get_item (color_model.get_selected());
+            var arrco = ((PaletteInfo)pitem).colors.to_array();
+
+            if (arrco[0] != null) {
+                if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).name) {
+                    if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
+                        ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
+                    }
+                }
+                colorstore.remove (color_model.get_selected());
+            }
+            if (colorstore.get_item(0) == null) {
+                header_stack.set_visible_child_name ("palheader");
+                main_stack.set_visible_child_name ("palbody");
+                palettestore.remove (palette_model.selected);
+            }
+
+            m.save_palettes.begin (palettestore);
+            color_fb.queue_draw ();
+            palette_fb.queue_draw ();
         }
 
         public void action_keys () {
@@ -347,58 +370,58 @@ namespace Emulsion {
                                    null);
         }
 
-        void populate_palettes_view () {
-            var a = new PaletteInfo ();
-            a.name = "Flat";
-            a.colors = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
+        // void populate_palettes_view () {
+        //     var a = new PaletteInfo ();
+        //     a.name = "Flat";
+        //     a.colors = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
 
-            palettestore.append (a);
+        //     palettestore.append (a);
 
-            var b = new PaletteInfo ();
-            b.name = "GNOME";
-            b.colors = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
+        //     var b = new PaletteInfo ();
+        //     b.name = "GNOME";
+        //     b.colors = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
 
-            palettestore.append (b);
+        //     palettestore.append (b);
 
-            var c = new PaletteInfo ();
-            c.name = "Sandy";
-            c.colors = {"#f6efdc", "#dabab1", "#bacaba"};
+        //     var c = new PaletteInfo ();
+        //     c.name = "Sandy";
+        //     c.colors = {"#f6efdc", "#dabab1", "#bacaba"};
 
-            palettestore.append (c);
+        //     palettestore.append (c);
 
-            var d = new PaletteInfo ();
-            d.name = "Game Boy";
-            d.colors = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
+        //     var d = new PaletteInfo ();
+        //     d.name = "Game Boy";
+        //     d.colors = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
 
-            palettestore.append (d);
+        //     palettestore.append (d);
 
-            var e = new PaletteInfo ();
-            e.name = "Pico-8";
-            e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
-                        "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
-                        "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
+        //     var e = new PaletteInfo ();
+        //     e.name = "Pico-8";
+        //     e.colors = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
+        //                 "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
+        //                 "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
 
-            palettestore.append (e);
+        //     palettestore.append (e);
 
-            var f = new PaletteInfo ();
-            f.name = "Monochroma";
-            f.colors = {"#171219", "#f2fbeb"};
+        //     var f = new PaletteInfo ();
+        //     f.name = "Monochroma";
+        //     f.colors = {"#171219", "#f2fbeb"};
 
-            palettestore.append (f);
+        //     palettestore.append (f);
 
-            var g = new PaletteInfo ();
-            g.name = "Endesga 8";
-            g.colors = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
-                        "#7b53ad", "#fdfdf8"};
+        //     var g = new PaletteInfo ();
+        //     g.name = "Endesga 8";
+        //     g.colors = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
+        //                 "#7b53ad", "#fdfdf8"};
 
-            palettestore.append (g);
+        //     palettestore.append (g);
 
-            var h = new PaletteInfo ();
-            h.name = "CGA";
-            h.colors = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
-                        "#AA00AA", "#FFFFFF"};
+        //     var h = new PaletteInfo ();
+        //     h.name = "CGA";
+        //     h.colors = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
+        //                 "#AA00AA", "#FFFFFF"};
 
-            palettestore.append (h);
-        }
+        //     palettestore.append (h);
+        // }
 	}
 }
