@@ -440,7 +440,7 @@ namespace Emulsion {
             var h = new PaletteInfo ();
             h.name = "CGA";
             string[] hr = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
-                        "#AA00AA", "#FFFFFF"};
+                          "#AA00AA", "#FFFFFF"};
             h.colors = new Gee.TreeSet<string> ();
             h.colors.add_all_array (hr);
 
