@@ -28,16 +28,24 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
 	    [GtkChild]
+	    unowned Gtk.Button add_color_button;
+	    [GtkChild]
 	    unowned Gtk.Button back_button;
 	    [GtkChild]
 	    unowned Gtk.Revealer search_revealer;
 
+	    [GtkChild]
+	    unowned Gtk.Label palette_hlabel;
+	    [GtkChild]
+	    unowned Gtk.Label palette_label;
 	    [GtkChild]
 	    unowned Gtk.Label color_label;
 	    [GtkChild]
 	    unowned Gtk.Stack header_stack;
 	    [GtkChild]
 	    unowned Gtk.Stack main_stack;
+	    [GtkChild]
+	    unowned Gtk.Stack palette_stack;
 
 	    [GtkChild]
 	    unowned Gtk.ScrolledWindow palette_window;
@@ -58,6 +66,8 @@ namespace Emulsion {
 	    public Manager m;
 	    public ColorInfo win_color_info;
 
+	    int uid_counter = 1;
+
 	    public signal void clicked ();
 	    public signal void toggled ();
 
@@ -65,10 +75,14 @@ namespace Emulsion {
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_ABOUT = "action_about";
         public const string ACTION_KEYS = "action_keys";
+        public const string ACTION_DELETE_PALETTE = "delete_palette";
+        public const string ACTION_DELETE_COLOR = "delete_color";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
         private const GLib.ActionEntry[] ACTION_ENTRIES = {
               {ACTION_ABOUT, action_about},
               {ACTION_KEYS, action_keys},
+              {ACTION_DELETE_PALETTE, delete_palette},
+              {ACTION_DELETE_COLOR, delete_color},
         };
 
         public Gtk.Application app { get; construct; }
@@ -83,8 +97,8 @@ namespace Emulsion {
 		    // TODO: Figure out what to do with these so they work.
 		    //       There's abysmal demo/examples count online.
 
-		    //install_action ("delete_palette", "u", (Gtk.WidgetActionActivateFunc)delete_palette);
-            //install_action ("delete_color", "u", (Gtk.WidgetActionActivateFunc)delete_color);
+		    install_action ("win.delete_palette", null, (Gtk.WidgetActionActivateFunc)delete_palette);
+            install_action ("win.delete_color", null, (Gtk.WidgetActionActivateFunc)delete_color);
 		}
 
         construct {
@@ -206,47 +220,80 @@ namespace Emulsion {
                 Emulsion.Application.gsettings.set_boolean("first-time", false);
             } else {
                 m.load_from_file.begin ();
+                if (palettestore.get_item(0) == null) {
+                    palette_label.set_visible(false);
+                    palette_stack.set_visible_child_name ("palempty");
+                    palette_hlabel.set_text("Emulsion");
+                } else {
+                    palette_label.set_visible(true);
+                    palette_stack.set_visible_child_name ("palfull");
+                    palette_hlabel.set_text("");
+                }
             }
 
             add_palette_button.clicked.connect (() => {
+                palette_stack.set_visible_child_name ("palfull");
+                palette_label.set_visible(true);
+                palette_hlabel.set_text("");
+
                 var rand = new GLib.Rand ();
                 string[] n = {};
 
-                for (int i = 0; i <= rand.int_range (1, 16); i++) {
+                for (int i = 0; i <= rand.int_range (1, 8); i++) {
                     var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     n += rc;
                 }
 
                 var a = new PaletteInfo ();
-                a.name = "New Palette";
+                a.name = "New Palette " + "%d".printf(uid_counter++);
                 a.colors = n;
 
                 palettestore.append (a);
             });
 
-            this.set_size_request (360, 500);
+            add_color_button.clicked.connect (() => {
+                var rand = new GLib.Rand ();
+                var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
+
+                var a = new ColorInfo ();
+
+                uint i, n = palettestore.get_n_items ();
+                for (i = 0; i < n; i++) {
+                    var pitem = palettestore.get_item (i);
+                    a.uid = ((PaletteInfo)pitem).name;
+
+                    if (a.uid == ((PaletteInfo)pitem).name) {
+                        m.save_palettes.begin (palettestore);
+                        color_fb.queue_draw ();
+                        palette_fb.queue_draw ();
+                    }
+                }
+
+                a.name = rc;
+                a.color = rc;
+
+                colorstore.append (a);
+                color_fb.queue_draw ();
+                palette_fb.queue_draw ();
+            });
+
+            this.set_size_request (360, 360);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
 		}
 
-	    void delete_palette (Gtk.Widget widget, string action, GLib.Variant param) {
-	        var selfe = widget as MainWindow;
-            selfe.palettestore.remove (param.get_uint32());
+	    public void delete_palette () {
+            palettestore.remove (palette_model.selected);
+
+            if (palettestore.get_item(0) == null) {
+                palette_stack.set_visible_child_name ("palempty");
+                palette_label.set_visible(false);
+                palette_hlabel.set_text("Emulsion");
+            }
         }
 
-        [GtkCallback]
-        private GLib.Variant p_pos (uint32 pos) {
-            return new GLib.Variant.uint32 (pos);
-        }
-
-        void delete_color (Gtk.Widget widget, string action, GLib.Variant param) {
-            var selfe = widget as MainWindow;
-            selfe.colorstore.remove (param.get_uint32());
-        }
-
-        [GtkCallback]
-        private GLib.Variant c_pos (uint pos) {
-            return new GLib.Variant.uint32 (pos);
+        public void delete_color () {
+            colorstore.remove (color_model.selected);
         }
 
         public void action_keys () {

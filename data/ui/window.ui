@@ -30,6 +30,9 @@
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="palette_hlabel">
+                        <style>
+                          <class name="title"/>
+                        </style>
                       </object>
                     </child>
                     <child type="end">
@@ -94,6 +97,15 @@
                         </style>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkButton" id="add_color_button">
+                        <property name="icon-name">list-add-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </property>
               </object>
@@ -128,6 +140,7 @@
         <child>
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
+            <property name="transition-type">crossfade</property>
             <style>
               <class name="view"/>
             </style>
@@ -135,44 +148,67 @@
               <object class="GtkStackPage">
                 <property name="name">palbody</property>
                 <property name="child">
-                      <object class="GtkBox" id="palette_box">
+                  <object class="GtkBox" id="palette_box">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkBox" id="palette_label_box">
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="palette_label_box">
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkLabel" id="palette_label">
-                                <property name="halign">start</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-start">30</property>
-                                <property name="margin-bottom">20</property>
-                                <property name="label" translatable="true">Palettes</property>
-                                <style>
-                                  <class name="title-1"/>
-                                </style>
-                              </object>
-                            </child>
+                          <object class="GtkLabel" id="palette_label">
+                            <property name="halign">start</property>
+                            <property name="margin-top">30</property>
+                            <property name="margin-start">30</property>
+                            <property name="margin-bottom">20</property>
+                            <property name="label" translatable="true">Palettes</property>
                             <style>
-                              <class name="title-box"/>
+                              <class name="title-1"/>
                             </style>
                           </object>
                         </child>
+                        <style>
+                          <class name="title-box"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="palette_window">
+                        <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="palette_window">
+                          <object class="GtkStack" id="palette_stack">
                             <property name="vexpand">1</property>
+                            <property name="transition-type">crossfade</property>
+                            <style>
+                              <class name="view"/>
+                            </style>
                             <child>
-                            <object class="GtkGridView" id="palette_fb">
-                              <property name="min-columns">1</property>
-                              <property name="max-columns">4</property>
-                              <property name="margin-start">20</property>
-                              <property name="margin-end">20</property>
-                              <property name="model">
-                                <object class="GtkSingleSelection" id="palette_model">
-                                </object>
-                              </property>
-                              <property name="factory">
-                                <object class="GtkBuilderListItemFactory" id="palette_factory">
-                                  <property name="bytes"><![CDATA[
+                              <object class="GtkStackPage">
+                                <property name="name">palempty</property>
+                                <property name="child">
+                                  <object class="AdwStatusPage" id="placeholder">
+                                    <property name="valign">center</property>
+                                    <property name="icon-name">rgb-symbolic</property>
+                                    <property name="title" translatable="yes">No Palettes</property>
+                                    <property name="description" translatable="yes">Add a palette with the + button.</property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="name">palfull</property>
+                                <property name="child">
+                                  <object class="GtkGridView" id="palette_fb">
+                                    <property name="min-columns">1</property>
+                                    <property name="max-columns">4</property>
+                                    <property name="margin-start">20</property>
+                                    <property name="margin-end">20</property>
+                                    <property name="model">
+                                      <object class="GtkSingleSelection" id="palette_model">
+                                      </object>
+                                    </property>
+                                    <property name="factory">
+                                      <object class="GtkBuilderListItemFactory" id="palette_factory">
+                                        <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="GtkListItem">
@@ -210,12 +246,7 @@
             <child>
               <object class="GtkButton" id="palette_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">delete_palette</property>
-                <binding name="action-target">
-                  <closure type="GVariant" function="p_pos">
-                    <lookup name="item">GtkListItem</lookup>
-                  </closure>
-                </binding>
+                <property name="action-name">win.delete_palette</property>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
@@ -228,9 +259,13 @@
     </property>
   </template>
 </interface>
-                                    ]]></property>
+                                            ]]></property>
+                                          </object>
+                                        </property>
+                                      </object>
+                                    </property>
                                   </object>
-                                </property>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -318,12 +353,7 @@
             <child>
               <object class="GtkButton" id="color_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">delete_color</property>
-                <binding name="action-target">
-                  <closure type="GVariant" function="c_pos">
-                    <lookup name="item">GtkListItem</lookup>
-                  </closure>
-                </binding>
+                <property name="action-name">win.delete_color</property>
                 <style>
                   <class name="header-button"/>
                   <class name="flat"/>
