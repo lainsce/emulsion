@@ -1,8 +1,9 @@
 [Desktop Entry]
-Name=io.github.lainsce.Emulsion
+Name=Emulsion
 Exec=io.github.lainsce.Emulsion
 Icon=@icon@
+Keywords=color;palette;library;hue;swatch;
 Terminal=false
 Type=Application
-Categories=GTK;
 StartupNotify=true
+Categories=GTK;Utility;
