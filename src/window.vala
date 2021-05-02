@@ -144,22 +144,16 @@ namespace Emulsion {
                 color_fb.grab_focus ();
 
                 int j = 0;
-                uint i, n = palettestore.get_n_items ();
-                for (i = 0; i < n; i++) {
-                    var item = palettestore.get_item (pos);
-
-                    colorstore.remove_all ();
-
-                    for (j = 0; j < ((PaletteInfo)item).colors.size; j++) {
-                        var a = new ColorInfo ();
-                        var arrco = ((PaletteInfo)item).colors.to_array();
-                        a.name = arrco[j];
-                        a.color = arrco[j];
-                        a.uid = ((PaletteInfo)item).palname;
-                        colorstore.append (a);
-                    }
-                    color_label.set_text(((PaletteInfo)item).palname);
+                var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
+                colorstore.remove_all ();
+                for (j = 0; j < arrco.length; j++) {
+                    var a = new ColorInfo ();
+                    a.name = arrco[j];
+                    a.color = arrco[j];
+                    a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
+                    colorstore.append (a);
                 }
+                color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
             });
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));
@@ -181,10 +175,8 @@ namespace Emulsion {
 
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);
-
                 var item = colorstore.get_item (pos);
                 cep.color_info = ((ColorInfo)item);
-
                 Gtk.Allocation alloc;
                 color_fb.get_focus_child ().get_allocation (out alloc);
                 cep.set_pointing_to (alloc);
@@ -194,27 +186,21 @@ namespace Emulsion {
                 cep.closed.connect (() => {
                     colorstore.remove (pos);
                     colorstore.insert (pos, cep.color_info);
-
                     int j;
-                    uint i, n = palettestore.get_n_items ();
-                    for (i = 0; i < n; i++) {
-                        var pitem = palettestore.get_item (i);
-
-                        var arrco = ((PaletteInfo)pitem).colors.to_array();
-                        for (j = 0; j < arrco.length; j++) {
-                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
-                                if (arrco[j] != ((ColorInfo)item).color) {
-                                    ((PaletteInfo)pitem).colors.remove (arrco[pos]);
-                                    ((PaletteInfo)pitem).colors.add (cep.color_info.color);
-                                    m.save_palettes.begin (palettestore);
-                                    color_fb.queue_draw ();
-                                    palette_fb.queue_draw ();
-                                }
+                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
+                    for (j = 0; j < arrco.length; j++) {
+                        if (((ColorInfo)item).uid == ((PaletteInfo)palettestore.get_item (pos)).palname) {
+                            if (arrco[j] != ((ColorInfo)item).color) {
+                                ((PaletteInfo)palettestore.get_item (pos)).colors.remove (arrco[pos]);
+                                ((PaletteInfo)palettestore.get_item (pos)).colors.add (cep.color_info.color);
                             }
                         }
                     }
+                    m.save_palettes.begin (palettestore);
+                    color_fb.queue_draw ();
+                    palette_fb.queue_draw ();
                 });
-
+                m.save_palettes.begin (palettestore);
                 color_fb.queue_draw ();
                 palette_fb.queue_draw ();
             });
@@ -384,14 +370,6 @@ namespace Emulsion {
         }
 
         void populate_palettes_view () {
-            var a = new PaletteInfo ();
-            a.palname = "Flat";
-            string[] ar = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
-            a.colors = new Gee.TreeSet<string> ();
-            a.colors.add_all_array (ar);
-
-            palettestore.append (a);
-
             var b = new PaletteInfo ();
             b.palname = "GNOME";
             string[] br = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
@@ -399,22 +377,6 @@ namespace Emulsion {
             b.colors.add_all_array (br);
 
             palettestore.append (b);
-
-            var c = new PaletteInfo ();
-            c.palname = "Sandy";
-            string[] cr = {"#f6efdc", "#dabab1", "#bacaba"};
-            c.colors = new Gee.TreeSet<string> ();
-            c.colors.add_all_array (cr);
-
-            palettestore.append (c);
-
-            var d = new PaletteInfo ();
-            d.palname = "Game Boy";
-            string[] dr = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
-            d.colors = new Gee.TreeSet<string> ();
-            d.colors.add_all_array (dr);
-
-            palettestore.append (d);
 
             var e = new PaletteInfo ();
             e.palname = "Pico-8";
@@ -426,14 +388,6 @@ namespace Emulsion {
 
             palettestore.append (e);
 
-            var f = new PaletteInfo ();
-            f.palname = "Monochroma";
-            string[] fr = {"#171219", "#f2fbeb"};
-            f.colors = new Gee.TreeSet<string> ();
-            f.colors.add_all_array (fr);
-
-            palettestore.append (f);
-
             var g = new PaletteInfo ();
             g.palname = "Endesga 8";
             string[] gr = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
@@ -443,14 +397,13 @@ namespace Emulsion {
 
             palettestore.append (g);
 
-            var h = new PaletteInfo ();
-            h.palname = "CGA";
-            string[] hr = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
-                          "#AA00AA", "#FFFFFF"};
-            h.colors = new Gee.TreeSet<string> ();
-            h.colors.add_all_array (hr);
+            var f = new PaletteInfo ();
+            f.palname = "Monochroma";
+            string[] fr = {"#171219", "#f2fbeb"};
+            f.colors = new Gee.TreeSet<string> ();
+            f.colors.add_all_array (fr);
 
-            palettestore.append (h);
+            palettestore.append (f);
         }
 	}
 }
