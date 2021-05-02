@@ -141,6 +141,7 @@ namespace Emulsion {
                 main_stack.set_visible_child_name ("colbody");
                 search_revealer.set_reveal_child (false);
                 search_button.set_active (false);
+                color_fb.grab_focus ();
 
                 int j = 0;
                 uint i, n = palettestore.get_n_items ();
