@@ -211,6 +211,14 @@
                                         <property name="model">
                                           <object class="GtkFilterListModel" id="palette_filter_model">
                                             <property name="incremental">1</property>
+                                            <property name="filter">
+                                              <object class="GtkStringFilter">
+                                                <property name="expression">
+                                                  <lookup name="palname" type="EmulsionPaletteInfo"></lookup>
+                                                </property>
+                                                <property name="search" bind-source="searchentry" bind-property="text"/>
+                                              </object>
+                                            </property>
                                           </object>
                                         </property>
                                       </object>

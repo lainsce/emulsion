@@ -72,7 +72,6 @@ namespace Emulsion {
 	    public GLib.ListStore colorstore;
 	    public Manager m;
 	    public ColorInfo win_color_info;
-        private Gtk.CustomFilter palette_filter;
 	    int uid_counter = 1;
 
 	    public signal void clicked ();
@@ -135,11 +134,7 @@ namespace Emulsion {
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.MINIMUM;
-
-            palette_filter = new Gtk.CustomFilter (filter_palettes);
-            palette_filter.bind_property ("search", searchentry, "text", 0);
             palette_filter_model.set_model (palettestore);
-            palette_filter_model.set_filter (palette_filter);
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
@@ -315,18 +310,6 @@ namespace Emulsion {
             this.set_size_request (360, 360);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
-		}
-
-		bool filter_palettes () {
-		    var search = searchentry.get_text ();
-		    if (search.length > 0) {
-		        uint i, n = palettestore.get_n_items ();
-                for (i = 0; i < n; i++) {
-                    var pitem = palettestore.get_item (i);
-                    return ((PaletteInfo)pitem).palname.contains (search);
-                }
-            }
-            return true;
 		}
 
 	    public void delete_palette () {
