@@ -135,6 +135,14 @@ stackswitcher button:last-child {
   border-bottom: 1px solid alpha(white, 0.10);
 }
 
+.title-box entry {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid alpha(white, 0.10);
+}
+
 .search-box {
   background: shade(@theme_base_color, 0.66);
   border-bottom: 1px solid alpha(white, 0.10);

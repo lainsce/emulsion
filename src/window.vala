@@ -46,7 +46,7 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Label palette_label;
 	    [GtkChild]
-	    unowned Gtk.Label color_label;
+	    unowned Gtk.Entry color_label;
 	    [GtkChild]
 	    unowned Gtk.Stack header_stack;
 	    [GtkChild]
@@ -162,7 +162,7 @@ namespace Emulsion {
                         a.uid = ((PaletteInfo)item).palname;
                         colorstore.append (a);
                     }
-                    color_label.label = ((PaletteInfo)item).palname;
+                    color_label.set_text(((PaletteInfo)item).palname);
                 }
             });
 
@@ -170,6 +170,18 @@ namespace Emulsion {
             color_model.set_model (colorstore);
             color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+
+            color_label.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,"document-edit-symbolic");
+            color_label.set_icon_activatable (Gtk.EntryIconPosition.SECONDARY, true);
+            color_label.set_icon_tooltip_text (Gtk.EntryIconPosition.SECONDARY, _("Set New Palette Name"));
+            color_label.activate.connect (() => {
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                ((PaletteInfo)pitem).palname = color_label.get_text ();
+            });
+            color_label.icon_press.connect (() => {
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                ((PaletteInfo)pitem).palname = color_label.get_text ();
+            });
 
             color_fb.activate.connect ((pos) => {
                 var cep = new ColorEditPopover (this);

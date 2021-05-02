@@ -294,7 +294,7 @@
                           <object class="GtkBox" id="color_label_box">
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkLabel" id="color_label">
+                              <object class="GtkEntry" id="color_label">
                                 <property name="halign">start</property>
                                 <property name="margin-top">30</property>
                                 <property name="margin-start">30</property>
