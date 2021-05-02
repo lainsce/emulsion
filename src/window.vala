@@ -117,6 +117,7 @@ namespace Emulsion {
 
                 app.set_accels_for_action (ACTION_PREFIX + action, accels_array);
             }
+            app.set_accels_for_action("app.quit", {"<Ctrl>q"});
 
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/io/github/lainsce/Emulsion/app.css");
