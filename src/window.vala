@@ -39,7 +39,7 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.SearchEntry searchentry;
 	    [GtkChild]
-	    unowned Gtk.StringFilter palette_filter;
+	    unowned Gtk.FilterListModel palette_filter_model;
 
 	    [GtkChild]
 	    unowned Gtk.Label palette_hlabel;
@@ -72,7 +72,7 @@ namespace Emulsion {
 	    public GLib.ListStore colorstore;
 	    public Manager m;
 	    public ColorInfo win_color_info;
-
+        private Gtk.CustomFilter palette_filter;
 	    int uid_counter = 1;
 
 	    public signal void clicked ();
@@ -101,9 +101,6 @@ namespace Emulsion {
 		}
 
 		static construct {
-		    // TODO: Figure out what to do with these so they work.
-		    //       There's abysmal demo/examples count online.
-
 		    install_action ("win.delete_palette", null, (Gtk.WidgetActionActivateFunc)delete_palette);
             install_action ("win.delete_color", null, (Gtk.WidgetActionActivateFunc)delete_color);
 		}
@@ -136,10 +133,13 @@ namespace Emulsion {
             menu_button2.menu_model = (MenuModel)builder.get_object ("menu");
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
-            palette_model.set_model (palettestore);
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.MINIMUM;
-            palette_filter.bind_property ("search", searchentry, "text", BindingFlags.BIDIRECTIONAL);
+
+            palette_filter = new Gtk.CustomFilter (filter_palettes);
+            palette_filter.bind_property ("search", searchentry, "text", 0);
+            palette_filter_model.set_model (palettestore);
+            palette_filter_model.set_filter (palette_filter);
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
@@ -159,10 +159,10 @@ namespace Emulsion {
                         var arrco = ((PaletteInfo)item).colors.to_array();
                         a.name = arrco[j];
                         a.color = arrco[j];
-                        a.uid = ((PaletteInfo)item).name;
+                        a.uid = ((PaletteInfo)item).palname;
                         colorstore.append (a);
                     }
-                    color_label.label = ((PaletteInfo)item).name;
+                    color_label.label = ((PaletteInfo)item).palname;
                 }
             });
 
@@ -194,7 +194,7 @@ namespace Emulsion {
 
                         var arrco = ((PaletteInfo)pitem).colors.to_array();
                         for (j = 0; j < arrco.length; j++) {
-                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).name) {
+                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
                                 if (arrco[j] != ((ColorInfo)item).color) {
                                     ((PaletteInfo)pitem).colors.remove (arrco[pos]);
                                     ((PaletteInfo)pitem).colors.add (cep.color_info.color);
@@ -227,6 +227,8 @@ namespace Emulsion {
             });
 
             colorstore.items_changed.connect (() => {
+                color_fb.queue_draw ();
+                palette_fb.queue_draw ();
                 m.save_palettes.begin (palettestore);
             });
 
@@ -267,7 +269,7 @@ namespace Emulsion {
                 }
 
                 var a = new PaletteInfo ();
-                a.name = "New Palette " + "%d".printf(uid_counter++);
+                a.palname = "New Palette " + "%d".printf(uid_counter++);
                 a.colors = new Gee.TreeSet<string> ();
                 a.colors.add_all_array (n);
 
@@ -283,11 +285,11 @@ namespace Emulsion {
                 a.color = rc;
 
                 var pitem = palettestore.get_item (palette_model.get_selected ());
-                a.uid = ((PaletteInfo)pitem).name;
+                a.uid = ((PaletteInfo)pitem).palname;
 
-                if (a.uid == ((PaletteInfo)pitem).name) {
+                if (a.uid == ((PaletteInfo)pitem).palname) {
                     var arrco = ((PaletteInfo)pitem).colors.to_array();
-                    for (j = 0; j <= arrco.length; j++) {
+                    for (int j = 0; j <= arrco.length; j++) {
                         ((PaletteInfo)pitem).colors.add(a.color);
                     }
                 }
@@ -301,6 +303,18 @@ namespace Emulsion {
             this.set_size_request (360, 360);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
+		}
+
+		bool filter_palettes () {
+		    var search = searchentry.get_text ();
+		    if (search.length > 0) {
+		        uint i, n = palettestore.get_n_items ();
+                for (i = 0; i < n; i++) {
+                    var pitem = palettestore.get_item (i);
+                    return ((PaletteInfo)pitem).palname.contains (search);
+                }
+            }
+            return true;
 		}
 
 	    public void delete_palette () {
@@ -320,7 +334,7 @@ namespace Emulsion {
             var arrco = ((PaletteInfo)pitem).colors.to_array();
 
             if (arrco[0] != null) {
-                if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).name) {
+                if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).palname) {
                     if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
                         ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
                     }
@@ -375,7 +389,7 @@ namespace Emulsion {
 
         void populate_palettes_view () {
             var a = new PaletteInfo ();
-            a.name = "Flat";
+            a.palname = "Flat";
             string[] ar = {"#e65353", "#e6b453", "#94e692", "#53e6c3", "#6b89d4"};
             a.colors = new Gee.TreeSet<string> ();
             a.colors.add_all_array (ar);
@@ -383,7 +397,7 @@ namespace Emulsion {
             palettestore.append (a);
 
             var b = new PaletteInfo ();
-            b.name = "GNOME";
+            b.palname = "GNOME";
             string[] br = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
             b.colors = new Gee.TreeSet<string> ();
             b.colors.add_all_array (br);
@@ -391,7 +405,7 @@ namespace Emulsion {
             palettestore.append (b);
 
             var c = new PaletteInfo ();
-            c.name = "Sandy";
+            c.palname = "Sandy";
             string[] cr = {"#f6efdc", "#dabab1", "#bacaba"};
             c.colors = new Gee.TreeSet<string> ();
             c.colors.add_all_array (cr);
@@ -399,7 +413,7 @@ namespace Emulsion {
             palettestore.append (c);
 
             var d = new PaletteInfo ();
-            d.name = "Game Boy";
+            d.palname = "Game Boy";
             string[] dr = {"#0f380f", "#306230", "#8bac0f", "#9bbc0f"};
             d.colors = new Gee.TreeSet<string> ();
             d.colors.add_all_array (dr);
@@ -407,7 +421,7 @@ namespace Emulsion {
             palettestore.append (d);
 
             var e = new PaletteInfo ();
-            e.name = "Pico-8";
+            e.palname = "Pico-8";
             string[] er = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
                           "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
                           "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
@@ -417,7 +431,7 @@ namespace Emulsion {
             palettestore.append (e);
 
             var f = new PaletteInfo ();
-            f.name = "Monochroma";
+            f.palname = "Monochroma";
             string[] fr = {"#171219", "#f2fbeb"};
             f.colors = new Gee.TreeSet<string> ();
             f.colors.add_all_array (fr);
@@ -425,7 +439,7 @@ namespace Emulsion {
             palettestore.append (f);
 
             var g = new PaletteInfo ();
-            g.name = "Endesga 8";
+            g.palname = "Endesga 8";
             string[] gr = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
                           "#7b53ad", "#fdfdf8"};
             g.colors = new Gee.TreeSet<string> ();
@@ -434,7 +448,7 @@ namespace Emulsion {
             palettestore.append (g);
 
             var h = new PaletteInfo ();
-            h.name = "CGA";
+            h.palname = "CGA";
             string[] hr = {"#000000", "#AA0000", "#AAAA00", "#00AA00", "#0000AA", "#00AAAA",
                           "#AA00AA", "#FFFFFF"};
             h.colors = new Gee.TreeSet<string> ();

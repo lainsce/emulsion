@@ -39,7 +39,7 @@ namespace Emulsion {
             for (i = 0; i < n; i++) {
                 builder.begin_array ();
                 var item = liststore.get_item (i);
-                builder.add_string_value (((PaletteInfo)item).name);
+                builder.add_string_value (((PaletteInfo)item).palname);
                 builder.begin_array ();
                 foreach (string col in ((PaletteInfo)item).colors) {
                     builder.add_string_value (col);
@@ -92,7 +92,7 @@ namespace Emulsion {
                             arrco += color.get_string_element(b);
                         });
 
-                        a.name = name;
+                        a.palname = name;
                         a.colors = new Gee.TreeSet<string> ();
                         a.colors.add_all_array (arrco);
                         win.palettestore.append (a);

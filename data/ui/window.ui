@@ -209,15 +209,8 @@
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
                                         <property name="model">
-                                          <object class="GtkFilterListModel">
+                                          <object class="GtkFilterListModel" id="palette_filter_model">
                                             <property name="incremental">1</property>
-                                            <property name="filter">
-                                              <object class="GtkStringFilter" id="palette_filter">
-                                                <property name="expression">
-                                                  <lookup type="EmulsionPaletteInfo" name="name"/>
-                                                </property>
-                                              </object>
-                                            </property>
                                           </object>
                                         </property>
                                       </object>
@@ -253,7 +246,7 @@
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
-                  <lookup type="EmulsionPaletteInfo" name="name">
+                  <lookup type="EmulsionPaletteInfo" name="palname">
                       <lookup name="item">GtkListItem</lookup>
                   </lookup>
                 </binding>

@@ -4,9 +4,7 @@ namespace Emulsion {
          * uid : string of the Palette's name e.g. "GNOME";
          * name : string of the Color name, in hexcode, e.g. "#FFFFFF";
          * color : string of the Color color, in hexcode, e.g. "#FFFFFF";
-         *
          */
-
         public string uid { get; set; }
         public string name { get; set; }
         public string color { get; set; }
