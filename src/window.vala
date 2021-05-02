@@ -37,8 +37,6 @@ namespace Emulsion {
         [GtkChild]
 	    unowned Gtk.SearchBar searchbar;
 	    [GtkChild]
-	    unowned Gtk.SearchEntry searchentry;
-	    [GtkChild]
 	    unowned Gtk.FilterListModel palette_filter_model;
 
 	    [GtkChild]
@@ -370,40 +368,51 @@ namespace Emulsion {
         }
 
         void populate_palettes_view () {
-            var b = new PaletteInfo ();
-            b.palname = "GNOME";
-            string[] br = {"#e01b24", "#ff7800", "#f6d32d", "#33d17a","#3584e4", "#9141ac"};
-            b.colors = new Gee.TreeSet<string> ();
-            b.colors.add_all_array (br);
-
-            palettestore.append (b);
-
-            var e = new PaletteInfo ();
-            e.palname = "Pico-8";
-            string[] er = {"#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F",
-                          "#C2C3C7", "#FFF1E8", "#FF004D", "#FFA300", "#FFEC27", "#00E436",
-                          "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"};
-            e.colors = new Gee.TreeSet<string> ();
-            e.colors.add_all_array (er);
-
-            palettestore.append (e);
-
             var g = new PaletteInfo ();
-            g.palname = "Endesga 8";
-            string[] gr = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
-                          "#7b53ad", "#fdfdf8"};
+            g.palname = "GNOME HIG";
+            string[] gr = {"#000000", "#241f31", "#3d3846", "#5e5c64", "#77767b",
+                           "#a51d2d", "#c01c28", "#e01b24", "#ed333b", "#f66151",
+                           "#63452c", "#865e3c", "#986a44", "#b5835a", "#cdab8f",
+                           "#c64600", "#e66100", "#ff7800", "#ffa348", "#ffbe6f",
+                           "#e5a50a", "#f5c211", "#f6d32d", "#f8e45c", "#f9f06b",
+                           "#26a269", "#2ec27e", "#33d17a", "#57e389", "#8ff0a4",
+                           "#1a5fb4", "#1c71d8", "#3584e4", "#62a0ea", "#99c1f1",
+                           "#613583", "#813d9c", "#9141ac", "#c061cb", "#dc8add",
+                           "#9a9996", "#c0bfbc", "#deddda", "#f6f5f4", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
-
             palettestore.append (g);
 
-            var f = new PaletteInfo ();
-            f.palname = "Monochroma";
-            string[] fr = {"#171219", "#f2fbeb"};
-            f.colors = new Gee.TreeSet<string> ();
-            f.colors.add_all_array (fr);
+            var p = new PaletteInfo ();
+            p.palname = "Pico-8";
+            string[] pr = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
+                          "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
+                          "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
+            p.colors = new Gee.TreeSet<string> ();
+            p.colors.add_all_array (pr);
+            palettestore.append (p);
 
-            palettestore.append (f);
+            var e = new PaletteInfo ();
+            e.palname = "Endesga 8";
+            string[] er = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
+                          "#7b53ad", "#fdfdf8"};
+            e.colors = new Gee.TreeSet<string> ();
+            e.colors.add_all_array (er);
+            palettestore.append (e);
+
+            var d = new PaletteInfo ();
+            d.palname = "Dot Matrix Game";
+            string[] dr = {"#081820", "#346856", "#88c070", "#e0f8d0"};
+            d.colors = new Gee.TreeSet<string> ();
+            d.colors.add_all_array (dr);
+            palettestore.append (d);
+
+            var m = new PaletteInfo ();
+            m.palname = "Monochroma";
+            string[] mr = {"#171219", "#f2fbeb"};
+            m.colors = new Gee.TreeSet<string> ();
+            m.colors.add_all_array (mr);
+            palettestore.append (m);
         }
 	}
 }
