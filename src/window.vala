@@ -185,29 +185,28 @@ namespace Emulsion {
                 cep.closed.connect (() => {
                     colorstore.remove (pos);
                     colorstore.insert (pos, cep.color_info);
+
                     int j;
-                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
-                    for (j = 0; j < arrco.length; j++) {
-                        if (((ColorInfo)item).uid == ((PaletteInfo)palettestore.get_item (pos)).palname) {
-                            if (arrco[j] != ((ColorInfo)item).color) {
-                                ((PaletteInfo)palettestore.get_item (pos)).colors.remove (arrco[pos]);
-                                ((PaletteInfo)palettestore.get_item (pos)).colors.add (cep.color_info.color);
+                    uint i, n = palettestore.get_n_items ();
+                    for (i = 0; i < n; i++) {
+                        var pitem = palettestore.get_item (i);
+
+                        var arrco = ((PaletteInfo)pitem).colors.to_array();
+                        for (j = 0; j < arrco.length; j++) {
+                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
+                                if (arrco[j] != ((ColorInfo)item).color) {
+                                    ((PaletteInfo)pitem).colors.remove (arrco[pos]);
+                                    ((PaletteInfo)pitem).colors.add (cep.color_info.color);
+                                }
                             }
                         }
                     }
-                    m.save_palettes.begin (palettestore);
-                    color_fb.queue_draw ();
-                    palette_fb.queue_draw ();
                 });
-                m.save_palettes.begin (palettestore);
-                color_fb.queue_draw ();
-                palette_fb.queue_draw ();
             });
 
             back_button.clicked.connect (() => {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
-                palette_fb.queue_draw ();
             });
 
             searchbar.set_key_capture_widget (this);
@@ -216,6 +215,8 @@ namespace Emulsion {
             });
 
             palettestore.items_changed.connect (() => {
+                color_fb.queue_draw ();
+                palette_fb.queue_draw ();
                 m.save_palettes.begin (palettestore);
             });
 
@@ -286,11 +287,7 @@ namespace Emulsion {
                         ((PaletteInfo)pitem).colors.add(a.color);
                     }
                 }
-
-                m.save_palettes.begin (palettestore);
                 colorstore.append (a);
-                color_fb.queue_draw ();
-                palette_fb.queue_draw ();
             });
 
             this.set_size_request (360, 360);
@@ -318,19 +315,15 @@ namespace Emulsion {
                 if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).palname) {
                     if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
                         ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
+                        colorstore.remove (color_model.get_selected());
                     }
                 }
-                colorstore.remove (color_model.get_selected());
             }
             if (colorstore.get_item(0) == null) {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
                 palettestore.remove (palette_model.selected);
             }
-
-            m.save_palettes.begin (palettestore);
-            color_fb.queue_draw ();
-            palette_fb.queue_draw ();
         }
 
         public void action_keys () {
