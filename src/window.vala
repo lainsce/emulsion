@@ -155,6 +155,8 @@ namespace Emulsion {
                     colorstore.append (a);
                 }
                 color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
+                color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
+                color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
             });
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));

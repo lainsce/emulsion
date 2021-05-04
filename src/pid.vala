@@ -22,17 +22,6 @@ namespace Emulsion {
         const string COLORED_SURFACE = """
             * {
                 background: %s;
-                margin-top: 12px;
-                margin-bottom: 12px;
-                outline: 1px solid alpha(white, 0.25);
-	            outline-offset: -1px;
-            }
-
-            *:first-child {
-                border-radius: 9999px 0 0 9999px;
-            }
-            *:last-child {
-                border-radius: 0 9999px 9999px 0;
             }
         """;
 
@@ -51,7 +40,6 @@ namespace Emulsion {
         private Gtk.Image image;
         private File file;
         private Utils.Palette palette;
-        int i = 0;
 
         public PaletteImportDialog (MainWindow win) {
             this.win = win;
@@ -60,9 +48,16 @@ namespace Emulsion {
         construct {
             image = new Gtk.Image ();
             image.halign = Gtk.Align.CENTER;
-            image.height_request = 300;
+            image.height_request = 200;
             image.width_request = 350;
+            image.set_margin_bottom (12);
+            image.set_margin_top (12);
             palette_drag_place.insert_child_after (image, file_label);
+            image.get_style_context ().add_class ("palette");
+
+            color_box.get_style_context ().add_class ("palette");
+            color_box.set_overflow(Gtk.Overflow.HIDDEN);
+            color_box.set_margin_bottom (12);
 
             cancel_button.clicked.connect (() => {
                 this.dispose ();
@@ -111,10 +106,8 @@ namespace Emulsion {
                             file = null;
                             file = File.new_for_uri (chooser.get_file ().get_uri ());
 						    var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
-                            var new_width = pixbuf.width / (pixbuf.height / image.get_allocated_height ());
 
-                            pixbuf = pixbuf.scale_simple (new_width, image.get_allocated_height (), Gdk.InterpType.BILINEAR);
-                            image.width_request = pixbuf.width/2;
+                            pixbuf = pixbuf.scale_simple (image.get_allocated_width ()*4, image.get_allocated_height ()*4, Gdk.InterpType.BILINEAR);
                             image.set_from_pixbuf (pixbuf);
 
                             var palette = new Utils.Palette.from_pixbuf (pixbuf);
@@ -162,16 +155,12 @@ namespace Emulsion {
             box.set_hexpand (false);
             box.tooltip_text = tooltip;
 
-            try {
-                var provider = new Gtk.CssProvider ();
-                var context = box.get_style_context ();
-                Gdk.RGBA rgba = {swatch.R, swatch.G, swatch.B, swatch.A};
-                var css = COLORED_SURFACE.printf (rgba.to_string ());
-                provider.load_from_data (css.data);
-                context.add_provider (provider, 9999);
-            } catch (Error e) {
-                warning ("Setting swatch color failed: %s", e.message);
-            }
+            var provider = new Gtk.CssProvider ();
+            var context = box.get_style_context ();
+            Gdk.RGBA rgba = {swatch.R, swatch.G, swatch.B, swatch.A};
+            var css = COLORED_SURFACE.printf (rgba.to_string ());
+            provider.load_from_data (css.data);
+            context.add_provider (provider, 9999);
 
             color_box.append (box);
         }

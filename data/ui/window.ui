@@ -313,7 +313,6 @@
                             <child>
                               <object class="GtkEntry" id="color_label">
                                 <property name="halign">start</property>
-                                <property name="width-chars">11</property>
                                 <property name="margin-top">30</property>
                                 <property name="margin-start">30</property>
                                 <property name="margin-bottom">20</property>
