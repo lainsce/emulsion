@@ -18,7 +18,7 @@
  */
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/pid.ui")]
-    public class PaletteImportDialog : Gtk.Window {
+    public class PaletteImportDialog : Adw.Window {
         const string COLORED_SURFACE = """
             * {
                 background: %s;
@@ -28,16 +28,15 @@ namespace Emulsion {
         [GtkChild]
         unowned Gtk.Box color_box;
         [GtkChild]
-        unowned Gtk.Box palette_drag_place;
-        [GtkChild]
         unowned Gtk.Button ok_button;
         [GtkChild]
         unowned Gtk.Button cancel_button;
         [GtkChild]
+        unowned Gtk.Button image;
+        [GtkChild]
         unowned Gtk.Label file_label;
 
         private MainWindow win = null;
-        private Gtk.Image image;
         private File file;
         private Utils.Palette palette;
 
@@ -46,18 +45,14 @@ namespace Emulsion {
         }
 
         construct {
-            image = new Gtk.Image ();
-            image.halign = Gtk.Align.CENTER;
-            image.height_request = 200;
-            image.width_request = 350;
-            image.set_margin_bottom (12);
-            image.set_margin_top (12);
-            palette_drag_place.insert_child_after (image, file_label);
-            image.get_style_context ().add_class ("palette");
-
             color_box.get_style_context ().add_class ("palette");
             color_box.set_overflow(Gtk.Overflow.HIDDEN);
             color_box.set_margin_bottom (12);
+            color_box.set_visible (false);
+            file_label.set_visible (true);
+            image.set_sensitive (true);
+            image.set_margin_top (12);
+            ((Gtk.Image)image.get_child ()).set_pixel_size (64);
 
             cancel_button.clicked.connect (() => {
                 this.dispose ();
@@ -106,14 +101,21 @@ namespace Emulsion {
                             file = null;
                             file = File.new_for_uri (chooser.get_file ().get_uri ());
 						    var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
+                            pixbuf = pixbuf.scale_simple (((Gtk.Image)image.get_child ()).get_allocated_width (), ((Gtk.Image)image.get_child ()).get_allocated_height ()*3, Gdk.InterpType.BILINEAR);
+                            ((Gtk.Image)image.get_child ()).set_from_pixbuf (pixbuf);
 
-                            pixbuf = pixbuf.scale_simple (image.get_allocated_width ()*4, image.get_allocated_height ()*4, Gdk.InterpType.BILINEAR);
-                            image.set_from_pixbuf (pixbuf);
+                            image.set_sensitive (false);
+                            image.set_margin_top (0);
+                            ((Gtk.Image)image.get_child ()).set_pixel_size (256);
+                            image.get_style_context ().remove_class ("dim-label");
 
                             var palette = new Utils.Palette.from_pixbuf (pixbuf);
                             palette.generate_async.begin (() => {
                                 set_colors (palette);
                             });
+
+                            color_box.set_visible (true);
+                            file_label.set_visible (false);
                         } catch {
 
                         }

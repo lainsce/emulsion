@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="EmulsionPaletteImportDialog" parent="GtkWindow">
+  <requires lib="libadwaita" version="1.0"/>
+  <template class="EmulsionPaletteImportDialog" parent="AdwWindow">
     <property name="can-focus">0</property>
     <property name="title" translatable="yes"> </property>
     <property name="resizable">0</property>
@@ -9,72 +10,32 @@
     <property name="default-width">360</property>
     <property name="default-height">360</property>
     <property name="destroy-with-parent">1</property>
-    <style>
-      <class name="flat"/>
-    </style>
-    <property name="child">
-      <object class="GtkBox" id="palette_drag_place">
-        <property name="can-focus">0</property>
-        <property name="margin-start">12</property>
-        <property name="margin-end">12</property>
-        <property name="margin-top">6</property>
-        <property name="margin-bottom">6</property>
+    <child>
+      <object class="GtkBox">
         <property name="orientation">vertical</property>
+        <property name="visible">1</property>
         <child>
-          <object class="GtkLabel" id="file_label">
+          <object class="AdwHeaderBar">
             <property name="can-focus">0</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Select an image to retrieve colors:</property>
-            <property name="wrap">1</property>
-            <property name="ellipsize">end</property>
-            <attributes>
-              <attribute name="weight" value="semibold"></attribute>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="color_box">
-            <property name="vexpand">1</property>
-            <property name="hexpand">0</property>
-            <property name="halign">center</property>
-            <property name="can-focus">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="file_button">
-            <property name="can-focus">0</property>
-            <property name="valign">center</property>
-            <property name="halign">center</property>
-            <property name="margin-bottom">12</property>
-            <property name="width-request">64</property>
-            <property name="height-request">64</property>
-            <property name="icon-name">image-x-generic-symbolic</property>
-            <property name="tooltip-text" translatable="yes">Choose Image</property>
-            <signal name="clicked" handler="on_clicked" swapped="no"/>
+            <property name="valign">start</property>
+            <property name="visible">1</property>
+            <property name="show-end-title-buttons">0</property>
             <style>
-              <class name="circular"/>
+              <class name="flat-dialog"/>
             </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="button_box">
-            <property name="can-focus">0</property>
-            <property name="homogeneous">1</property>
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
-                <property name="receives-default">1</property>
-                <property name="halign">start</property>
+                <property name="visible">1</property>
                 <style>
                   <class name="text-button"/>
                 </style>
               </object>
             </child>
-            <child>
+            <child type="end">
               <object class="GtkButton" id="ok_button">
                 <property name="label" translatable="yes">Import Palette</property>
-                <property name="receives-default">1</property>
-                <property name="halign">end</property>
+                <property name="visible">1</property>
                 <style>
                   <class name="text-button"/>
                   <class name="suggested-action"/>
@@ -83,7 +44,57 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkBox" id="palette_drag_place">
+            <property name="can-focus">0</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-top">6</property>
+            <property name="margin-bottom">6</property>
+            <property name="orientation">vertical</property>
+            <child>
+            </child>
+            <child>
+              <object class="GtkLabel" id="file_label">
+                <property name="can-focus">0</property>
+                <property name="halign">center</property>
+                <property name="label" translatable="yes">Select an image to retrieve colors:</property>
+                <property name="wrap">1</property>
+                <property name="ellipsize">end</property>
+                <attributes>
+                  <attribute name="weight" value="semibold"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="image">
+                <property name="can-focus">0</property>
+                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="width-request">350</property>
+                <property name="height-request">200</property>
+                <property name="icon-name">image-x-generic-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Choose Image</property>
+                <signal name="clicked" handler="on_clicked" swapped="no"/>
+                <style>
+                  <class name="header-button"/>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="color_box">
+                <property name="vexpand">1</property>
+                <property name="hexpand">0</property>
+                <property name="halign">center</property>
+                <property name="can-focus">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
-    </property>
+    </child>
   </template>
 </interface>

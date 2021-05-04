@@ -46,6 +46,13 @@ headerbar.flat {
   border-bottom: 1px solid alpha(white, 0.10);
 }
 
+headerbar.flat-dialog {
+  background: @theme_bg_color;
+  transition: 100ms ease-in-out;
+  border-bottom: 1px solid transparent;
+}
+
+
 headerbar.flat:backdrop {
   background-image: none;
   background: @theme_base_color;
