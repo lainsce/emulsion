@@ -28,6 +28,8 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
 	    [GtkChild]
+	    unowned Gtk.Button import_palette_button;
+	    [GtkChild]
 	    unowned Gtk.Button add_color_button;
 	    [GtkChild]
 	    unowned Gtk.Button back_button;
@@ -202,6 +204,12 @@ namespace Emulsion {
                         }
                     }
                 });
+            });
+
+            import_palette_button.clicked.connect (() => {
+                var pid = new PaletteImportDialog (this);
+                pid.set_transient_for (this);
+                pid.show ();
             });
 
             back_button.clicked.connect (() => {

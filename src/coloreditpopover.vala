@@ -51,15 +51,15 @@ namespace Emulsion {
                  _color_info = value;
                 color.parse(_color_info.color);
 
-                red_entry.set_text ("%00.0f".printf(get_srgb(color.red)));
-                green_entry.set_text ("%00.0f".printf(get_srgb(color.green)));
-                blue_entry.set_text ("%00.0f".printf(get_srgb(color.blue)));
+                red_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.red)));
+                green_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.green)));
+                blue_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.blue)));
 
-                red_scale.set_value (get_srgb(color.red));
-                green_scale.set_value (get_srgb(color.green));
-                blue_scale.set_value (get_srgb(color.blue));
+                red_scale.set_value (Utils.get_srgb(color.red));
+                green_scale.set_value (Utils.get_srgb(color.green));
+                blue_scale.set_value (Utils.get_srgb(color.blue));
 
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
                 queue_draw ();
@@ -78,7 +78,7 @@ namespace Emulsion {
             red_scale.value_changed.connect (() => {
                 red_entry.set_text ("%00.0f".printf(red_scale.get_value ()));
                 color.red = (float)(double.parse(red_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -90,7 +90,7 @@ namespace Emulsion {
             green_scale.value_changed.connect (() => {
                 green_entry.set_text ("%00.0f".printf(green_scale.get_value ()));
                 color.green = (float)(double.parse(green_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -102,7 +102,7 @@ namespace Emulsion {
             blue_scale.value_changed.connect (() => {
                 blue_entry.set_text ("%00.0f".printf(blue_scale.get_value ()));
                 color.blue = (float)(double.parse(blue_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -113,7 +113,7 @@ namespace Emulsion {
 
             red_entry.activate.connect (() => {
                 color.red = (float)(double.parse(red_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -124,7 +124,7 @@ namespace Emulsion {
 
             green_entry.activate.connect (() => {
                 color.green = (float)(double.parse(green_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -135,7 +135,7 @@ namespace Emulsion {
 
             blue_entry.activate.connect (() => {
                 color.blue = (float)(double.parse(blue_entry.get_text ()) / 255);
-                hex_entry.set_text ("%s".printf(make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
 
@@ -152,20 +152,6 @@ namespace Emulsion {
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
             });
-        }
-
-        public double get_srgb(double c) {
-            if (c <= 0.03928) {
-                c = c / 12.92;
-                return c * 255.0;
-            } else {
-                Math.pow (((c + 0.055) / 1.055), 2.4);
-                return c * 255.0;
-            }
-        }
-
-        public string make_hex (float red, float green, float blue) {
-            return "#" + "%02x%02x%02x".printf ((uint)red, (uint)green, (uint)blue);
         }
     }
 }

@@ -5,6 +5,7 @@
     <file alias="window.ui">ui/window.ui</file>
     <file alias="menu.ui">ui/menu.ui</file>
     <file alias="cep.ui">ui/cep.ui</file>
+    <file alias="pid.ui">ui/pid.ui</file>
     <file alias="keys.ui">ui/keys.ui</file>
   </gresource>
 </gresources>

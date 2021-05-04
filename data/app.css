@@ -71,6 +71,13 @@ entry {
     transition: 100ms ease-in-out;
 }
 
+.circular {
+    background: alpha(@theme_fg_color, 0.1);
+    border: none;
+    box-shadow: none;
+    transition: 100ms ease-in-out;
+}
+
 .text-button {
     background: alpha(@theme_fg_color, 0.1);
     border: none;
@@ -89,12 +96,14 @@ entry {
 
 .header-button:hover,
 .text-button:hover,
+.circular:hover,
 .toggle:checked {
   background: alpha(@theme_fg_color, 0.2);
 }
 
 .header-button:active,
 .text-button:active,
+.circular:active,
 .toggle:active {
   background: alpha(@theme_fg_color, 0.05);
   box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
@@ -125,7 +134,6 @@ stackswitcher button:last-child {
 
 
 /* app */
-
 .view {
   background-color: shade(@theme_base_color, 0.5);
 }

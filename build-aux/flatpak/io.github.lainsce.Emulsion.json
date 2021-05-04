@@ -6,8 +6,9 @@
     "command" : "io.github.lainsce.Emulsion",
     "rename-icon" : "io.github.lainsce.EmulsionDevel",
     "finish-args" : [
-        "--filesystem=xdg-documents",
+        "--filesystem=xdg-pictures",
         "--filesystem=xdg-download",
+        "--filesystem=xdg-run/gvfsd",
         "--socket=wayland",
         "--socket=fallback-x11",
         "--socket=session-bus",
