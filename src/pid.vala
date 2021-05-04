@@ -60,7 +60,7 @@ namespace Emulsion {
         construct {
             image = new Gtk.Image ();
             image.halign = Gtk.Align.CENTER;
-            image.height_request = 250;
+            image.height_request = 300;
             image.width_request = 350;
             palette_drag_place.insert_child_after (image, file_label);
 
@@ -70,14 +70,14 @@ namespace Emulsion {
 
             ok_button.clicked.connect (() => {
                 string[] n = {
-                              Utils.make_hex(palette.dominant_swatch.red, palette.dominant_swatch.green, palette.dominant_swatch.blue),
-                              Utils.make_hex(palette.title_swatch.red, palette.title_swatch.green, palette.title_swatch.blue),
-                              Utils.make_hex(palette.vibrant_swatch.red, palette.vibrant_swatch.green, palette.vibrant_swatch.blue),
-                              Utils.make_hex(palette.light_vibrant_swatch.red, palette.light_vibrant_swatch.green, palette.light_vibrant_swatch.blue),
-                              Utils.make_hex(palette.dark_vibrant_swatch.red, palette.dark_vibrant_swatch.green, palette.dark_vibrant_swatch.blue),
-                              Utils.make_hex(palette.muted_swatch.red, palette.muted_swatch.green, palette.muted_swatch.blue),
-                              Utils.make_hex(palette.light_muted_swatch.red, palette.light_muted_swatch.green, palette.light_muted_swatch.blue),
-                              Utils.make_hex(palette.dark_muted_swatch.red, palette.dark_muted_swatch.green, palette.dark_muted_swatch.blue)
+                  Utils.make_hex(palette.dominant_swatch.red, palette.dominant_swatch.green, palette.dominant_swatch.blue),
+                  Utils.make_hex(palette.title_swatch.red, palette.title_swatch.green, palette.title_swatch.blue),
+                  Utils.make_hex(palette.vibrant_swatch.red, palette.vibrant_swatch.green, palette.vibrant_swatch.blue),
+                  Utils.make_hex(palette.light_vibrant_swatch.red, palette.light_vibrant_swatch.green, palette.light_vibrant_swatch.blue),
+                  Utils.make_hex(palette.dark_vibrant_swatch.red, palette.dark_vibrant_swatch.green, palette.dark_vibrant_swatch.blue),
+                  Utils.make_hex(palette.muted_swatch.red, palette.muted_swatch.green, palette.muted_swatch.blue),
+                  Utils.make_hex(palette.light_muted_swatch.red, palette.light_muted_swatch.green, palette.light_muted_swatch.blue),
+                  Utils.make_hex(palette.dark_muted_swatch.red, palette.dark_muted_swatch.green, palette.dark_muted_swatch.blue)
                 };
 
                 var a = new PaletteInfo ();
@@ -112,9 +112,8 @@ namespace Emulsion {
                             file = File.new_for_uri (chooser.get_file ().get_uri ());
 						    var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
                             var new_width = pixbuf.width / (pixbuf.height / image.get_allocated_height ());
-                            var new_height = pixbuf.height / (pixbuf.width / image.get_allocated_width ());
 
-                            pixbuf = pixbuf.scale_simple (new_width, new_height, Gdk.InterpType.BILINEAR);
+                            pixbuf = pixbuf.scale_simple (new_width, image.get_allocated_height (), Gdk.InterpType.BILINEAR);
                             image.width_request = pixbuf.width/2;
                             image.set_from_pixbuf (pixbuf);
 
