@@ -138,7 +138,7 @@ namespace Emulsion {
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
-            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.MINIMUM;
+            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
@@ -149,22 +149,20 @@ namespace Emulsion {
                 color_fb.grab_focus ();
 
                 if (palette_model.is_selected (pos)) {
-
+                    int j = 0;
+                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
+                    colorstore.remove_all ();
+                    for (j = 0; j < arrco.length; j++) {
+                        var a = new ColorInfo ();
+                        a.name = arrco[j];
+                        a.color = arrco[j];
+                        a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
+                        colorstore.append (a);
+                    }
+                    color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
+                    color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
+                    color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                 }
-
-                int j = 0;
-                var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
-                colorstore.remove_all ();
-                for (j = 0; j < arrco.length; j++) {
-                    var a = new ColorInfo ();
-                    a.name = arrco[j];
-                    a.color = arrco[j];
-                    a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
-                    colorstore.append (a);
-                }
-                color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
-                color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
-                color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
             });
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));
@@ -185,35 +183,37 @@ namespace Emulsion {
             });
 
             color_fb.activate.connect ((pos) => {
-                var cep = new ColorEditPopover (this);
-                var item = colorstore.get_item (pos);
-                cep.color_info = ((ColorInfo)item);
-                Gtk.Allocation alloc;
-                color_fb.get_focus_child ().get_allocation (out alloc);
-                cep.set_pointing_to (alloc);
-                cep.set_offset (100, 100);
-                cep.popup ();
+                if (color_model.is_selected (pos)) {
+                    var cep = new ColorEditPopover (this);
+                    var item = colorstore.get_item (pos);
+                    cep.color_info = ((ColorInfo)item);
+                    Gtk.Allocation alloc;
+                    color_fb.get_focus_child ().get_allocation (out alloc);
+                    cep.set_pointing_to (alloc);
+                    cep.set_offset (100, 100);
+                    cep.popup ();
 
-                cep.closed.connect (() => {
-                    colorstore.remove (pos);
-                    colorstore.insert (pos, cep.color_info);
+                    cep.closed.connect (() => {
+                        colorstore.remove (pos);
+                        colorstore.insert (pos, cep.color_info);
 
-                    int j;
-                    uint i, n = palettestore.get_n_items ();
-                    for (i = 0; i < n; i++) {
-                        var pitem = palettestore.get_item (i);
+                        int j;
+                        uint i, n = palettestore.get_n_items ();
+                        for (i = 0; i < n; i++) {
+                            var pitem = palettestore.get_item (i);
 
-                        var arrco = ((PaletteInfo)pitem).colors.to_array();
-                        for (j = 0; j < arrco.length; j++) {
-                            if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
-                                if (arrco[j] != ((ColorInfo)item).color) {
-                                    ((PaletteInfo)pitem).colors.remove (arrco[pos]);
-                                    ((PaletteInfo)pitem).colors.add (cep.color_info.color);
+                            var arrco = ((PaletteInfo)pitem).colors.to_array();
+                            for (j = 0; j < arrco.length; j++) {
+                                if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
+                                    if (arrco[j] != ((ColorInfo)item).color) {
+                                        ((PaletteInfo)pitem).colors.remove (arrco[pos]);
+                                        ((PaletteInfo)pitem).colors.add (cep.color_info.color);
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             import_palette_button.clicked.connect (() => {
