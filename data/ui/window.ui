@@ -248,19 +248,30 @@
         </style>
         <child>
           <object class="EmulsionPaletteRenderer" id="palette_renderer">
-            <binding name="palette">
-              <lookup name="item">GtkListItem</lookup>
-            </binding>
+          <binding name="palette">
+            <lookup name="item">GtkListItem</lookup>
+          </binding>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="halign">center</property>
-            <property name="width-request">256</property>
+            <property name="width-request">260</property>
             <property name="hexpand">0</property>
             <child>
+              <object class="GtkButton" id="palette_export_button">
+                <property name="margin-end">20</property>
+                <property name="icon-name">edit-copy-symbolic</property>
+                <property name="action-name">win.action_ex_txt</property>
+                <property name="tooltip-text" translatable="yes">Copy Palette</property>
+                <style>
+                  <class name="header-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel" id="palette_name">
-                <property name="halign">start</property>
+                <property name="halign">center</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionPaletteInfo" name="palname">
@@ -269,14 +280,15 @@
                 </binding>
               </object>
             </child>
-            <child>
+            <child type="end">
               <object class="GtkButton" id="palette_remove_button">
+                <property name="margin-start">20</property>
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_palette</property>
                 <property name="tooltip-text" translatable="yes">Delete Palette</property>
                 <style>
+                  <class name="destructive-action"/>
                   <class name="header-button"/>
-                  <class name="flat"/>
                 </style>
               </object>
             </child>
@@ -367,8 +379,19 @@
             <property name="width-request">128</property>
             <property name="hexpand">0</property>
             <child>
+              <object class="GtkButton" id="color_export_button">
+                <property name="icon-name">edit-copy-symbolic</property>
+                <property name="margin-end">8</property>
+                <property name="action-name">win.action_exc_txt</property>
+                <property name="tooltip-text" translatable="yes">Copy Color Code</property>
+                <style>
+                  <class name="header-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel" id="color_name">
-                <property name="halign">start</property>
+                <property name="halign">center</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionColorInfo" name="name">
@@ -377,13 +400,15 @@
                 </binding>
               </object>
             </child>
-            <child>
+            <child type="end">
               <object class="GtkButton" id="color_remove_button">
                 <property name="icon-name">user-trash-symbolic</property>
                 <property name="action-name">win.delete_color</property>
+                <property name="margin-start">8</property>
                 <property name="tooltip-text" translatable="yes">Delete Palette Color</property>
                 <style>
                   <class name="header-button"/>
+                  <class name="destructive-action"/>
                   <class name="flat"/>
                 </style>
               </object>

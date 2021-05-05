@@ -1,40 +1,40 @@
 /* Neowaita */
 
-.text-button.suggested-action {
+.suggested-action {
     background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.8);
     color: @theme_fg_color;
     border: 1px solid transparent;
     box-shadow: none;
 }
 
-.text-button.suggested-action:disabled {
+.suggested-action:disabled {
     color: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
     background: none;
     border: 1px solid mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
 }
 
-.text-button.suggested-action:hover {
+.suggested-action:hover {
     background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.7);
 }
 
-.text-button.suggested-action:active,
-.text-button.suggested-action:active:checked {
+.suggested-action:active,
+.suggested-action:active:checked {
     background: mix(#1c71d8, alpha(@theme_bg_color, 0.05), 0.9);
     box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
 }
 
-.text-button.destructive-action {
+.destructive-action {
     background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.8);
     color: @theme_fg_color;
     border: 1px solid transparent;
 }
 
-.text-button.destructive-action:hover {
+.destructive-action:hover {
     background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.7);
 }
 
-.text-button.destructive-action:active,
-.text-button.destructive-action:active:checked {
+.destructive-action:active,
+.destructive-action:active:checked {
     background: mix(#e01b24, alpha(@theme_bg_color, 0.05), 0.9);
     box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
 }

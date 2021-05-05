@@ -81,12 +81,16 @@ namespace Emulsion {
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_ABOUT = "action_about";
         public const string ACTION_KEYS = "action_keys";
+        public const string ACTION_EX_TXT = "action_ex_txt";
+        public const string ACTION_EXC_TXT = "action_exc_txt";
         public const string ACTION_DELETE_PALETTE = "delete_palette";
         public const string ACTION_DELETE_COLOR = "delete_color";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
         private const GLib.ActionEntry[] ACTION_ENTRIES = {
               {ACTION_ABOUT, action_about},
               {ACTION_KEYS, action_keys},
+              {ACTION_EX_TXT, action_ex_txt},
+              {ACTION_EXC_TXT, action_exc_txt},
               {ACTION_DELETE_PALETTE, delete_palette},
               {ACTION_DELETE_COLOR, delete_color},
         };
@@ -143,6 +147,10 @@ namespace Emulsion {
                 search_revealer.set_reveal_child (false);
                 search_button.set_active (false);
                 color_fb.grab_focus ();
+
+                if (palette_model.is_selected (pos)) {
+
+                }
 
                 int j = 0;
                 var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
@@ -305,6 +313,38 @@ namespace Emulsion {
 			this.show ();
 		}
 
+		public void action_ex_txt () {
+            if (palettestore.get_item(palette_model.selected) != null) {
+                string ext_txt = "";
+                var item = palettestore.get_item(palette_model.selected);
+
+                ext_txt += ((PaletteInfo)item).palname + "\n";
+
+                foreach (string c in ((PaletteInfo)item).colors) {
+                    ext_txt += c + "\n";
+                }
+
+                // Put this ext_txt in clipboard
+                var display = Gdk.Display.get_default ();
+                unowned var clipboard = display.get_clipboard ();
+                clipboard.set_text (ext_txt);
+            }
+		}
+
+		public void action_exc_txt () {
+            if (colorstore.get_item(color_model.selected) != null) {
+                string ext_txt = "";
+                var item = colorstore.get_item(color_model.selected);
+
+                ext_txt += ((ColorInfo)item).color;
+
+                // Put this ext_txt in clipboard
+                var display = Gdk.Display.get_default ();
+                unowned var clipboard = display.get_clipboard ();
+                clipboard.set_text (ext_txt);
+            }
+		}
+
 	    public void delete_palette () {
             palettestore.remove (palette_model.selected);
 
@@ -374,15 +414,8 @@ namespace Emulsion {
         void populate_palettes_view () {
             var g = new PaletteInfo ();
             g.palname = "GNOME HIG";
-            string[] gr = {"#000000", "#241f31", "#3d3846", "#5e5c64", "#77767b",
-                           "#a51d2d", "#c01c28", "#e01b24", "#ed333b", "#f66151",
-                           "#63452c", "#865e3c", "#986a44", "#b5835a", "#cdab8f",
-                           "#c64600", "#e66100", "#ff7800", "#ffa348", "#ffbe6f",
-                           "#e5a50a", "#f5c211", "#f6d32d", "#f8e45c", "#f9f06b",
-                           "#26a269", "#2ec27e", "#33d17a", "#57e389", "#8ff0a4",
-                           "#1a5fb4", "#1c71d8", "#3584e4", "#62a0ea", "#99c1f1",
-                           "#613583", "#813d9c", "#9141ac", "#c061cb", "#dc8add",
-                           "#9a9996", "#c0bfbc", "#deddda", "#f6f5f4", "#ffffff"};
+            string[] gr = {"#e01b24", "#986a44", "#ff7800", "#f6d32d", "#33d17a", "#3584e4",
+                           "#9141ac"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
             palettestore.append (g);
