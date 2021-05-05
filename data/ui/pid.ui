@@ -20,14 +20,14 @@
             <property name="visible">1</property>
             <property name="show-end-title-buttons">0</property>
             <style>
-              <class name="flat-dialog"/>
+              <class name="nw-flat-dialog"/>
             </style>
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">1</property>
                 <style>
-                  <class name="header-button"/>
+                  <class name="nw-header-button"/>
                 </style>
               </object>
             </child>
@@ -36,8 +36,7 @@
                 <property name="label" translatable="yes">Import Palette</property>
                 <property name="visible">1</property>
                 <style>
-                  <class name="header-button"/>
-                  <class name="suggested-action"/>
+                  <class name="nw-suggested-action"/>
                 </style>
               </object>
             </child>
@@ -59,7 +58,7 @@
                 <property name="tooltip-text" translatable="yes">Choose Image</property>
                 <signal name="clicked" handler="on_clicked" swapped="no"/>
                 <style>
-                  <class name="header-button"/>
+                  <class name="nw-header-button"/>
                 </style>
                 <child>
                   <object class="GtkBox" id="file_box">

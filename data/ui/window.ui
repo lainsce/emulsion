@@ -11,7 +11,7 @@
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
     <style>
-      <class name="outline"/>
+      <class name="nw-outline"/>
     </style>
     <child>
       <object class="GtkBox" id="main_box">
@@ -26,7 +26,7 @@
                   <object class="AdwHeaderBar" id="palette_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="flat"/>
+                      <class name="nw-flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="palette_hlabel">
@@ -40,8 +40,7 @@
                         <property name="icon-name">list-add-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Add Palette</property>
                         <style>
-                          <class name="image-button"/>
-                          <class name="header-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -50,8 +49,7 @@
                         <property name="icon-name">insert-image-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Import Palette…</property>
                         <style>
-                          <class name="image-button"/>
-                          <class name="header-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -59,8 +57,7 @@
                       <object class="GtkMenuButton" id="menu_button2">
                         <property name="icon-name">open-menu-symbolic</property>
                         <style>
-                          <class name="image-button"/>
-                          <class name="header-toggle-button"/>
+                          <class name="nw-header-toggle-button"/>
                         </style>
                       </object>
                     </child>
@@ -69,8 +66,7 @@
                         <property name="icon-name">edit-find-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Search Palette Names</property>
                         <style>
-                          <class name="image-button"/>
-                          <class name="header-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -85,7 +81,7 @@
                   <object class="AdwHeaderBar" id="color_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="flat"/>
+                      <class name="nw-flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="color_hlabel">
@@ -95,8 +91,7 @@
                       <object class="GtkMenuButton" id="menu_button">
                         <property name="icon-name">open-menu-symbolic</property>
                         <style>
-                          <class name="image-button"/>
-                          <class name="header-toggle-button"/>
+                          <class name="nw-header-toggle-button"/>
                         </style>
                       </object>
                     </child>
@@ -106,7 +101,7 @@
                         <property name="tooltip-text" translatable="yes">Go Back to Palettes View</property>
                         <style>
                           <class name="image-button"/>
-                          <class name="header-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -116,7 +111,7 @@
                         <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
                         <style>
                           <class name="image-button"/>
-                          <class name="header-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -129,25 +124,16 @@
         <child>
           <object class="GtkRevealer" id="search_revealer">
             <child>
-              <object class="GtkBox" id="search_box">
-                <property name="orientation">vertical</property>
+              <object class="GtkSearchBar" id="searchbar">
+                <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
                 <child>
-                  <object class="GtkSearchBar" id="searchbar">
-                    <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
-                    <child>
-                      <object class="GtkSearchEntry" id="searchentry">
-                        <property name="halign">center</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="margin-end">6</property>
-                        <property name="placeholder-text" translatable="yes">Search for palettes</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="search-box"/>
-                    </style>
+                  <object class="GtkSearchEntry" id="searchentry">
+                    <property name="placeholder-text" translatable="yes">Search for palettes</property>
                   </object>
                 </child>
+                <style>
+                  <class name="nw-search-box"/>
+                </style>
               </object>
             </child>
           </object>
@@ -156,7 +142,7 @@
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
             <style>
-              <class name="view"/>
+              <class name="nw-view"/>
             </style>
             <child>
               <object class="GtkStackPage">
@@ -189,9 +175,6 @@
                         <child>
                           <object class="GtkStack" id="palette_stack">
                             <property name="vexpand">1</property>
-                            <style>
-                              <class name="view"/>
-                            </style>
                             <child>
                               <object class="GtkStackPage">
                                 <property name="name">palempty</property>
@@ -212,9 +195,10 @@
                                   <object class="GtkGridView" id="palette_fb">
                                     <property name="min-columns">1</property>
                                     <property name="max-columns">4</property>
-                                    <property name="margin-start">20</property>
-                                    <property name="margin-end">20</property>
                                     <property name="single-click-activate">1</property>
+                                    <style>
+                                      <class name="nw-view"/>
+                                    </style>
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
                                         <property name="model">
@@ -266,7 +250,7 @@
                 <property name="action-name">win.action_ex_txt</property>
                 <property name="tooltip-text" translatable="yes">Copy Palette</property>
                 <style>
-                  <class name="header-button"/>
+                  <class name="nw-header-button"/>
                 </style>
               </object>
             </child>
@@ -288,8 +272,7 @@
                 <property name="action-name">win.delete_palette</property>
                 <property name="tooltip-text" translatable="yes">Delete Palette</property>
                 <style>
-                  <class name="destructive-action"/>
-                  <class name="header-button"/>
+                  <class name="nw-destructive-action"/>
                 </style>
               </object>
             </child>
@@ -327,7 +310,7 @@
                               <object class="GtkEntry" id="color_label">
                                 <property name="halign">start</property>
                                 <property name="margin-top">30</property>
-                                <property name="margin-start">30</property>
+                                <property name="margin-start">20</property>
                                 <property name="margin-bottom">20</property>
                                 <style>
                                   <class name="title-1"/>
@@ -345,11 +328,12 @@
                               <object class="GtkGridView" id="color_fb">
                                 <property name="min-columns">1</property>
                                 <property name="max-columns">5</property>
-                                <property name="margin-start">20</property>
-                                <property name="margin-end">20</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="single-click-activate">1</property>
+                                <style>
+                                  <class name="nw-view"/>
+                                </style>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"/>
                                 </property>
@@ -386,7 +370,7 @@
                 <property name="action-name">win.action_exc_txt</property>
                 <property name="tooltip-text" translatable="yes">Copy Color Code</property>
                 <style>
-                  <class name="header-button"/>
+                  <class name="nw-header-button"/>
                 </style>
               </object>
             </child>
@@ -408,9 +392,7 @@
                 <property name="margin-start">8</property>
                 <property name="tooltip-text" translatable="yes">Delete Palette Color</property>
                 <style>
-                  <class name="header-button"/>
-                  <class name="destructive-action"/>
-                  <class name="flat"/>
+                  <class name="nw-destructive-action"/>
                 </style>
               </object>
             </child>

@@ -1,154 +1,8 @@
-/* Neowaita */
-.suggested-action {
-    background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.8);
-    color: @theme_fg_color;
-    border: 1px solid transparent;
-    box-shadow: none;
-}
-
-.suggested-action:disabled {
-    color: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
-    background: none;
-    border: 1px solid mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.5);
-}
-
-.suggested-action:hover {
-    background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.7);
-}
-
-.suggested-action:active,
-.suggested-action:active:checked {
-    background: mix(#1c71d8, alpha(@theme_bg_color, 0.05), 0.9);
-    box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
-}
-
-.destructive-action {
-    background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.8);
-    color: @theme_fg_color;
-    border: 1px solid transparent;
-}
-
-.destructive-action:hover {
-    background: mix(#e01b24, alpha(@theme_bg_color, 0.2), 0.7);
-}
-
-.destructive-action:active,
-.destructive-action:active:checked {
-    background: mix(#e01b24, alpha(@theme_bg_color, 0.05), 0.9);
-    box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
-}
-
-headerbar,
-headerbar.flat {
-  background: @theme_bg_color;
-  transition: 100ms ease-in-out;
-  border-bottom: 1px solid alpha(white, 0.10);
-}
-
-headerbar.flat-dialog {
-  background: @theme_bg_color;
-  transition: 100ms ease-in-out;
-  border-bottom: 1px solid transparent;
-}
-
-
-headerbar.flat:backdrop {
-  background-image: none;
-  background: @theme_base_color;
-}
-
-entry {
-  background-color: shade(@theme_base_color, 0.4);
-  border-radius: 8px;
-}
-
-.outline {
-  outline: 1px solid alpha(@theme_fg_color, 0.25);
-  outline-offset: -1px;
-}
-
-.header-button,
-.header-toggle-button > button,
-.toggle {
-    border-radius: 8px;
-    background: alpha(@theme_fg_color, 0.1);
-    border: none;
-    box-shadow: none;
-    transition: 100ms ease-in-out;
-}
-
-.circular {
-    background: alpha(@theme_fg_color, 0.1);
-    border: none;
-    box-shadow: none;
-    transition: 100ms ease-in-out;
-}
-
-.text-button {
-    background: alpha(@theme_fg_color, 0.1);
-    border: none;
-    box-shadow: none;
-    transition: 100ms ease-in-out;
-}
-
-.header-button image {
-  padding: 0;
-  margin: 0;
-}
-
-.header-toggle-button button {
-  margin: 0;
-}
-
-.header-button:hover,
-.text-button:hover,
-.circular:hover,
-.toggle:checked {
-  background: alpha(@theme_fg_color, 0.2);
-}
-
-.header-button:active,
-.text-button:active,
-.circular:active,
-.toggle:active {
-  background: alpha(@theme_fg_color, 0.05);
-  box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
-}
-
-.header-toggle-button > button:hover {
-  background: alpha(@theme_fg_color, 0.2);
-}
-
-.header-toggle-button > button:active {
-  background: alpha(@theme_fg_color, 0.05);
-  box-shadow: inset 0 0 3px 0 alpha(@theme_fg_color, 0.5);
-}
-
-viewswitcher button:first-child {
-  border-radius: 8px 0 0 8px;
-}
-viewswitcher button:last-child {
-  border-radius: 0 8px 8px 0;
-}
-
-stackswitcher button:first-child {
-  border-radius: 8px 0 0 8px;
-}
-stackswitcher button:last-child {
-  border-radius: 0 8px 8px 0;
-}
-
-
 /* app */
-.view {
-  background-color: shade(@theme_base_color, 0.5);
-}
-
 .title-box {
-  background: none;
-  border-bottom: 1px solid alpha(white, 0.10);
+  background: transparent;
+  border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
 }
-
 .title-box entry {
   background: none;
   box-shadow: none;
@@ -156,21 +10,10 @@ stackswitcher button:last-child {
   border: none;
 }
 
-.search-box {
-  background: shade(@theme_base_color, 0.66);
-  border-bottom: 1px solid alpha(white, 0.10);
-}
-
-.search-box entry {
-  border: 1px solid alpha(white, 0.10);
-}
-
-.palette {
-  outline: 1px solid alpha(white, 0.25);
+.palette,
+.color {
+  outline: 1px solid alpha(@theme_fg_color, 0.25);
 	outline-offset: -1px;
-}
-
-.palette {
 	box-shadow: none;
 	padding: 0;
 	margin: 0;
@@ -181,58 +24,27 @@ stackswitcher button:last-child {
 	min-width: 32px;
 }
 
-gridview child .palette-box {
-  border-radius: 8px;
-  border: 2px solid transparent;
-}
-
-gridview child:selected {
-  background: none;
-}
-
-gridview child:selected .palette-box {
-  background: alpha(@theme_fg_color, 0.05);
-  border: 2px solid @theme_selected_bg_color;
-}
-
-.color {
-  outline: 1px solid alpha(white, 0.25);
-	outline-offset: -1px;
-}
-
-.color {
-	box-shadow: none;
-	padding: 0;
-	margin: 0;
-	border: none;
-	background: none;
-	border-radius: 8px;
-	min-height: 32px;
-	min-width: 32px;
-}
-
+gridview child .palette-box,
 gridview child .color-box {
   border-radius: 8px;
   border: 2px solid transparent;
 }
-
 gridview child:selected {
   background: none;
+  color: @theme_fg_color;
 }
-
+gridview child:selected .palette-box,
 gridview child:selected .color-box {
-  background: alpha(@theme_fg_color, 0.05);
-  border: 2px solid @theme_selected_bg_color;
+  background: alpha(@theme_fg_color, 0.1);
 }
 
 .red slider,
 .blue slider,
 .green slider {
-        background: shade(@theme_base_color, 1.88);
+        background: mix(@theme_base_color, @theme_fg_color, 0.5);
         border: none;
-        border: 1px solid alpha(white, 0.25);
+        border: 1px solid alpha(shade(@theme_base_color, 0.77), 0.25);
 }
-
 .red trough{
         background-image:
             linear-gradient(
@@ -243,12 +55,10 @@ gridview child:selected .color-box {
         padding: 8px;
         border-radius: 9999px;
 }
-
 .red highlight {
         background: none;
         border: 1px solid transparent;
 }
-
 .green trough {
         background-image:
             linear-gradient(
@@ -259,12 +69,10 @@ gridview child:selected .color-box {
         padding: 8px;
         border-radius: 9999px;
 }
-
 .green highlight {
         background: none;
         border: 1px solid transparent;
 }
-
 .blue trough {
         background-image:
             linear-gradient(
@@ -275,7 +83,6 @@ gridview child:selected .color-box {
         padding: 8px;
         border-radius: 9999px;
 }
-
 .blue highlight {
         background: none;
         border: 1px solid transparent;
