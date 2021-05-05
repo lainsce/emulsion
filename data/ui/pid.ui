@@ -53,14 +53,13 @@
               <object class="GtkButton" id="image">
                 <property name="valign">center</property>
                 <property name="halign">center</property>
-                <property name="margin-bottom">12</property>
+                <property name="margin-bottom">6</property>
                 <property name="width-request">350</property>
                 <property name="height-request">206</property>
                 <property name="tooltip-text" translatable="yes">Choose Image</property>
                 <signal name="clicked" handler="on_clicked" swapped="no"/>
                 <style>
                   <class name="header-button"/>
-                  <class name="dim-label"/>
                 </style>
                 <child>
                   <object class="GtkBox" id="file_box">
@@ -72,6 +71,9 @@
                       <object class="GtkImage" id="file_image">
                         <property name="icon-name">image-x-generic-symbolic</property>
                         <property name="pixel-size">64</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -86,6 +88,9 @@
                         <attributes>
                           <attribute name="weight" value="semibold"></attribute>
                         </attributes>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                   </object>
