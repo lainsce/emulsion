@@ -34,7 +34,11 @@ namespace Emulsion {
         [GtkChild]
         unowned Gtk.Button image;
         [GtkChild]
+        unowned Gtk.Box file_box;
+        [GtkChild]
         unowned Gtk.Label file_label;
+        [GtkChild]
+        unowned Gtk.Image file_image;
 
         private MainWindow win = null;
         private File file;
@@ -50,9 +54,9 @@ namespace Emulsion {
             color_box.set_margin_bottom (12);
             color_box.set_visible (false);
             file_label.set_visible (true);
+            file_image.set_visible (true);
             image.set_sensitive (true);
             image.set_margin_top (12);
-            ((Gtk.Image)image.get_child ()).set_pixel_size (64);
 
             cancel_button.clicked.connect (() => {
                 this.dispose ();
@@ -101,12 +105,12 @@ namespace Emulsion {
                             file = null;
                             file = File.new_for_uri (chooser.get_file ().get_uri ());
 						    var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
-                            pixbuf = pixbuf.scale_simple (((Gtk.Image)image.get_child ()).get_allocated_width (), ((Gtk.Image)image.get_child ()).get_allocated_height ()*3, Gdk.InterpType.BILINEAR);
-                            ((Gtk.Image)image.get_child ()).set_from_pixbuf (pixbuf);
+                            pixbuf = pixbuf.scale_simple (file_image.get_allocated_width (), file_image.get_allocated_height ()*2, Gdk.InterpType.BILINEAR);
+                            file_image.set_from_pixbuf (pixbuf);
 
                             image.set_sensitive (false);
                             image.set_margin_top (0);
-                            ((Gtk.Image)image.get_child ()).set_pixel_size (256);
+                            file_image.set_pixel_size (256);
                             image.get_style_context ().remove_class ("dim-label");
 
                             var palette = new Utils.Palette.from_pixbuf (pixbuf);

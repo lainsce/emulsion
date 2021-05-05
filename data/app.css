@@ -1,5 +1,4 @@
 /* Neowaita */
-
 .suggested-action {
     background: mix(#1c71d8, alpha(@theme_bg_color, 0.2), 0.8);
     color: @theme_fg_color;
@@ -155,7 +154,6 @@ stackswitcher button:last-child {
   box-shadow: none;
   border-radius: 0;
   border: none;
-  border-bottom: 2px solid alpha(white, 0.10);
 }
 
 .search-box {
