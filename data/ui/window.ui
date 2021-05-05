@@ -45,6 +45,16 @@
                         </style>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkButton" id="import_palette_button">
+                        <property name="icon-name">insert-image-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Import Palette…</property>
+                        <style>
+                          <class name="image-button"/>
+                          <class name="header-button"/>
+                        </style>
+                      </object>
+                    </child>
                     <child type="end">
                       <object class="GtkMenuButton" id="menu_button2">
                         <property name="icon-name">open-menu-symbolic</property>
@@ -58,16 +68,6 @@
                       <object class="GtkToggleButton" id="search_button">
                         <property name="icon-name">edit-find-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Search Palette Names</property>
-                        <style>
-                          <class name="image-button"/>
-                          <class name="header-button"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child type="end">
-                      <object class="GtkButton" id="import_palette_button">
-                        <property name="icon-name">insert-image-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Import Palette…</property>
                         <style>
                           <class name="image-button"/>
                           <class name="header-button"/>
