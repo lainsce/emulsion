@@ -166,7 +166,7 @@
                           </object>
                         </child>
                         <style>
-                          <class name="title-box"/>
+                          <class name="nw-title-box"/>
                         </style>
                       </object>
                     </child>
@@ -318,7 +318,7 @@
                               </object>
                             </child>
                             <style>
-                              <class name="title-box"/>
+                              <class name="nw-title-box"/>
                             </style>
                           </object>
                         </child>
