@@ -122,7 +122,7 @@ namespace Emulsion.Utils {
         private int max_population = 0;
 
         public Gdk.Pixbuf? pixbuf { get; construct set; }
-        public uint8[] pixel_data { get; set; }
+        public string pixel_data { get; set; }
 
         private uint8 _quality = DEFAULT_QUALITY;
         public uint8 quality {
@@ -167,7 +167,7 @@ namespace Emulsion.Utils {
             Object (pixbuf: pixbuf, max_colors: max_colors, quality: quality);
         }
 
-        public Palette.from_data (owned uint8[] pixels, bool has_alpha, uint16 max_colors = DEFAULT_COLORS, uint8 quality = DEFAULT_QUALITY) {
+        public Palette.from_data (owned string pixels, bool has_alpha, uint16 max_colors = DEFAULT_COLORS, uint8 quality = DEFAULT_QUALITY) {
             this.pixel_data = pixels;
             Object (has_alpha: has_alpha, max_colors: max_colors, quality: quality);
         }
@@ -177,7 +177,7 @@ namespace Emulsion.Utils {
             if (pixbuf != null) {
                 pixels = convert_pixels_to_rgb (pixbuf.get_pixels_with_length (), pixbuf.has_alpha);
             } else {
-                pixels = convert_pixels_to_rgb (pixel_data, has_alpha);
+                pixels = convert_pixels_to_rgb (pixel_data.data, has_alpha);
             }
 
             uint8 max_depth = (uint8)Math.log2 (max_colors);

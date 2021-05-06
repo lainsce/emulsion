@@ -227,6 +227,10 @@
       <attribute name="action">win.action_ex_txt</attribute>
     </item>
     <item>
+      <attribute name="label" translatable="yes">Copy Palette Image to Clipboard</attribute>
+      <attribute name="action">win.action_ex_png</attribute>
+    </item>
+    <item>
       <attribute name="label" translatable="yes">Remove Palette</attribute>
       <attribute name="action">win.delete_palette</attribute>
     </item>

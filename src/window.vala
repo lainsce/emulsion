@@ -82,6 +82,7 @@ namespace Emulsion {
         public const string ACTION_ABOUT = "action_about";
         public const string ACTION_KEYS = "action_keys";
         public const string ACTION_EX_TXT = "action_ex_txt";
+        public const string ACTION_EX_PNG = "action_ex_png";
         public const string ACTION_EXC_TXT = "action_exc_txt";
         public const string ACTION_DELETE_PALETTE = "delete_palette";
         public const string ACTION_DELETE_COLOR = "delete_color";
@@ -90,6 +91,7 @@ namespace Emulsion {
               {ACTION_ABOUT, action_about},
               {ACTION_KEYS, action_keys},
               {ACTION_EX_TXT, action_ex_txt},
+              {ACTION_EX_PNG, action_ex_png},
               {ACTION_EXC_TXT, action_exc_txt},
               {ACTION_DELETE_PALETTE, delete_palette},
               {ACTION_DELETE_COLOR, delete_color},
@@ -347,6 +349,27 @@ namespace Emulsion {
                 clipboard.set_text (ext_txt);
             }
 		}
+
+		public void action_ex_png () {
+		    if (palettestore.get_item(palette_model.selected) != null) {
+                var palren = new PaletteRenderer ();
+                palren.palette = ((PaletteInfo)palettestore.get_item(palette_model.selected));
+                var snap = new Gtk.Snapshot ();
+                palren.snapshot (snap);
+
+                var sf = new Cairo.ImageSurface (Cairo.Format.ARGB32, 256, 64); // 256×64 is the palette's size;
+                var cr = new Cairo.Context (sf);
+                var node = snap.to_node ();
+                node.draw(cr);
+
+                var pb = Gdk.pixbuf_get_from_surface (sf, 0, 0, 256, 64);
+                var mt = Gdk.Texture.for_pixbuf (pb);
+
+                var display = Gdk.Display.get_default ();
+                unowned var clipboard = display.get_clipboard ();
+                clipboard.set_texture (mt);
+            }
+        }
 
 	    public void delete_palette () {
             palettestore.remove (palette_model.selected);

@@ -34,8 +34,6 @@ namespace Emulsion {
         [GtkChild]
         unowned Gtk.Button image;
         [GtkChild]
-        unowned Gtk.Box file_box;
-        [GtkChild]
         unowned Gtk.Label file_label;
         [GtkChild]
         unowned Gtk.Image file_image;
