@@ -13,6 +13,13 @@
 	min-width: 32px;
 }
 
+/* Horrible hack, otherwise menus are blown in size */
+.menu * {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 0;
+}
+
 gridview child .palette-box,
 gridview child .color-box {
   border-radius: 8px;

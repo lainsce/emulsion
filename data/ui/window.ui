@@ -221,6 +221,16 @@
                                         <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <menu id="pmenu">
+    <item>
+      <attribute name="label" translatable="yes">Copy Palette to Clipboard</attribute>
+      <attribute name="action">win.action_ex_txt</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">Remove Palette</attribute>
+      <attribute name="action">win.delete_palette</attribute>
+    </item>
+  </menu>
   <template class="GtkListItem">
     <property name="child">
       <object class="GtkBox">
@@ -244,19 +254,8 @@
             <property name="width-request">260</property>
             <property name="hexpand">0</property>
             <child>
-              <object class="GtkButton" id="palette_export_button">
-                <property name="margin-end">20</property>
-                <property name="icon-name">edit-copy-symbolic</property>
-                <property name="action-name">win.action_ex_txt</property>
-                <property name="tooltip-text" translatable="yes">Copy Palette</property>
-                <style>
-                  <class name="nw-header-button"/>
-                </style>
-              </object>
-            </child>
-            <child>
               <object class="GtkLabel" id="palette_name">
-                <property name="halign">center</property>
+                <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionPaletteInfo" name="palname">
@@ -266,13 +265,11 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkButton" id="palette_remove_button">
-                <property name="margin-start">20</property>
-                <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">win.delete_palette</property>
-                <property name="tooltip-text" translatable="yes">Delete Palette</property>
+              <object class="GtkMenuButton" id="palette_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">pmenu</property>
                 <style>
-                  <class name="nw-destructive-action"/>
+                  <class name="nw-header-toggle-button"/>
                 </style>
               </object>
             </child>
@@ -342,6 +339,16 @@
                                     <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <menu id="cmenu">
+    <item>
+      <attribute name="label" translatable="yes">Copy Color to Clipboard</attribute>
+      <attribute name="action">win.action_exc_txt</attribute>
+    </item>
+    <item>
+      <attribute name="label" translatable="yes">Remove Color from Palette</attribute>
+      <attribute name="action">win.delete_color</attribute>
+    </item>
+  </menu>
   <template class="GtkListItem">
     <property name="child">
       <object class="GtkBox">
@@ -364,19 +371,8 @@
             <property name="width-request">128</property>
             <property name="hexpand">0</property>
             <child>
-              <object class="GtkButton" id="color_export_button">
-                <property name="icon-name">edit-copy-symbolic</property>
-                <property name="margin-end">8</property>
-                <property name="action-name">win.action_exc_txt</property>
-                <property name="tooltip-text" translatable="yes">Copy Color Code</property>
-                <style>
-                  <class name="nw-header-button"/>
-                </style>
-              </object>
-            </child>
-            <child>
               <object class="GtkLabel" id="color_name">
-                <property name="halign">center</property>
+                <property name="halign">start</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionColorInfo" name="name">
@@ -386,13 +382,11 @@
               </object>
             </child>
             <child type="end">
-              <object class="GtkButton" id="color_remove_button">
-                <property name="icon-name">user-trash-symbolic</property>
-                <property name="action-name">win.delete_color</property>
-                <property name="margin-start">8</property>
-                <property name="tooltip-text" translatable="yes">Delete Palette Color</property>
+              <object class="GtkMenuButton" id="color_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">cmenu</property>
                 <style>
-                  <class name="nw-destructive-action"/>
+                  <class name="nw-header-toggle-button"/>
                 </style>
               </object>
             </child>
