@@ -84,6 +84,7 @@ namespace Emulsion {
         public const string ACTION_EX_TXT = "action_ex_txt";
         public const string ACTION_EX_PNG = "action_ex_png";
         public const string ACTION_EXC_TXT = "action_exc_txt";
+        public const string ACTION_EXC_TXT_RGB = "action_exc_txt_rgb";
         public const string ACTION_DELETE_PALETTE = "delete_palette";
         public const string ACTION_DELETE_COLOR = "delete_color";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
@@ -93,6 +94,7 @@ namespace Emulsion {
               {ACTION_EX_TXT, action_ex_txt},
               {ACTION_EX_PNG, action_ex_png},
               {ACTION_EXC_TXT, action_exc_txt},
+              {ACTION_EXC_TXT_RGB, action_exc_txt_rgb},
               {ACTION_DELETE_PALETTE, delete_palette},
               {ACTION_DELETE_COLOR, delete_color},
         };
@@ -342,6 +344,22 @@ namespace Emulsion {
                 var item = colorstore.get_item(color_model.selected);
 
                 ext_txt += ((ColorInfo)item).color;
+
+                // Put this ext_txt in clipboard
+                var display = Gdk.Display.get_default ();
+                unowned var clipboard = display.get_clipboard ();
+                clipboard.set_text (ext_txt);
+            }
+		}
+
+		public void action_exc_txt_rgb () {
+            if (colorstore.get_item(color_model.selected) != null) {
+                string ext_txt = "";
+                var item = colorstore.get_item(color_model.selected);
+
+                Gdk.RGBA gc = {};
+                gc.parse(((ColorInfo)item).color);
+                ext_txt += gc.to_string ();
 
                 // Put this ext_txt in clipboard
                 var display = Gdk.Display.get_default ();

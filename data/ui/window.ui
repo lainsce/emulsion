@@ -348,14 +348,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <menu id="cmenu">
-    <item>
-      <attribute name="label" translatable="yes">Copy Color to Clipboard</attribute>
-      <attribute name="action">win.action_exc_txt</attribute>
-    </item>
-    <item>
-      <attribute name="label" translatable="yes">Remove Color from Palette</attribute>
-      <attribute name="action">win.delete_color</attribute>
-    </item>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Copy Hexcode to Clipboard</attribute>
+        <attribute name="action">win.action_exc_txt</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Copy RGB to Clipboard</attribute>
+        <attribute name="action">win.action_exc_txt_rgb</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Remove Color from Palette</attribute>
+        <attribute name="action">win.delete_color</attribute>
+      </item>
+    </section>
   </menu>
   <template class="GtkListItem">
     <property name="child">
