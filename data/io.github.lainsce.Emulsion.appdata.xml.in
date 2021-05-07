@@ -50,11 +50,12 @@
         <content_attribute id="money-gambling">none</content_attribute>
     </content_rating>
     <releases>
-        <release version="2.0.0" date="2020-09-11">
+        <release version="2.0.0" date="2020-05-07">
             <description>
                 <p>Release: Importin' &amp; Exportin'</p>
                 <p>Add: Export palettes as PNGs or as text via clipboard.</p>
-                <p>Add: Import palettes via dragging an image to a special dialog.</p>
+                <p>Add: Export single colors as hexcode (#xxxxxx) or RGBA (rgb(xx,xx,xx)) via clipboard.</p>
+                <p>Add: Import palettes via opening an image in a special dialog.</p>
             </description>
         </release>
         <release version="1.0.0" date="2020-05-02">
