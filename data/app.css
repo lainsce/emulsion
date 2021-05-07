@@ -19,6 +19,9 @@
   padding-bottom: 2px;
   margin: 0;
 }
+.menu separator {
+  padding: 0;
+}
 
 gridview child .palette-box,
 gridview child .color-box {

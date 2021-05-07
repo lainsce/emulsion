@@ -222,6 +222,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <menu id="pmenu">
+    <section>
     <item>
       <attribute name="label" translatable="yes">Copy Palette to Clipboard</attribute>
       <attribute name="action">win.action_ex_txt</attribute>
@@ -230,10 +231,13 @@
       <attribute name="label" translatable="yes">Copy Palette Image to Clipboard</attribute>
       <attribute name="action">win.action_ex_png</attribute>
     </item>
+    </section>
+    <section>
     <item>
       <attribute name="label" translatable="yes">Remove Palette</attribute>
       <attribute name="action">win.delete_palette</attribute>
     </item>
+    </section>
   </menu>
   <template class="GtkListItem">
     <property name="child">

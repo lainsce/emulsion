@@ -126,6 +126,10 @@ headerbar.nw-flat-dialog .toggle {
   padding: 0;
   margin: 0;
 }
+.nw-header-toggle-button image {
+  padding: 0;
+  margin: 0;
+}
 
 .nw-header-toggle-button button {
   margin: 0;

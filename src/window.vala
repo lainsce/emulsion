@@ -152,11 +152,14 @@ namespace Emulsion {
                 search_revealer.set_reveal_child (false);
                 search_button.set_active (false);
                 color_fb.grab_focus ();
+                colorstore.remove_all ();
 
                 if (palette_model.is_selected (pos)) {
+                    color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
+                    color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
+                    color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                     int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
-                    colorstore.remove_all ();
                     for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
                         a.name = arrco[j];
@@ -164,9 +167,6 @@ namespace Emulsion {
                         a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         colorstore.append (a);
                     }
-                    color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
-                    color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
-                    color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                 }
             });
 
@@ -440,8 +440,15 @@ namespace Emulsion {
         void populate_palettes_view () {
             var g = new PaletteInfo ();
             g.palname = "GNOME HIG";
-            string[] gr = {"#e01b24", "#986a44", "#ff7800", "#f6d32d", "#33d17a", "#3584e4",
-                           "#9141ac"};
+            string[] gr = {"#000000", "#3d3846",
+                           "#a51d2d", "#e01b24",
+                           "#63452c", "#986a44",
+                           "#c64600", "#ff7800",
+                           "#e5a50a", "#f6d32d",
+                           "#26a269", "#33d17a",
+                           "#1a5fb4", "#3584e4",
+                           "#613583", "#9141ac",
+                           "#9a9996", "#f6f5f4"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
             palettestore.append (g);
