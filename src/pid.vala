@@ -87,7 +87,6 @@ namespace Emulsion {
 
                 win.palettestore.append (a);
                 this.dispose ();
-                ok_button.set_sensitive (true);
             });
         }
 
@@ -127,6 +126,7 @@ namespace Emulsion {
 
                             color_box.set_visible (true);
                             file_label.set_visible (false);
+                            ok_button.set_sensitive (true);
                         } catch {
 
                         }
