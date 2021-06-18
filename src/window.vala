@@ -132,9 +132,9 @@ namespace Emulsion {
             var provider = new Gtk.CssProvider ();
             provider.load_from_resource ("/io/github/lainsce/Emulsion/app.css");
             Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-            var provider2 = new Gtk.CssProvider ();
-            provider2.load_from_resource ("/io/github/lainsce/Emulsion/adwaita-plus.css");
-            Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider2, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+            // var provider2 = new Gtk.CssProvider ();
+            // provider2.load_from_resource ("/io/github/lainsce/Emulsion/adwaita-plus.css");
+            // Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider2, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
             default_theme.add_resource_path ("/io/github/lainsce/Emulsion");

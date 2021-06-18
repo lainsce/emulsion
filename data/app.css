@@ -1,4 +1,7 @@
 /* app */
+@define-color accent_color #26a269;
+@define-color destructive_color #dc8add;
+
 .palette,
 .color {
   outline: 1px solid alpha(@theme_fg_color, 0.25);
@@ -35,14 +38,6 @@ gridview child:selected {
 gridview child:selected .palette-box,
 gridview child:selected .color-box {
   background: alpha(@theme_fg_color, 0.1);
-}
-
-.red slider,
-.blue slider,
-.green slider {
-        background: mix(@theme_base_color, @theme_fg_color, 0.5);
-        border: none;
-        border: 1px solid alpha(shade(@theme_base_color, 0.77), 0.25);
 }
 .red trough{
         background-image:
@@ -85,4 +80,21 @@ gridview child:selected .color-box {
 .blue highlight {
         background: none;
         border: 1px solid transparent;
+}
+
+.nw-title-box {
+  background-color: shade(@theme_base_color, 0.8);
+  border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
+}
+.nw-title-box entry {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  border: none;
+}
+.nw-view {
+  background-color: shade(@theme_base_color, 0.5);
+}
+.nw-search-box entry {
+  border-radius: 99999px;
 }

@@ -31,20 +31,20 @@ namespace Emulsion.Utils {
     }
 
     public class Palette : Object {
-        const double TARGET_DARK_LUMA = 0.26;
-        const double MAX_DARK_LUMA = 0.45;
-        const double MIN_LIGHT_LUMA = 0.55;
-        const double TARGET_LIGHT_LUMA = 0.74;
+        const double TARGET_DARK_LUMA = 0.2;
+        const double MAX_DARK_LUMA = 0.4;
+        const double MIN_LIGHT_LUMA = 0.5;
+        const double TARGET_LIGHT_LUMA = 0.7;
         const double MIN_NORMAL_LUMA = 0.3;
         const double TARGET_NORMAL_LUMA = 0.5;
         const double MAX_NORMAL_LUMA = 0.7;
         const double TARGET_MUTED_SATURATION = 0.3;
         const double MAX_MUTED_SATURATION = 0.4;
         const double TARGET_VIBRANT_SATURATION = 1;
-        const double MIN_VIBRANT_SATURATION = 0.35;
-        const double WEIGHT_SATURATION = 0.24;
-        const double WEIGHT_LUMA = 0.52;
-        const double WEIGHT_POPULATION = 0.24;
+        const double MIN_VIBRANT_SATURATION = 0.3;
+        const double WEIGHT_SATURATION = 0.2;
+        const double WEIGHT_LUMA = 0.5;
+        const double WEIGHT_POPULATION = 0.2;
 
         public class Swatch : Object {
             public float R = 0.0f;
@@ -95,11 +95,11 @@ namespace Emulsion.Utils {
         }
 
         public const uint8 MAX_QUALITY = 10;
-        public const uint8 MIN_QUALITY = 1;
-        public const uint8 DEFAULT_QUALITY = 5;
+        public const uint8 MIN_QUALITY = 2;
+        public const uint8 DEFAULT_QUALITY = 10;
         public const uint16 MAX_COLORS = 256;
         public const uint16 DEFAULT_COLORS = 64;
-        public const uint16 MIN_COLORS = 2;
+        public const uint16 MIN_COLORS = 16;
 
         private Gee.List<Swatch> _swatches;
         public Gee.List<Swatch> swatches {
@@ -248,12 +248,12 @@ namespace Emulsion.Utils {
 
 
         private SwatchComponent find_biggest_range (Gee.List<Swatch> pixels) {
-            int r_min = int.MAX;
-            int r_max = int.MIN;
-            int g_min = int.MAX;
-            int g_max = int.MIN;
-            int b_min = int.MAX;
-            int b_max = int.MIN;
+            int r_min = int.MIN;
+            int r_max = int.MAX;
+            int g_min = int.MIN;
+            int g_max = int.MAX;
+            int b_min = int.MIN;
+            int b_max = int.MAX;
 
             foreach (var pixel in pixels) {
                 r_min = int.min (r_min, pixel.red);
@@ -277,7 +277,7 @@ namespace Emulsion.Utils {
             }
         }
 
-        private async Gee.List<Swatch> quantize (Gee.List<Swatch> pixels, uint8 depth = 0, uint8 max_depth = 16) {
+        private async Gee.List<Swatch> quantize (Gee.List<Swatch> pixels, uint8 depth = 0, uint8 max_depth = 32) {
             if (depth == max_depth) {
                 int r = 0, g = 0, b = 0;
                 int population = 0;
@@ -335,35 +335,9 @@ namespace Emulsion.Utils {
             light_muted_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
             dark_muted_swatch = find_color_variation (TARGET_DARK_LUMA, 0, MAX_DARK_LUMA, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
 
-            if (dominant_swatch != null) {
-                foreach (var swatch in _swatches) {
-                    bool aa_level, aaa_level;
-                    passes_wcag_guidelines (dominant_swatch, swatch, out aa_level, out aaa_level);
-                    if (aa_level && title_swatch == null) {
-                        title_swatch = swatch;
-                    }
-
-                    if (aaa_level && body_swatch == null) {
-                        body_swatch = swatch;
-                    }
-                }
-
-                bool is_dark_color = is_dark_color (dominant_swatch);
-                if (title_swatch == null) {
-                    if (is_dark_color) {
-                        title_swatch = new Swatch (255, 255, 255, 0);
-                    } else {
-                        title_swatch = new Swatch (0, 0, 0, 0);
-                    }
-                }
-
-                if (body_swatch == null) {
-                    if (is_dark_color) {
-                        body_swatch = new Swatch (255, 255, 255, 0);
-                    } else {
-                        body_swatch = new Swatch (0, 0, 0, 0);
-                    }
-                }
+            foreach (var swatch in _swatches) {
+                bool aa_level, aaa_level;
+                passes_wcag_guidelines (dominant_swatch, swatch, out aa_level, out aaa_level);
             }
         }
 
@@ -409,7 +383,7 @@ namespace Emulsion.Utils {
         }
 
         private static double get_saturation (Swatch color) {
-            double max = double.MIN;
+            double max = double.MAX;
             if (color.R > color.G && color.R > color.B) {
                 max = color.R;
             } else if (color.G > color.R && color.G > color.B) {
@@ -418,7 +392,7 @@ namespace Emulsion.Utils {
                 max = color.B;
             }
 
-            double min = double.MAX;
+            double min = double.MIN;
             if (color.R < color.G && color.R < color.B) {
                 min = color.R;
             } else if (color.G < color.R && color.G < color.B) {
@@ -444,7 +418,7 @@ namespace Emulsion.Utils {
         }
 
         private static double get_luminance (Swatch color) {
-            double max = double.MIN;
+            double max = double.MAX;
             if (color.R > color.G && color.R > color.B) {
                 max = color.R;
             } else if (color.G > color.R && color.G > color.B) {
@@ -453,7 +427,7 @@ namespace Emulsion.Utils {
                 max = color.B;
             }
 
-            double min = double.MAX;
+            double min = double.MIN;
             if (color.R < color.G && color.R < color.B) {
                 min = color.R;
             } else if (color.G < color.R && color.G < color.B) {
@@ -463,11 +437,6 @@ namespace Emulsion.Utils {
             }
 
             return (max + min) / 2;
-        }
-
-        private static bool is_dark_color (Swatch color) {
-            double lum = 0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B;
-            return lum < 0.5;
         }
 
         private Swatch? find_color_variation (double target_luma,
@@ -482,7 +451,7 @@ namespace Emulsion.Utils {
                 double sat = get_saturation (swatch);
                 double luma = get_luminance (swatch);
                 if (sat >= min_saturation && sat <= max_saturation && luma >= min_luma && luma <= max_luma && !is_already_selected_color (swatch)) {
-                    double value = create_comparasion_value (sat, target_saturation, luma, target_luma, swatch.population, max_population);
+                    double value = create_comparison_value (sat, target_saturation, luma, target_luma, swatch.population, max_population);
                     if (max == null || value > max_value) {
                         max = swatch;
                         max_value = value;
@@ -493,7 +462,7 @@ namespace Emulsion.Utils {
             return max;
         }
 
-        private static double create_comparasion_value (double saturation,
+        private static double create_comparison_value (double saturation,
                                                 double target_saturation,
                                                 double luma,
                                                 double target_luma,
