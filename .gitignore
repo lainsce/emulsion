@@ -3,6 +3,7 @@ build/
 ~*
 *~
 .flatpak-builder/
+.flatpak/
 app-dir/
 debian/com.github.lainsce.emulsion.debhelper.log
 debian/com.github.lainsce.emulsion.substvars
