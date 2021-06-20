@@ -55,22 +55,30 @@ namespace Emulsion {
             file_image.set_visible (true);
             image.set_sensitive (true);
             image.set_margin_top (12);
+            ok_button.set_sensitive (false);
 
             cancel_button.clicked.connect (() => {
                 this.dispose ();
             });
 
             ok_button.clicked.connect (() => {
-                string[] n = {
-                  Utils.make_hex(palette.dominant_swatch.red, palette.dominant_swatch.green, palette.dominant_swatch.blue),
-                  Utils.make_hex(palette.title_swatch.red, palette.title_swatch.green, palette.title_swatch.blue),
-                  Utils.make_hex(palette.vibrant_swatch.red, palette.vibrant_swatch.green, palette.vibrant_swatch.blue),
-                  Utils.make_hex(palette.light_vibrant_swatch.red, palette.light_vibrant_swatch.green, palette.light_vibrant_swatch.blue),
-                  Utils.make_hex(palette.dark_vibrant_swatch.red, palette.dark_vibrant_swatch.green, palette.dark_vibrant_swatch.blue),
-                  Utils.make_hex(palette.muted_swatch.red, palette.muted_swatch.green, palette.muted_swatch.blue),
-                  Utils.make_hex(palette.light_muted_swatch.red, palette.light_muted_swatch.green, palette.light_muted_swatch.blue),
-                  Utils.make_hex(palette.dark_muted_swatch.red, palette.dark_muted_swatch.green, palette.dark_muted_swatch.blue)
-                };
+                if (palette == null) {
+                    this.dispose ();
+                }
+
+                string[] n;
+                if (palette.dark_vibrant_swatch != null)
+                    n += Utils.make_hex(palette.dark_vibrant_swatch.red, palette.dark_vibrant_swatch.green, palette.dark_vibrant_swatch.blue);
+                if (palette.vibrant_swatch != null)
+                    n += Utils.make_hex(palette.vibrant_swatch.red, palette.vibrant_swatch.green, palette.vibrant_swatch.blue);
+                if (palette.light_vibrant_swatch != null)
+                    n += Utils.make_hex(palette.light_vibrant_swatch.red, palette.light_vibrant_swatch.green, palette.light_vibrant_swatch.blue);
+                if (palette.dark_muted_swatch != null)
+                    n += Utils.make_hex(palette.dark_muted_swatch.red, palette.dark_muted_swatch.green, palette.dark_muted_swatch.blue);
+                if (palette.muted_swatch != null)
+                    n += Utils.make_hex(palette.muted_swatch.red, palette.muted_swatch.green, palette.muted_swatch.blue);
+                if (palette.light_muted_swatch != null)
+                    n += Utils.make_hex(palette.light_muted_swatch.red, palette.light_muted_swatch.green, palette.light_muted_swatch.blue);
 
                 var a = new PaletteInfo ();
                 a.palname = "%s".printf(file.get_basename().replace(".jpg","").replace(".png",""));
@@ -118,6 +126,7 @@ namespace Emulsion {
 
                             color_box.set_visible (true);
                             file_label.set_visible (false);
+                            ok_button.set_sensitive (true);
                         } catch {
 
                         }
@@ -142,13 +151,19 @@ namespace Emulsion {
             }
             this.palette = palette;
 
-            add_swatch (palette.dominant_swatch, "Dominant color");
-            add_swatch (palette.title_swatch, "Title color");
-            add_swatch (palette.vibrant_swatch, "Vibrant color");
-            add_swatch (palette.light_vibrant_swatch, "Light vibrant color");
-            add_swatch (palette.dark_vibrant_swatch, "Dark vibrant color");
-            add_swatch (palette.muted_swatch, "Muted color");
-            add_swatch (palette.dark_muted_swatch, "Dark muted color");
+            // Checking for null avoids growing palette's colors that aren't there.
+            if (palette.dark_vibrant_swatch != null)
+                add_swatch (palette.dark_vibrant_swatch, "Dark vibrant color");
+            if (palette.vibrant_swatch != null)
+                add_swatch (palette.vibrant_swatch, "Vibrant color");
+            if (palette.light_vibrant_swatch != null)
+                add_swatch (palette.light_vibrant_swatch, "Light vibrant color");
+            if (palette.dark_muted_swatch != null)
+                add_swatch (palette.dark_muted_swatch, "Dark muted color");
+            if (palette.muted_swatch != null)
+                add_swatch (palette.muted_swatch, "Muted color");
+            if (palette.light_muted_swatch != null)
+                add_swatch (palette.light_muted_swatch, "Light muted color");
         }
 
         private void add_swatch (Utils.Palette.Swatch? swatch, string tooltip) {
