@@ -25,7 +25,7 @@
             <property name="spacing">6</property>
             <property name="visible">1</property>
             <child>
-              <object class="AdwViewSwitcher" id="vs">
+              <object class="GtkStackSwitcher" id="vs">
                 <property name="vexpand">1</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
