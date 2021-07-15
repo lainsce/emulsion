@@ -454,16 +454,8 @@ namespace Emulsion {
 
         void populate_palettes_view () {
             var g = new PaletteInfo ();
-            g.palname = "GNOME HIG";
-            string[] gr = {"#000000", "#3d3846",
-                           "#a51d2d", "#e01b24",
-                           "#63452c", "#986a44",
-                           "#c64600", "#ff7800",
-                           "#e5a50a", "#f6d32d",
-                           "#26a269", "#33d17a",
-                           "#1a5fb4", "#3584e4",
-                           "#613583", "#9141ac",
-                           "#9a9996", "#f6f5f4"};
+            g.palname = "Merveilles";
+            string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
             palettestore.append (g);

@@ -28,8 +28,8 @@
 
 gridview child .palette-box,
 gridview child .color-box {
-  border-radius: 8px;
-  border: 2px solid transparent;
+  border-radius: 12px;
+  border: 4px solid transparent;
 }
 gridview child:selected {
   background: none;
@@ -85,7 +85,7 @@ gridview child:selected .color-box {
 }
 
 .nw-title-box {
-  background-color: shade(@theme_base_color, 0.8);
+  background-color: shade(@theme_base_color, 0.4);
   border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
 }
 .nw-title-box entry {
@@ -96,8 +96,15 @@ gridview child:selected .color-box {
   border: none;
 }
 .nw-view {
-  background-color: shade(@theme_base_color, 0.5);
+  background-color: shade(@theme_base_color, 0.2);
+}
+.nw-search-box box {
+  border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
+  background-color: shade(@theme_base_color, 0.6);
 }
 .nw-search-box entry {
   border-radius: 99999px;
+}
+.nw-flat {
+  border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
 }

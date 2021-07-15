@@ -72,6 +72,7 @@ namespace Emulsion {
             this.present ();
             win.palette_fb.queue_draw ();
             win.color_fb.queue_draw ();
+            queue_draw ();
         }
 
         construct {
@@ -85,6 +86,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             green_scale.value_changed.connect (() => {
@@ -97,6 +99,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             blue_scale.value_changed.connect (() => {
@@ -109,6 +112,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             red_entry.activate.connect (() => {
@@ -120,6 +124,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             green_entry.activate.connect (() => {
@@ -131,6 +136,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             blue_entry.activate.connect (() => {
@@ -142,6 +148,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
 
             hex_entry.activate.connect (() => {
@@ -151,6 +158,7 @@ namespace Emulsion {
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
+                queue_draw ();
             });
         }
     }
