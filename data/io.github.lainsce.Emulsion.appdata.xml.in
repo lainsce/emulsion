@@ -50,7 +50,7 @@
         <content_attribute id="money-gambling">none</content_attribute>
     </content_rating>
     <releases>
-        <release version="2.0.1" date="2020-06-24">
+        <release version="2.0.1" date="2020-08-18">
             <description>
                 <p>Release: Picking Flowers in Technicolor</p>
                 <p>Add: Color picking from anywhere as a palette is open, via a button.</p>
