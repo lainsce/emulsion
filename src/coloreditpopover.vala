@@ -51,13 +51,13 @@ namespace Emulsion {
                  _color_info = value;
                 color.parse(_color_info.color);
 
-                red_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.red)));
-                green_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.green)));
-                blue_entry.set_text ("%00.0f".printf(Utils.get_srgb(color.blue)));
+                red_entry.set_text ("%00.0f".printf(Utils.make_srgb(color.red)));
+                green_entry.set_text ("%00.0f".printf(Utils.make_srgb(color.green)));
+                blue_entry.set_text ("%00.0f".printf(Utils.make_srgb(color.blue)));
 
-                red_scale.set_value (Utils.get_srgb(color.red));
-                green_scale.set_value (Utils.get_srgb(color.green));
-                blue_scale.set_value (Utils.get_srgb(color.blue));
+                red_scale.set_value (Utils.make_srgb(color.red));
+                green_scale.set_value (Utils.make_srgb(color.green));
+                blue_scale.set_value (Utils.make_srgb(color.blue));
 
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 win.palette_fb.queue_draw ();
@@ -73,9 +73,7 @@ namespace Emulsion {
             win.palette_fb.queue_draw ();
             win.color_fb.queue_draw ();
             queue_draw ();
-        }
 
-        construct {
             red_scale.value_changed.connect (() => {
                 red_entry.set_text ("%00.0f".printf(red_scale.get_value ()));
                 color.red = (float)(double.parse(red_entry.get_text ()) / 255);

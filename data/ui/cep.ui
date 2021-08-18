@@ -162,9 +162,16 @@
             <property name="spacing">6</property>
             <property name="visible">1</property>
             <child>
-              <object class="GtkFixed">
-                <property name="margin-top">40</property>
-                <property name="vexpand">1</property>
+              <object class="GtkBox">
+              <property name="orientation">horizontal</property>
+              <property name="spacing">6</property>
+              <property name="visible">1</property>
+              <child>
+                <object class="GtkFixed">
+                  <property name="margin-top">40</property>
+                  <property name="hexpand">1</property>
+                </object>
+              </child>
               </object>
             </child>
             <child>

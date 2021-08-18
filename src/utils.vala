@@ -20,7 +20,7 @@ namespace Emulsion.Utils {
     public string make_hex (float red, float green, float blue) {
         return "#" + "%02x%02x%02x".printf ((uint)red, (uint)green, (uint)blue);
     }
-    public double get_srgb(double c) {
+    public double make_srgb(double c) {
         if (c <= 0.03928) {
             c = c / 12.92;
             return c * 255.0;

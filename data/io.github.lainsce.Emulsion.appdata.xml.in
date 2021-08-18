@@ -53,6 +53,7 @@
         <release version="2.0.1" date="2020-06-24">
             <description>
                 <p>Release: Picking Flowers in Technicolor</p>
+                <p>Add: Color picking from anywhere as you edit a color.</p>
             </description>
         </release>
         <release version="2.0.0" date="2020-05-07">

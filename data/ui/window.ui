@@ -310,9 +310,11 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox" id="color_label_box">
-                            <property name="orientation">vertical</property>
+                            <property name="orientation">horizontal</property>
+                            <property name="homogeneous">1</property>
                             <child>
                               <object class="GtkEntry" id="color_label">
+                                <property name="valign">center</property>
                                 <property name="halign">start</property>
                                 <property name="margin-top">30</property>
                                 <property name="margin-start">20</property>
@@ -320,6 +322,17 @@
                                 <style>
                                   <class name="title-1"/>
                                 </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="picker_button">
+                                <property name="icon-name">color-picker-symbolic</property>
+                                <property name="valign">center</property>
+                                <property name="halign">end</property>
+                                <property name="margin-top">30</property>
+                                <property name="margin-end">20</property>
+                                <property name="margin-bottom">20</property>
+                                <property name="tooltip-text" translatable="yes">Pick Color</property>
                               </object>
                             </child>
                             <style>

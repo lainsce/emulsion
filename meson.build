@@ -1,4 +1,4 @@
-project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '2.0.0')
+project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '2.0.1')
 gnome = import('gnome')
 i18n = import('i18n')
 
@@ -54,6 +54,7 @@ sources = files(
    'src/palette.vala',
    'src/color.vala',
    'src/coloreditpopover.vala',
+   'src/portal.vala',
 )
 
 dependencies = [

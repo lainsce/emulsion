@@ -68,6 +68,9 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.SingleSelection color_model;
 
+	    [GtkChild]
+        public unowned Gtk.Button picker_button;
+
 	    public GLib.ListStore palettestore;
 	    public GLib.ListStore colorstore;
 	    public Manager m;
@@ -216,6 +219,9 @@ namespace Emulsion {
                                 }
                             }
                         }
+
+                        palette_fb.queue_draw ();
+                        color_fb.queue_draw ();
                     });
                 }
             });
@@ -312,10 +318,70 @@ namespace Emulsion {
                 colorstore.append (a);
             });
 
+            picker_button.clicked.connect (() => {
+                pick_color.begin ();
+                m.save_palettes.begin (palettestore);
+            });
+
             this.set_size_request (360, 360);
             Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 			this.show ();
 		}
+
+		public async void pick_color () {
+            try {
+                var bus = yield Bus.get(BusType.SESSION);
+                var shot = yield bus.get_proxy<org.freedesktop.portal.Screenshot>("org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop");
+                var options = new GLib.HashTable<string, GLib.Variant>(str_hash, str_equal);
+                var handle = shot.pick_color ("", options);
+                var request = yield bus.get_proxy<org.freedesktop.portal.Request>("org.freedesktop.portal.Desktop", handle);
+
+                request.response.connect ((response, results) => {
+                    if (response == 0) {
+                        debug ("User picked a color.");
+                        Gdk.RGBA color_portal = {};
+                        double cr, cg, cb = 0.0;
+
+                        results.@get("color").get ("(ddd)", out cr, out cg, out cb);
+
+                        color_portal.red = (float)cr;
+                        color_portal.green = (float)cg;
+                        color_portal.blue = (float)cb;
+                        color_portal.alpha = 1;
+
+                        var pc = Utils.make_hex((float)Utils.make_srgb(color_portal.red), (float)Utils.make_srgb(color_portal.green), (float)Utils.make_srgb(color_portal.blue));
+
+                        print ("HEX:%s\n", pc);
+                        print ("R:%00.0f\nG:%00.0f\nB:%00.0f\n", (float)Utils.make_srgb(color_portal.red), (float)Utils.make_srgb(color_portal.green), (float)Utils.make_srgb(color_portal.blue));
+
+                        var a = new ColorInfo ();
+                        a.name = pc;
+                        a.color = pc;
+
+                        var pitem = palettestore.get_item (palette_model.get_selected ());
+                        a.uid = ((PaletteInfo)pitem).palname;
+
+                        if (a.uid == ((PaletteInfo)pitem).palname) {
+                            var arrco = ((PaletteInfo)pitem).colors.to_array();
+                            for (int j = 0; j <= arrco.length; j++) {
+                                ((PaletteInfo)pitem).colors.add(a.color);
+                            }
+                        }
+
+                        colorstore.append (a);
+
+                        pick_color.callback();
+                    } else {
+                       debug ("User didn't pick a color.");
+                       return;
+                    }
+                });
+
+                yield;
+            } catch (GLib.Error error) {
+                warning ("Failed to request color: %s", error.message);
+            }
+        }
 
 		public void action_ex_txt () {
             if (palettestore.get_item(palette_model.selected) != null) {
