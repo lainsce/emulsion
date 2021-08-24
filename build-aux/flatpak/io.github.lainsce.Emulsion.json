@@ -97,6 +97,7 @@
                 {
                     "type" : "git",
                     "url" : "../../"
+		    "branch": "main"
                 }
             ]
         }
