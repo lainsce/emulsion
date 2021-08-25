@@ -96,7 +96,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "../../"
+                    "url" : "../../",
 		    "branch": "main"
                 }
             ]

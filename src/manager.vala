@@ -45,6 +45,11 @@ namespace Emulsion {
                     builder.add_string_value (col);
                 }
                 builder.end_array ();
+                builder.begin_array ();
+                foreach (string coln in ((PaletteInfo)item).colorsnames) {
+                    builder.add_string_value (coln);
+                }
+                builder.end_array ();
                 builder.end_array ();
             }
             builder.end_array ();
@@ -84,17 +89,37 @@ namespace Emulsion {
                         var pi = t.get_array ();
                         var name = pi.get_string_element(0);
                         var color = pi.get_array_element(1);
+                        var colornames = pi.get_array_element(2);
 
                         var a = new PaletteInfo ();
+
+                        a.palname = name;
+
                         string[] arrco = {};
 
                         color.foreach_element ((a, b, c) => {
                             arrco += color.get_string_element(b);
                         });
 
-                        a.palname = name;
                         a.colors = new Gee.TreeSet<string> ();
                         a.colors.add_all_array (arrco);
+
+                        if (colornames != null) {
+                            string[] arrconames = {};
+
+                            colornames.foreach_element ((a, b, c) => {
+                                arrconames += colornames.get_string_element(b);
+                            });
+
+                            a.colorsnames = new Gee.TreeSet<string> ();
+                            a.colorsnames.add_all_array (arrconames);
+                        } else {
+                            string[] arrconames = {};
+
+                            a.colorsnames = new Gee.TreeSet<string> ();
+                            a.colorsnames.add_all_array (arrconames);
+                        }
+
                         win.palettestore.append (a);
                     }
                 }

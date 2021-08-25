@@ -7,6 +7,7 @@ namespace Emulsion {
 
         public string palname { get; set; }
         public Gee.TreeSet<string> colors { get; set; }
+        public Gee.TreeSet<string> colorsnames { get; set; }
     }
 
     public class PaletteRenderer : Gtk.Box {

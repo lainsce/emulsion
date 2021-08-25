@@ -400,20 +400,37 @@
             <property name="width-request">128</property>
             <property name="hexpand">0</property>
             <child>
-              <object class="GtkLabel" id="color_name">
-                <property name="halign">start</property>
-                <property name="hexpand">1</property>
-                <binding name="label">
-                  <lookup type="EmulsionColorInfo" name="name">
-                      <lookup name="item">GtkListItem</lookup>
-                  </lookup>
-                </binding>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkEntry" id="color_rname">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <binding name="text">
+                      <lookup type="EmulsionColorInfo" name="rname">
+                          <lookup name="item">GtkListItem</lookup>
+                      </lookup>
+                    </binding>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="color_name">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <binding name="label">
+                      <lookup type="EmulsionColorInfo" name="name">
+                          <lookup name="item">GtkListItem</lookup>
+                      </lookup>
+                    </binding>
+                  </object>
+                </child>
               </object>
             </child>
             <child type="end">
               <object class="GtkMenuButton" id="color_button">
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="menu-model">cmenu</property>
+                <property name="valign">center</property>
                 <style>
                   <class name="nw-header-toggle-button"/>
                 </style>

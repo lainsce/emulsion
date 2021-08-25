@@ -18,8 +18,8 @@
 
 /* Horrible hack, otherwise menus are blown in size */
 .menu * {
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   margin: 0;
 }
 .menu separator {
@@ -30,6 +30,10 @@ gridview child .palette-box,
 gridview child .color-box {
   border-radius: 12px;
   border: 4px solid transparent;
+}
+
+gridview child button {
+  padding: 0;
 }
 gridview child:selected {
   background: none;

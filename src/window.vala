@@ -162,9 +162,11 @@ namespace Emulsion {
                     color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                     int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
+                    var arrconame = ((PaletteInfo)palettestore.get_item (pos)).colorsnames.to_array();
                     for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
                         a.name = arrco[j];
+                        a.colorname = arrconame[j];
                         a.color = arrco[j];
                         a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         colorstore.append (a);
@@ -304,6 +306,7 @@ namespace Emulsion {
 
                 var a = new ColorInfo ();
                 a.name = rc;
+                a.colorname = "";
                 a.color = rc;
 
                 var pitem = palettestore.get_item (palette_model.get_selected ());
@@ -472,6 +475,7 @@ namespace Emulsion {
                 if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).palname) {
                     if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
                         ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
+                        ((PaletteInfo)pitem).colorsnames.remove(((ColorInfo)citem).colorname);
                         colorstore.remove (color_model.get_selected());
                     }
                 }
@@ -524,6 +528,9 @@ namespace Emulsion {
             string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
+            string[] grn = {"Black", "Ultraviolet Sun", "Infrared Moon", "White"};
+            g.colorsnames = new Gee.TreeSet<string> ();
+            g.colorsnames.add_all_array (grn);
             palettestore.append (g);
 
             var p = new PaletteInfo ();
@@ -533,6 +540,11 @@ namespace Emulsion {
                           "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
             p.colors = new Gee.TreeSet<string> ();
             p.colors.add_all_array (pr);
+            string[] prn = {"", "", "", "", "", "",
+                            "", "", "", "", "", "",
+                            "", "", "", ""};
+            p.colorsnames = new Gee.TreeSet<string> ();
+            p.colorsnames.add_all_array (prn);
             palettestore.append (p);
 
             var e = new PaletteInfo ();
@@ -541,6 +553,10 @@ namespace Emulsion {
                           "#7b53ad", "#fdfdf8"};
             e.colors = new Gee.TreeSet<string> ();
             e.colors.add_all_array (er);
+            string[] ern = {"", "", "", "", "", "",
+                            "", ""};
+            e.colorsnames = new Gee.TreeSet<string> ();
+            e.colorsnames.add_all_array (ern);
             palettestore.append (e);
 
             var d = new PaletteInfo ();
@@ -548,6 +564,9 @@ namespace Emulsion {
             string[] dr = {"#081820", "#346856", "#88c070", "#e0f8d0"};
             d.colors = new Gee.TreeSet<string> ();
             d.colors.add_all_array (dr);
+            string[] drn = {"", "", "", ""};
+            d.colorsnames = new Gee.TreeSet<string> ();
+            d.colorsnames.add_all_array (drn);
             palettestore.append (d);
 
             var m = new PaletteInfo ();
@@ -555,6 +574,9 @@ namespace Emulsion {
             string[] mr = {"#171219", "#f2fbeb"};
             m.colors = new Gee.TreeSet<string> ();
             m.colors.add_all_array (mr);
+            string[] mrn = {"", ""};
+            m.colorsnames = new Gee.TreeSet<string> ();
+            m.colorsnames.add_all_array (mrn);
             palettestore.append (m);
         }
 	}

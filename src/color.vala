@@ -7,6 +7,7 @@ namespace Emulsion {
          */
         public string uid { get; set; }
         public string name { get; set; }
+        public string colorname { get; set; }
         public string color { get; set; }
     }
 
