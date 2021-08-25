@@ -104,21 +104,14 @@ namespace Emulsion {
                         a.colors = new Gee.TreeSet<string> ();
                         a.colors.add_all_array (arrco);
 
-                        if (colornames != null) {
-                            string[] arrconames = {};
+                        string[] arrconames = {};
 
-                            colornames.foreach_element ((a, b, c) => {
-                                arrconames += colornames.get_string_element(b);
-                            });
+                        colornames.foreach_element ((a, b, c) => {
+                            arrconames += colornames.get_string_element(b);
+                        });
 
-                            a.colorsnames = new Gee.TreeSet<string> ();
-                            a.colorsnames.add_all_array (arrconames);
-                        } else {
-                            string[] arrconames = {};
-
-                            a.colorsnames = new Gee.TreeSet<string> ();
-                            a.colorsnames.add_all_array (arrconames);
-                        }
+                        a.colorsnames = new Gee.TreeSet<string> ();
+                        a.colorsnames.add_all_array (arrconames);
 
                         win.palettestore.append (a);
                     }

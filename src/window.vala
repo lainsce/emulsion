@@ -166,7 +166,11 @@ namespace Emulsion {
                     for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
                         a.name = arrco[j];
-                        a.colorname = arrconame[j];
+                        if (arrconame != null) {
+                            a.colorname = arrconame[j];
+                        } else {
+                            a.colorname = "";
+                        }
                         a.color = arrco[j];
                         a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         colorstore.append (a);
@@ -286,16 +290,20 @@ namespace Emulsion {
 
                 var rand = new GLib.Rand ();
                 string[] n = {};
+                string[] nn = {};
 
                 for (int i = 0; i <= rand.int_range (1, 16); i++) {
                     var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     n += rc;
+                    nn += rc;
                 }
 
                 var a = new PaletteInfo ();
                 a.palname = "New Palette " + "%d".printf(uid_counter++);
                 a.colors = new Gee.TreeSet<string> ();
                 a.colors.add_all_array (n);
+                a.colorsnames = new Gee.TreeSet<string> ();
+                a.colorsnames.add_all_array (nn);
 
                 palettestore.append (a);
             });
@@ -306,7 +314,7 @@ namespace Emulsion {
 
                 var a = new ColorInfo ();
                 a.name = rc;
-                a.colorname = "";
+                a.colorname = rc;
                 a.color = rc;
 
                 var pitem = palettestore.get_item (palette_model.get_selected ());
@@ -528,7 +536,7 @@ namespace Emulsion {
             string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
-            string[] grn = {"Black", "Ultraviolet Sun", "Infrared Moon", "White"};
+            string[] grn = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colorsnames = new Gee.TreeSet<string> ();
             g.colorsnames.add_all_array (grn);
             palettestore.append (g);
@@ -540,9 +548,9 @@ namespace Emulsion {
                           "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
             p.colors = new Gee.TreeSet<string> ();
             p.colors.add_all_array (pr);
-            string[] prn = {"", "", "", "", "", "",
-                            "", "", "", "", "", "",
-                            "", "", "", ""};
+            string[] prn = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
+                            "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
+                            "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
             p.colorsnames = new Gee.TreeSet<string> ();
             p.colorsnames.add_all_array (prn);
             palettestore.append (p);
@@ -553,8 +561,8 @@ namespace Emulsion {
                           "#7b53ad", "#fdfdf8"};
             e.colors = new Gee.TreeSet<string> ();
             e.colors.add_all_array (er);
-            string[] ern = {"", "", "", "", "", "",
-                            "", ""};
+            string[] ern = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
+                            "#7b53ad", "#fdfdf8"};
             e.colorsnames = new Gee.TreeSet<string> ();
             e.colorsnames.add_all_array (ern);
             palettestore.append (e);
@@ -564,7 +572,7 @@ namespace Emulsion {
             string[] dr = {"#081820", "#346856", "#88c070", "#e0f8d0"};
             d.colors = new Gee.TreeSet<string> ();
             d.colors.add_all_array (dr);
-            string[] drn = {"", "", "", ""};
+            string[] drn = {"#081820", "#346856", "#88c070", "#e0f8d0"};
             d.colorsnames = new Gee.TreeSet<string> ();
             d.colorsnames.add_all_array (drn);
             palettestore.append (d);
@@ -574,7 +582,7 @@ namespace Emulsion {
             string[] mr = {"#171219", "#f2fbeb"};
             m.colors = new Gee.TreeSet<string> ();
             m.colors.add_all_array (mr);
-            string[] mrn = {"", ""};
+            string[] mrn = {"#171219", "#f2fbeb"};
             m.colorsnames = new Gee.TreeSet<string> ();
             m.colorsnames.add_all_array (mrn);
             palettestore.append (m);

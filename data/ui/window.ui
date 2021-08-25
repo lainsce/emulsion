@@ -345,7 +345,7 @@
                             <child>
                               <object class="GtkGridView" id="color_fb">
                                 <property name="min-columns">1</property>
-                                <property name="max-columns">5</property>
+                                <property name="max-columns">4</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="single-click-activate">1</property>
@@ -402,23 +402,27 @@
             <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkEntry" id="color_rname">
-                    <property name="halign">start</property>
-                    <property name="hexpand">1</property>
-                    <binding name="text">
-                      <lookup type="EmulsionColorInfo" name="rname">
-                          <lookup name="item">GtkListItem</lookup>
-                      </lookup>
-                    </binding>
-                  </object>
-                </child>
+                <property name="hexpand">1</property>
                 <child>
                   <object class="GtkLabel" id="color_name">
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <binding name="label">
                       <lookup type="EmulsionColorInfo" name="name">
+                          <lookup name="item">GtkListItem</lookup>
+                      </lookup>
+                    </binding>
+                    <style>
+                      <class name="nw-color-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="color_rname">
+                    <property name="halign">start</property>
+                    <property name="hexpand">1</property>
+                    <binding name="label">
+                      <lookup type="EmulsionColorInfo" name="colorname">
                           <lookup name="item">GtkListItem</lookup>
                       </lookup>
                     </binding>
@@ -431,9 +435,6 @@
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="menu-model">cmenu</property>
                 <property name="valign">center</property>
-                <style>
-                  <class name="nw-header-toggle-button"/>
-                </style>
               </object>
             </child>
           </object>
