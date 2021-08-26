@@ -25,8 +25,18 @@
             <property name="spacing">6</property>
             <property name="visible">1</property>
             <child>
-              <object class="GtkEntry" id="color_name_entry">
-                <property name="halign">center</property>
+              <object class="GtkBox">
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel" id="color_name_label">
+                    <property name="label" translatable="yes">Name∶</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="color_name_entry">
+                    <property name="halign">center</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
