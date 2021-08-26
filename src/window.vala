@@ -220,7 +220,9 @@ namespace Emulsion {
                                 if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
                                     if (arrco[j] != ((ColorInfo)item).color) {
                                         ((PaletteInfo)pitem).colors.remove (arrco[pos]);
+                                        ((PaletteInfo)pitem).colorsnames.remove (arrco[pos]);
                                         ((PaletteInfo)pitem).colors.add (cep.color_info.color);
+                                        ((PaletteInfo)pitem).colorsnames.add (cep.color_info.colorname);
                                     }
                                 }
                             }
@@ -536,7 +538,7 @@ namespace Emulsion {
             string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
-            string[] grn = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
+            string[] grn = {"Black", "Infrared Moon", "Ultraviolet Sun", "White"};
             g.colorsnames = new Gee.TreeSet<string> ();
             g.colorsnames.add_all_array (grn);
             palettestore.append (g);
@@ -550,7 +552,7 @@ namespace Emulsion {
             p.colors.add_all_array (pr);
             string[] prn = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
                             "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
-                            "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
+                            "#29adff", "#83769c", "#ff77a8", "Peach"};
             p.colorsnames = new Gee.TreeSet<string> ();
             p.colorsnames.add_all_array (prn);
             palettestore.append (p);

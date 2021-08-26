@@ -33,6 +33,8 @@ namespace Emulsion {
         public unowned Gtk.Entry blue_entry;
         [GtkChild]
         public unowned Gtk.Entry hex_entry;
+        [GtkChild]
+        public unowned Gtk.Entry color_name_entry;
 
         public MainWindow win { get; construct; }
         public Gdk.RGBA color = {};
@@ -60,6 +62,9 @@ namespace Emulsion {
                 blue_scale.set_value (Utils.make_srgb(color.blue));
 
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+
+                color_name_entry.set_text ("%s".printf(_color_info.colorname));
+
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
                 queue_draw ();
@@ -152,6 +157,15 @@ namespace Emulsion {
             hex_entry.activate.connect (() => {
                 _color_info.color = hex_entry.get_text ();
                 _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
+                queue_draw ();
+            });
+
+            color_name_entry.activate.connect (() => {
+                _color_info.colorname = color_name_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();

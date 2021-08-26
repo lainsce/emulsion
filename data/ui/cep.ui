@@ -25,6 +25,11 @@
             <property name="spacing">6</property>
             <property name="visible">1</property>
             <child>
+              <object class="GtkEntry" id="color_name_entry">
+                <property name="halign">center</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkStackSwitcher" id="vs">
                 <property name="vexpand">1</property>
                 <property name="visible">True</property>
