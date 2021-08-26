@@ -326,6 +326,7 @@ namespace Emulsion {
                     var arrco = ((PaletteInfo)pitem).colors.to_array();
                     for (int j = 0; j <= arrco.length; j++) {
                         ((PaletteInfo)pitem).colors.add(a.color);
+                        ((PaletteInfo)pitem).colorsnames.add(a.colorname);
                     }
                 }
                 colorstore.append (a);

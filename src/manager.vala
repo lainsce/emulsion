@@ -110,6 +110,14 @@ namespace Emulsion {
                         a.colors.add_all_array (arrco);
 
                         a.colorsnames = new Gee.TreeSet<string> ();
+                        a.colorsnames.order_by ((color_a,color_b) => {
+                            foreach (string col in a.colorsnames) {
+                                if (col == color_a || col == color_b) {
+                                    return 0;
+                                }
+                            }
+                            return 1;
+                        });
                         a.colorsnames.add_all_array (arrcon);
 
                         win.palettestore.append (a);
