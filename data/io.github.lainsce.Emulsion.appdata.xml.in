@@ -11,6 +11,10 @@
     <provides>
         <binary>io.github.lainsce.Emulsion</binary>
     </provides>
+    <kudos>
+      <kudo>ModernToolkit</kudo>
+      <kudo>HiDpiIcon</kudo>
+    </kudos>
     <developer_name>Lains</developer_name>
     <url type="homepage">https://github.com/lainsce/emulsion/</url>
     <url type="bugtracker">https://github.com/lainsce/emulsion/issues</url>
@@ -20,43 +24,26 @@
             <image>https://raw.githubusercontent.com/lainsce/emulsion/master/data/shot.png</image>
         </screenshot>
     </screenshots>
-    <content_rating type="oars-1.1">
-        <content_attribute id="violence-cartoon">none</content_attribute>
-        <content_attribute id="violence-fantasy">none</content_attribute>
-        <content_attribute id="violence-realistic">none</content_attribute>
-        <content_attribute id="violence-bloodshed">none</content_attribute>
-        <content_attribute id="violence-sexual">none</content_attribute>
-        <content_attribute id="violence-desecration">none</content_attribute>
-        <content_attribute id="violence-slavery">none</content_attribute>
-        <content_attribute id="violence-worship">none</content_attribute>
-        <content_attribute id="drugs-alcohol">none</content_attribute>
-        <content_attribute id="drugs-narcotics">none</content_attribute>
-        <content_attribute id="drugs-tobacco">none</content_attribute>
-        <content_attribute id="sex-nudity">none</content_attribute>
-        <content_attribute id="sex-themes">none</content_attribute>
-        <content_attribute id="sex-homosexuality">none</content_attribute>
-        <content_attribute id="sex-prostitution">none</content_attribute>
-        <content_attribute id="sex-adultery">none</content_attribute>
-        <content_attribute id="sex-appearance">none</content_attribute>
-        <content_attribute id="language-profanity">none</content_attribute>
-        <content_attribute id="language-humor">none</content_attribute>
-        <content_attribute id="language-discrimination">none</content_attribute>
-        <content_attribute id="social-chat">none</content_attribute>
-        <content_attribute id="social-info">none</content_attribute>
-        <content_attribute id="social-audio">none</content_attribute>
-        <content_attribute id="social-location">none</content_attribute>
-        <content_attribute id="social-contacts">none</content_attribute>
-        <content_attribute id="money-purchasing">none</content_attribute>
-        <content_attribute id="money-gambling">none</content_attribute>
-    </content_rating>
+    <content_rating type="oars-1.1" />
+    <recommends>
+      <control>keyboard</control>
+      <control>pointing</control>
+      <control>touch</control>
+    </recommends>
+    <requires>
+      <display_length compare="ge">360</display_length>
+    </requires>
+    <custom>
+      <value key="GnomeSoftware::key-colors">[(51, 209, 122)]</value>
+    </custom>
     <releases>
-        <release version="2.0.1" date="2020-08-18">
+        <release version="2.0.1" date="2021-08-18">
             <description>
                 <p>Release: Picking Flowers in Technicolor</p>
                 <p>Add: Color picking from anywhere as a palette is open, via a button.</p>
             </description>
         </release>
-        <release version="2.0.0" date="2020-05-07">
+        <release version="2.0.0" date="2021-05-07">
             <description>
                 <p>Release: Importin' &amp; Exportin'</p>
                 <p>Add: Export palettes as PNGs or as text via clipboard.</p>
@@ -64,7 +51,7 @@
                 <p>Add: Import palettes via opening an image in a special dialog.</p>
             </description>
         </release>
-        <release version="1.0.0" date="2020-05-02">
+        <release version="1.0.0" date="2021-05-02">
             <description>
                 <p>Release: First Release</p>
             </description>
