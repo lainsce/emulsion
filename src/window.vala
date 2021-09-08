@@ -216,18 +216,19 @@ namespace Emulsion {
                             var pitem = palettestore.get_item (i);
 
                             var arrco = ((PaletteInfo)pitem).colors.to_array();
-                            for (j = 0; j < arrco.length; j++) {
+                            var arrcon = ((PaletteInfo)pitem).colorsnames.to_array();
+                            for (j = 0; j < ((PaletteInfo)pitem).colors.size; j++) {
                                 if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
                                     if (arrco[j] != ((ColorInfo)item).color) {
                                         ((PaletteInfo)pitem).colors.remove (arrco[pos]);
-                                        ((PaletteInfo)pitem).colorsnames.remove (arrco[pos]);
+                                        ((PaletteInfo)pitem).colorsnames.remove (arrcon[pos]);
                                         ((PaletteInfo)pitem).colors.add (cep.color_info.color);
                                         ((PaletteInfo)pitem).colorsnames.add (cep.color_info.colorname);
                                     }
                                 }
                             }
                         }
-
+                        m.save_palettes.begin (palettestore);
                         palette_fb.queue_draw ();
                         color_fb.queue_draw ();
                     });
@@ -371,6 +372,7 @@ namespace Emulsion {
                         var a = new ColorInfo ();
                         a.name = pc;
                         a.color = pc;
+                        a.colorname = pc;
 
                         var pitem = palettestore.get_item (palette_model.get_selected ());
                         a.uid = ((PaletteInfo)pitem).palname;
@@ -379,6 +381,7 @@ namespace Emulsion {
                             var arrco = ((PaletteInfo)pitem).colors.to_array();
                             for (int j = 0; j <= arrco.length; j++) {
                                 ((PaletteInfo)pitem).colors.add(a.color);
+                                ((PaletteInfo)pitem).colorsnames.add(a.color);
                             }
                         }
 

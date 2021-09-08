@@ -10,9 +10,6 @@
     <property name="default-width">950</property>
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
-    <style>
-      <class name="nw-outline"/>
-    </style>
     <child>
       <object class="GtkBox" id="main_box">
         <property name="orientation">vertical</property>
@@ -40,7 +37,7 @@
                         <property name="icon-name">list-add-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Add Palette</property>
                         <style>
-                          <class name="nw-header-button"/>
+                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -49,7 +46,7 @@
                         <property name="icon-name">insert-image-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Import Palette…</property>
                         <style>
-                          <class name="nw-header-button"/>
+                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -66,7 +63,7 @@
                         <property name="icon-name">edit-find-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Search Palette Names</property>
                         <style>
-                          <class name="nw-header-button"/>
+                          <class name="image-button"/>
                         </style>
                       </object>
                     </child>
@@ -90,9 +87,6 @@
                     <child type="end">
                       <object class="GtkMenuButton" id="menu_button">
                         <property name="icon-name">open-menu-symbolic</property>
-                        <style>
-                          <class name="nw-header-toggle-button"/>
-                        </style>
                       </object>
                     </child>
                     <child>
@@ -101,7 +95,6 @@
                         <property name="tooltip-text" translatable="yes">Go Back to Palettes View</property>
                         <style>
                           <class name="image-button"/>
-                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -111,7 +104,6 @@
                         <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
                         <style>
                           <class name="image-button"/>
-                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
