@@ -1,37 +1,42 @@
-# ![icon](data/icon.png) Emulsion
+<img align="left" style="vertical-align: middle" width="120" height="120" src="data/icon.png">
 
-## Stock up on colors
+# Emulsion
 
-<!-- <a href='https://flathub.org/apps/details/io.github.lainsce.Emulsion'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a> -->
+Stock up on colors
+
+###
 
 [![Please do not theme this app](https://stopthemingmy.app/badge.svg)](https://stopthemingmy.app)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 ![Screenshot](data/shot.png)
 
-## Donations 
+<p align="center"><a href='https://flathub.org/apps/details/io.github.lainsce.Emulsion'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a></p>
+
+## 💝 Donations 
 
 Would you like to support the development of this app to new heights? Then:
 
 [Be my backer on Patreon](https://www.patreon.com/lainsce)
 
-## Dependencies
+## 🛠️ Dependencies
 
 Please make sure you have these dependencies first before building.
 
 ```bash
 gtk4
-libjson-glib
 libadwaita-1
+libjson-glib
+libgee-0.8
 meson
 vala
 ```
 
-## Building
+## 🏗️ Building
 
 Simply clone this repo, then:
 
 ```bash
-meson build --prefix=/usr && cd build
+meson _build --prefix=/usr && cd _build
 sudo ninja install
 ```
