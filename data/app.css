@@ -1,6 +1,7 @@
 /* app */
 @define-color accent_color @green_4;
 @define-color accent_bg_color @green_4;
+@define-color accent_fg_color @theme_fg_color;
 
 .palette,
 .color {
@@ -12,6 +13,7 @@
 	border-radius: 8px;
 	min-height: 32px;
 	min-width: 32px;
+	outline: 1px solid @borders;
 }
 
 /* Horrible hack, otherwise menus are blown in size */
@@ -28,6 +30,7 @@ gridview child .palette-box,
 gridview child .color-box {
   border-radius: 12px;
   border: 4px solid transparent;
+  outline: 1px solid @borders;
 }
 
 gridview child button {
@@ -47,49 +50,39 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #e01b24
+                #FF0000
             );
-        padding: 8px;
-        border-radius: 9999px;
 }
 .red highlight {
         background: none;
-        border: 1px solid transparent;
 }
 .green trough {
         background-image:
             linear-gradient(
                 to right,
                 #000,
-                #33d17a
+                #00FF00
             );
-        padding: 8px;
-        border-radius: 9999px;
 }
 .green highlight {
         background: none;
-        border: 1px solid transparent;
 }
 .blue trough {
         background-image:
             linear-gradient(
                 to right,
                 #000,
-                #3584e4
+                #0000FF
             );
-        padding: 8px;
-        border-radius: 9999px;
 }
 .blue highlight {
         background: none;
-        border: 1px solid transparent;
 }
 
 .nw-title-box {
-  background-color: shade(@theme_base_color, 0.4);
-  border-bottom: 1px solid @borders;
+  background-color: shade(@theme_bg_color, 0.66);
 }
-.nw-title-box entry {
+.nw-title-box entry:not(.nw-search-box) {
   background: none;
   box-shadow: none;
   border-radius: 8px;
@@ -100,11 +93,13 @@ gridview child:selected .color-box {
   background-color: shade(@theme_base_color, 0.2);
 }
 .nw-search-box box {
-  background-color: shade(@theme_base_color, 0.6);
+  background-color: shade(@theme_base_color, 0.66);
+  border: none;
 }
-.nw-search-box entry {
+.nw-title-box entry {
   border-radius: 99999px;
 }
 .nw-color-label {
-  font-size: 1.2rem;
+  font-size: 1.33rem;
+  font-weight: 700;
 }

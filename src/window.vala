@@ -24,8 +24,6 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.MenuButton menu_button2;
 	    [GtkChild]
-	    unowned Gtk.ToggleButton search_button;
-	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
 	    [GtkChild]
 	    unowned Gtk.Button import_palette_button;
@@ -33,11 +31,6 @@ namespace Emulsion {
 	    unowned Gtk.Button add_color_button;
 	    [GtkChild]
 	    unowned Gtk.Button back_button;
-
-	    [GtkChild]
-	    unowned Gtk.Revealer search_revealer;
-        [GtkChild]
-	    unowned Gtk.SearchBar searchbar;
 	    [GtkChild]
 	    unowned Gtk.FilterListModel palette_filter_model;
 
@@ -53,11 +46,6 @@ namespace Emulsion {
 	    unowned Gtk.Stack main_stack;
 	    [GtkChild]
 	    unowned Gtk.Stack palette_stack;
-
-	    [GtkChild]
-	    unowned Gtk.ScrolledWindow palette_window;
-	    [GtkChild]
-	    unowned Gtk.ScrolledWindow color_window;
 
         [GtkChild]
 	    public unowned Gtk.GridView palette_fb;
@@ -144,15 +132,11 @@ namespace Emulsion {
             menu_button2.menu_model = (MenuModel)builder.get_object ("menu");
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
-            palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
-            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
                 main_stack.set_visible_child_name ("colbody");
-                search_revealer.set_reveal_child (false);
-                search_button.set_active (false);
                 color_fb.grab_focus ();
                 colorstore.remove_all ();
 
@@ -160,19 +144,21 @@ namespace Emulsion {
                     color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
                     color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                     color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
-                    int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
                     var arrconame = ((PaletteInfo)palettestore.get_item (pos)).colorsnames.to_array();
-                    for (j = 0; j < arrco.length; j++) {
+                    for (int j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
-                        a.name = arrco[j];
+                        a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         if (arrconame != null) {
-                            a.colorname = arrconame[j];
+                            for (int i = 0; i < arrconame.length; i++) {
+                                if (i == j) {
+                                    a.color = arrco[i];
+                                    a.colorname = arrconame[i];
+                                }
+                            }
                         } else {
                             a.colorname = "";
                         }
-                        a.color = arrco[j];
-                        a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         colorstore.append (a);
                     }
                 }
@@ -180,8 +166,6 @@ namespace Emulsion {
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
-            color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
-            color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
 
             color_label.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,"document-edit-symbolic");
             color_label.set_icon_activatable (Gtk.EntryIconPosition.SECONDARY, true);
@@ -246,11 +230,6 @@ namespace Emulsion {
                 main_stack.set_visible_child_name ("palbody");
             });
 
-            searchbar.set_key_capture_widget (this);
-            search_button.toggled.connect (() => {
-               search_revealer.set_reveal_child (search_button.get_active());
-            });
-
             palettestore.items_changed.connect (() => {
                 color_fb.queue_draw ();
                 palette_fb.queue_draw ();
@@ -276,12 +255,10 @@ namespace Emulsion {
                     palette_label.set_visible(false);
                     palette_stack.set_visible_child_name ("palempty");
                     palette_hlabel.set_text("Emulsion");
-                    search_button.set_visible(false);
                 } else {
                     palette_label.set_visible(true);
                     palette_stack.set_visible_child_name ("palfull");
                     palette_hlabel.set_text("");
-                    search_button.set_visible(true);
                 }
             }
 
@@ -289,7 +266,6 @@ namespace Emulsion {
                 palette_stack.set_visible_child_name ("palfull");
                 palette_label.set_visible(true);
                 palette_hlabel.set_text("");
-                search_button.set_visible(true);
 
                 var rand = new GLib.Rand ();
                 string[] n = {};
@@ -316,7 +292,6 @@ namespace Emulsion {
                 var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
 
                 var a = new ColorInfo ();
-                a.name = rc;
                 a.colorname = rc;
                 a.color = rc;
 
@@ -370,7 +345,6 @@ namespace Emulsion {
                         print ("R:%00.0f\nG:%00.0f\nB:%00.0f\n", (float)Utils.make_srgb(color_portal.red), (float)Utils.make_srgb(color_portal.green), (float)Utils.make_srgb(color_portal.blue));
 
                         var a = new ColorInfo ();
-                        a.name = pc;
                         a.color = pc;
                         a.colorname = pc;
 
@@ -475,7 +449,6 @@ namespace Emulsion {
             if (palettestore.get_item(0) == null) {
                 palette_stack.set_visible_child_name ("palempty");
                 palette_label.set_visible(false);
-                search_button.set_visible(false);
                 palette_hlabel.set_text("Emulsion");
             }
         }

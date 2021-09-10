@@ -39,16 +39,15 @@ namespace Emulsion {
             for (i = 0; i < n; i++) {
                 builder.begin_array ();
                 var item = liststore.get_item (i);
-                int j = ((PaletteInfo)item).colors.size;
                 builder.add_string_value (((PaletteInfo)item).palname);
                 builder.begin_array ();
-                for (uint k = i; k < j; k++) {
-                    builder.begin_array ();
-                    string col = ((PaletteInfo)item).colors.to_array()[k];
-                    string coln = ((PaletteInfo)item).colorsnames.to_array()[k];
+                foreach (string col in ((PaletteInfo)item).colors) {
                     builder.add_string_value (col);
+                }
+                builder.end_array ();
+                builder.begin_array ();
+                foreach (string coln in ((PaletteInfo)item).colorsnames) {
                     builder.add_string_value (coln);
-                    builder.end_array ();
                 }
                 builder.end_array ();
                 builder.end_array ();
@@ -90,37 +89,25 @@ namespace Emulsion {
                         var pi = t.get_array ();
                         var name = pi.get_string_element(0);
                         var color = pi.get_array_element(1);
+                        var colorn = pi.get_array_element(2);
 
                         var a = new PaletteInfo ();
-
-                        a.palname = name;
-
                         string[] arrco = {};
                         string[] arrcon = {};
 
                         color.foreach_element ((a, b, c) => {
-                            var color_pairs = color.get_array_element(b);
-                            color_pairs.foreach_element ((a, b, c) => {
-                                arrco += color_pairs.get_string_element(0);
-                                arrcon += color_pairs.get_string_element(1);
-                            });
+                            arrco += color.get_string_element(b);
                         });
 
+                        colorn.foreach_element ((a, b, c) => {
+                            arrcon += colorn.get_string_element(b);
+                        });
+
+                        a.palname = name;
                         a.colors = new Gee.TreeSet<string> ();
                         a.colors.add_all_array (arrco);
-
                         a.colorsnames = new Gee.TreeSet<string> ();
                         a.colorsnames.add_all_array (arrcon);
-                        a.colorsnames.order_by ((color_a,color_b) => {
-                            for (int i = 0; i < a.colors.size; i++) {
-                                if (color_a == a.colors.to_array()[i] && color_b == a.colors.to_array()[i]) {
-                                    return 1;
-                                } else {
-                                    return -1;
-                                }
-                            }
-                            return 0;
-                        });
                         win.palettestore.append (a);
                     }
                 }

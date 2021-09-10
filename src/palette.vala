@@ -1,8 +1,9 @@
 namespace Emulsion {
     public class PaletteInfo : Object {
         /*
-         * name : string of the Palette's name e.g. "GNOME";
+         * palname : string of the Palette's name e.g. "GNOME";
          * colors : string array of the Palette, all in hexcodes;
+         * colorsnames : string array of the Palette, for color names;
          */
 
         public string palname { get; set; }

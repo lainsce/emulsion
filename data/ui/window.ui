@@ -23,7 +23,7 @@
                   <object class="AdwHeaderBar" id="palette_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="nw-flat"/>
+                      <class name="flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="palette_hlabel">
@@ -54,15 +54,6 @@
                       <object class="GtkMenuButton" id="menu_button2">
                         <property name="icon-name">open-menu-symbolic</property>
                         <style>
-                          <class name="nw-header-toggle-button"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child type="end">
-                      <object class="GtkToggleButton" id="search_button">
-                        <property name="icon-name">edit-find-symbolic</property>
-                        <property name="tooltip-text" translatable="yes">Search Palette Names</property>
-                        <style>
                           <class name="image-button"/>
                         </style>
                       </object>
@@ -78,7 +69,7 @@
                   <object class="AdwHeaderBar" id="color_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="nw-flat"/>
+                      <class name="flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="color_hlabel">
@@ -87,6 +78,9 @@
                     <child type="end">
                       <object class="GtkMenuButton" id="menu_button">
                         <property name="icon-name">open-menu-symbolic</property>
+                        <style>
+                          <class name="image-button"/>
+                        </style>
                       </object>
                     </child>
                     <child>
@@ -114,23 +108,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkRevealer" id="search_revealer">
-            <child>
-              <object class="GtkSearchBar" id="searchbar">
-                <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
-                <child>
-                  <object class="GtkSearchEntry" id="searchentry">
-                    <property name="placeholder-text" translatable="yes">Search for palettes</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="nw-search-box"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
             <style>
@@ -144,7 +121,8 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox" id="palette_label_box">
-                        <property name="orientation">vertical</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="homogeneous">1</property>
                         <child>
                           <object class="GtkLabel" id="palette_label">
                             <property name="halign">start</property>
@@ -154,6 +132,19 @@
                             <property name="label" translatable="yes">Palettes</property>
                             <style>
                               <class name="title-1"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSearchEntry" id="searchentry">
+                            <property name="placeholder-text" translatable="yes">Search for palettes</property>
+                            <property name="valign">center</property>
+                            <property name="halign">end</property>
+                            <property name="margin-top">30</property>
+                            <property name="margin-end">20</property>
+                            <property name="margin-bottom">20</property>
+                            <style>
+                              <class name="nw-search-box"/>
                             </style>
                           </object>
                         </child>
@@ -400,7 +391,7 @@
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <binding name="label">
-                      <lookup type="EmulsionColorInfo" name="name">
+                      <lookup type="EmulsionColorInfo" name="colorname">
                           <lookup name="item">GtkListItem</lookup>
                       </lookup>
                     </binding>
@@ -414,7 +405,7 @@
                     <property name="halign">start</property>
                     <property name="hexpand">1</property>
                     <binding name="label">
-                      <lookup type="EmulsionColorInfo" name="colorname">
+                      <lookup type="EmulsionColorInfo" name="color">
                           <lookup name="item">GtkListItem</lookup>
                       </lookup>
                     </binding>
