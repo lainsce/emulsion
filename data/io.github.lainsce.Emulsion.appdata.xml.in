@@ -19,6 +19,7 @@
     <url type="homepage">https://github.com/lainsce/emulsion/</url>
     <url type="bugtracker">https://github.com/lainsce/emulsion/issues</url>
     <url type="donation">https://www.patreon.com/lainsce/</url>
+    <url type="translate">https://github.com/lainsce/emulsion/blob/master/po/README.md</url>
     <screenshots>
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/lainsce/emulsion/master/data/shot.png</image>
@@ -36,6 +37,7 @@
     <custom>
       <value key="GnomeSoftware::key-colors">[(51, 209, 122)]</value>
     </custom>
+    <translation type="gettext">io.github.lainsce.Emulsion</translation>
     <releases>
         <release version="2.0.1" date="2021-08-18">
             <description>
