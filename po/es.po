@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-24 18:20+0200\n"
-"PO-Revision-Date: 2021-08-24 18:21+0200\n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2021-09-11 21:13+0200\n"
 "Last-Translator: Óscar Fernández Díaz <oscfdezdz@tuta.io>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: data/io.github.lainsce.Emulsion.desktop.in:3
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:506
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
 msgid "Emulsion"
 msgstr "Emulsion"
 
@@ -35,77 +35,43 @@ msgstr "Abastézcase de colores"
 msgid "Store your palettes in an easy way, and edit them if needed."
 msgstr "Almacene sus paletas de forma sencilla y edítelas si es necesario."
 
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:14
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
 msgid "Lains"
 msgstr "Lains"
 
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:55
-msgid "Release: Picking Flowers in Technicolor"
-msgstr "Versión: Recogiendo flores en Technicolor"
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:56
-msgid "Add: Color picking from anywhere as a palette is open, via a button."
-msgstr ""
-"Añade: Toma de color desde cualquier lugar mientras la paleta está abierta, "
-"a través de un botón."
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:61
-msgid "Release: Importin' &amp; Exportin'"
-msgstr "Versión: Importar y exportar"
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:62
-msgid "Add: Export palettes as PNGs or as text via clipboard."
-msgstr ""
-"Añade: Exportación de paletas como PNG o como texto a través del "
-"portapapeles."
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:63
-msgid ""
-"Add: Export single colors as hexcode (#xxxxxx) or RGBA (rgb(xx,xx,xx)) via "
-"clipboard."
-msgstr ""
-"Añade: Exportación de colores individuales como código hexadecimal (#xxxxxx) "
-"o RGBA (rgb(xx,xx,xx)) a través del portapapeles."
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:64
-msgid "Add: Import palettes via opening an image in a special dialog."
-msgstr ""
-"Añade: Importación de paletas mediante la apertura de una imagen en un "
-"diálogo especial."
-
-#: data/io.github.lainsce.Emulsion.appdata.xml.in:69
-msgid "Release: First Release"
-msgstr "Versión: Primera versión"
-
 #: data/io.github.lainsce.Emulsion.gschema.xml:6
 msgid "First Boot"
-msgstr "Primer arranque"
+msgstr "Primer inicio"
 
 #: data/io.github.lainsce.Emulsion.gschema.xml:7
 msgid "Whether to add the default palettes on first boot or not."
 msgstr "Si se añaden las paletas por defecto en el primer arranque o no."
 
-#: data/ui/cep.ui:47
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Nombre∶"
+
+#: data/ui/cep.ui:62
 msgid "RGB"
 msgstr "RVA"
 
-#: data/ui/cep.ui:66
+#: data/ui/cep.ui:81
 msgid "Red∶"
 msgstr "Rojo∶"
 
-#: data/ui/cep.ui:85
+#: data/ui/cep.ui:100
 msgid "Green∶"
 msgstr "Verde∶"
 
-#: data/ui/cep.ui:104
+#: data/ui/cep.ui:119
 msgid "Blue∶"
 msgstr "Azul∶"
 
-#: data/ui/cep.ui:121
+#: data/ui/cep.ui:136
 msgid "Hex"
 msgstr "Hex"
 
-#: data/ui/cep.ui:141
+#: data/ui/cep.ui:156
 msgid "Color Hexcode∶"
 msgstr "Código hexadecimal del color∶"
 
@@ -147,45 +113,65 @@ msgstr "Elegir imagen"
 msgid "Select an image to retrieve colors"
 msgstr "Seleccionar imagen para extraer los colores"
 
-#: data/ui/window.ui:41
+#: data/ui/window.ui:38
 msgid "Add Palette"
 msgstr "Añadir paleta"
 
-#: data/ui/window.ui:50
+#: data/ui/window.ui:47
 msgid "Import Palette…"
 msgstr "Importar paleta…"
 
-#: data/ui/window.ui:67
-msgid "Search Palette Names"
-msgstr "Buscar nombres de paletas"
-
-#: data/ui/window.ui:101
+#: data/ui/window.ui:89
 msgid "Go Back to Palettes View"
 msgstr "Volver a la vista de paletas"
 
-#: data/ui/window.ui:111
+#: data/ui/window.ui:98
 msgid "Add Color to This Palette"
 msgstr "Añadir color a esta paleta"
 
-#: data/ui/window.ui:131
-msgid "Search for palettes"
-msgstr "Buscar paletas"
-
-#: data/ui/window.ui:162
+#: data/ui/window.ui:132
 msgid "Palettes"
 msgstr "Paletas"
 
-#: data/ui/window.ui:185
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Buscar paletas"
+
+#: data/ui/window.ui:168
 msgid "No Palettes"
 msgstr "No hay paletas"
 
-#: data/ui/window.ui:186
+#: data/ui/window.ui:169
 msgid "Add a palette with the + button."
 msgstr "Añadir una paleta con el botón +."
 
-#: data/ui/window.ui:335
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Copiar paleta al portapapeles"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Copiar imagen de la paleta al portapapeles"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Eliminar paleta"
+
+#: data/ui/window.ui:318
 msgid "Pick Color"
 msgstr "Escoger color"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Copiar código hexadecimal al portapapeles"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "Copiar RVA al portapapeles"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Eliminar color de la paleta"
 
 #: src/pid.vala:95
 msgid "Import"
@@ -195,14 +181,14 @@ msgstr "Importar"
 msgid "Picture"
 msgstr "Imagen"
 
-#: src/window.vala:182
+#: src/window.vala:172
 msgid "Set New Palette Name"
 msgstr "Cambiar nombre a la paleta"
 
-#: src/window.vala:511
+#: src/window.vala:502
 msgid "Stock up on colors."
 msgstr "Abastézcase de colores."
 
-#: src/window.vala:517
+#: src/window.vala:508
 msgid "translator-credits"
 msgstr "Óscar Fernández Díaz <oscfdezdz@tuta.io>"
