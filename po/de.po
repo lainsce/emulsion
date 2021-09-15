@@ -1,0 +1,196 @@
+# German translation.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Milo Ivir <mail@milotype.de>, 2021.
+
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.lainsce.Emulsion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2021-09-15 15:50+0100\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+#: data/io.github.lainsce.Emulsion.desktop.in:3
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
+msgid "Emulsion"
+msgstr "Emulsion"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:6
+msgid "color;palette;library;hue;swatch;"
+msgstr "Farbe;Palette;Farbton;Muster;"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:7
+msgid "Stock up on colors"
+msgstr "Deck’ dich mit Farben ein"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:9
+msgid "Store your palettes in an easy way, and edit them if needed."
+msgstr "Paletten auf einfache Weise speichern und bei Bedarf bearbeiten."
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
+msgid "Lains"
+msgstr "Lains"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:6
+msgid "First Boot"
+msgstr "Erste Benutzung"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:7
+msgid "Whether to add the default palettes on first boot or not."
+msgstr "Ob die Standardpaletten bei erster Benutzung hinzugefügt werden sollen oder nicht."
+
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Name∶"
+
+#: data/ui/cep.ui:62
+msgid "RGB"
+msgstr "RGB"
+
+#: data/ui/cep.ui:81
+msgid "Red∶"
+msgstr "Rot∶"
+
+#: data/ui/cep.ui:100
+msgid "Green∶"
+msgstr "Grün∶"
+
+#: data/ui/cep.ui:119
+msgid "Blue∶"
+msgstr "Blau∶"
+
+#: data/ui/cep.ui:136
+msgid "Hex"
+msgstr "Hex"
+
+#: data/ui/cep.ui:156
+msgid "Color Hexcode∶"
+msgstr "Hex-Code der Farbe∶"
+
+#: data/ui/keys.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Allgemein"
+
+#: data/ui/keys.ui:16
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Beenden"
+
+#: data/ui/menu.ui:7
+msgid "Keyboard Shortcuts"
+msgstr "Tastaturkürzel"
+
+#: data/ui/menu.ui:11
+msgid "About Emulsion"
+msgstr "Über Emulsion"
+
+#: data/ui/pid.ui:7
+msgid " "
+msgstr " "
+
+#: data/ui/pid.ui:27
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: data/ui/pid.ui:36
+msgid "Import Palette"
+msgstr "Palette importieren"
+
+#: data/ui/pid.ui:58
+msgid "Choose Image"
+msgstr "Bild wählen"
+
+#: data/ui/pid.ui:84
+msgid "Select an image to retrieve colors"
+msgstr "Bild wählen um Farben herauszufiltern"
+
+#: data/ui/window.ui:38
+msgid "Add Palette"
+msgstr "Palette hinzufügen"
+
+#: data/ui/window.ui:47
+msgid "Import Palette…"
+msgstr "Palette importieren …"
+
+#: data/ui/window.ui:89
+msgid "Go Back to Palettes View"
+msgstr "Zurück zur Palettenansicht"
+
+#: data/ui/window.ui:98
+msgid "Add Color to This Palette"
+msgstr "Farbe dieser Palette hinzufügen"
+
+#: data/ui/window.ui:132
+msgid "Palettes"
+msgstr "Paletten"
+
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Paletten suchen"
+
+#: data/ui/window.ui:168
+msgid "No Palettes"
+msgstr "Keine Paletten"
+
+#: data/ui/window.ui:169
+msgid "Add a palette with the + button."
+msgstr "Palette mit Taste + hinzufügen."
+
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Palette in Zwischenablage kopieren"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Palettenbild in Zwischenablage kopieren"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Palette entfernen"
+
+#: data/ui/window.ui:318
+msgid "Pick Color"
+msgstr "Farbe wählen"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Hex-Code in Zwischenablage kopieren"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "RGB in Zwischenablage kopieren"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Farbe aus Palette entfernen"
+
+#: src/pid.vala:95
+msgid "Import"
+msgstr "Importieren"
+
+#: src/pid.vala:98
+msgid "Picture"
+msgstr "Bild"
+
+#: src/window.vala:172
+msgid "Set New Palette Name"
+msgstr "Name der neuen Palette setzen"
+
+#: src/window.vala:502
+msgid "Stock up on colors."
+msgstr "Deck’ dich mit Farben ein."
+
+#: src/window.vala:508
+msgid "translator-credits"
+msgstr "Milo Ivir <mail@milotype.de>"
