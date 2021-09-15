@@ -1,0 +1,196 @@
+Emulsion# Croatian translation.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Milo Ivir <mail@milotype.de>, 2021.
+
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.lainsce.Emulsion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2021-09-15 14:54+0100\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
+"Language-Team: \n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+
+#: data/io.github.lainsce.Emulsion.desktop.in:3
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
+msgid "Emulsion"
+msgstr "Emulsion"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:6
+msgid "color;palette;library;hue;swatch;"
+msgstr "boja;paleta;biblioteka;nijansa;uzorak;"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:7
+msgid "Stock up on colors"
+msgstr "Opskrbi se bojama"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:9
+msgid "Store your palettes in an easy way, and edit them if needed."
+msgstr "Spremi svoje palete na jednostavan način i po potrebi ih promijeni."
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
+msgid "Lains"
+msgstr "Lains"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:6
+msgid "First Boot"
+msgstr "Prvo pokretanje"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:7
+msgid "Whether to add the default palettes on first boot or not."
+msgstr "Da li dodati standardne palete pri prvom pokretanju ili ne."
+
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Ime∶"
+
+#: data/ui/cep.ui:62
+msgid "RGB"
+msgstr "RGB"
+
+#: data/ui/cep.ui:81
+msgid "Red∶"
+msgstr "Crvena∶"
+
+#: data/ui/cep.ui:100
+msgid "Green∶"
+msgstr "Zelena∶"
+
+#: data/ui/cep.ui:119
+msgid "Blue∶"
+msgstr "Plava∶"
+
+#: data/ui/cep.ui:136
+msgid "Hex"
+msgstr "Heks"
+
+#: data/ui/cep.ui:156
+msgid "Color Hexcode∶"
+msgstr "Heksadecimalni kod boje∶"
+
+#: data/ui/keys.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Opće"
+
+#: data/ui/keys.ui:16
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Zatvori program"
+
+#: data/ui/menu.ui:7
+msgid "Keyboard Shortcuts"
+msgstr "Tipkovni prečaci"
+
+#: data/ui/menu.ui:11
+msgid "About Emulsion"
+msgstr "O programu Emulsion"
+
+#: data/ui/pid.ui:7
+msgid " "
+msgstr " "
+
+#: data/ui/pid.ui:27
+msgid "Cancel"
+msgstr "Odustani"
+
+#: data/ui/pid.ui:36
+msgid "Import Palette"
+msgstr "Uvezi paletu"
+
+#: data/ui/pid.ui:58
+msgid "Choose Image"
+msgstr "Odaberi sliku"
+
+#: data/ui/pid.ui:84
+msgid "Select an image to retrieve colors"
+msgstr "Odaberi sliku za izdvajanje boja"
+
+#: data/ui/window.ui:38
+msgid "Add Palette"
+msgstr "Dodaj paletu"
+
+#: data/ui/window.ui:47
+msgid "Import Palette…"
+msgstr "Uvezi paletu …"
+
+#: data/ui/window.ui:89
+msgid "Go Back to Palettes View"
+msgstr "Vrati se na prikaz paleta"
+
+#: data/ui/window.ui:98
+msgid "Add Color to This Palette"
+msgstr "Dodaj boju ovoj paleti"
+
+#: data/ui/window.ui:132
+msgid "Palettes"
+msgstr "Palete"
+
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Traži palete"
+
+#: data/ui/window.ui:168
+msgid "No Palettes"
+msgstr "Nema paleta"
+
+#: data/ui/window.ui:169
+msgid "Add a palette with the + button."
+msgstr "Dodaj poletu s gumbom +."
+
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Kopiraj paletu u međuspremnik"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Kopiraj sliku palete u međuspremnik"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Ukloni paletu"
+
+#: data/ui/window.ui:318
+msgid "Pick Color"
+msgstr "Odaberi boju"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Kopiraj heksadecimalni kod u međuspremnik"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "Kopiraj RGB u međuspremnik"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Ukloni boju iz palete"
+
+#: src/pid.vala:95
+msgid "Import"
+msgstr "Uvezi"
+
+#: src/pid.vala:98
+msgid "Picture"
+msgstr "Slika"
+
+#: src/window.vala:172
+msgid "Set New Palette Name"
+msgstr "Zadaj ime nove palete"
+
+#: src/window.vala:502
+msgid "Stock up on colors."
+msgstr "Opskrbi se bojama."
+
+#: src/window.vala:508
+msgid "translator-credits"
+msgstr "Milo Ivir <mail@milotype.de>"
