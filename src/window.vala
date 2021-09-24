@@ -324,7 +324,8 @@ namespace Emulsion {
             });
 
             this.set_size_request (360, 360);
-            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
+            var adwsm = Adw.StyleManager.get_default ();
+            adwsm.set_color_scheme (Adw.ColorScheme.FORCE_DARK);
 			this.show ();
 		}
 
