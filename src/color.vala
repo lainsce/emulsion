@@ -2,11 +2,11 @@ namespace Emulsion {
     public class ColorInfo : Object {
         /*
          * uid : string of the Palette's name e.g. "GNOME";
-         * colorname : string of the Color name, e.g. "White";
+         * name : string of the Color name, in hexcode, e.g. "#FFFFFF";
          * color : string of the Color color, in hexcode, e.g. "#FFFFFF";
          */
         public string uid { get; set; }
-        public string colorname { get; set; }
+        public string name { get; set; }
         public string color { get; set; }
     }
 
@@ -39,7 +39,7 @@ namespace Emulsion {
 
 	    protected override void snapshot (Gtk.Snapshot snapshot) {
             Gdk.RGBA gc = {};
-            gc.parse (color.color);
+            gc.parse (color.name);
             snapshot.append_color (gc, {{0, 0}, {128, 128}});
         }
     }

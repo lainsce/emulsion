@@ -34,7 +34,7 @@ gridview child .color-box {
 }
 
 gridview child button {
-  padding: 5px;
+  padding: 0;
 }
 gridview child:selected {
   background: none;

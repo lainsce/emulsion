@@ -10,6 +10,9 @@
     <property name="default-width">950</property>
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
+    <style>
+      <class name="nw-outline"/>
+    </style>
     <child>
       <object class="GtkBox" id="main_box">
         <property name="orientation">vertical</property>
@@ -23,7 +26,7 @@
                   <object class="AdwHeaderBar" id="palette_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="flat"/>
+                      <class name="nw-flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="palette_hlabel">
@@ -37,7 +40,7 @@
                         <property name="icon-name">list-add-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Add Palette</property>
                         <style>
-                          <class name="image-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -46,7 +49,7 @@
                         <property name="icon-name">insert-image-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Import Palette…</property>
                         <style>
-                          <class name="image-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -54,7 +57,16 @@
                       <object class="GtkMenuButton" id="menu_button2">
                         <property name="icon-name">open-menu-symbolic</property>
                         <style>
-                          <class name="image-button"/>
+                          <class name="nw-header-toggle-button"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkToggleButton" id="search_button">
+                        <property name="icon-name">edit-find-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Search Palette Names</property>
+                        <style>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -69,7 +81,7 @@
                   <object class="AdwHeaderBar" id="color_headerbar">
                     <property name="valign">start</property>
                     <style>
-                      <class name="flat"/>
+                      <class name="nw-flat"/>
                     </style>
                     <child type="title">
                       <object class="GtkLabel" id="color_hlabel">
@@ -79,7 +91,7 @@
                       <object class="GtkMenuButton" id="menu_button">
                         <property name="icon-name">open-menu-symbolic</property>
                         <style>
-                          <class name="image-button"/>
+                          <class name="nw-header-toggle-button"/>
                         </style>
                       </object>
                     </child>
@@ -89,6 +101,7 @@
                         <property name="tooltip-text" translatable="yes">Go Back to Palettes View</property>
                         <style>
                           <class name="image-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
@@ -98,11 +111,29 @@
                         <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
                         <style>
                           <class name="image-button"/>
+                          <class name="nw-header-button"/>
                         </style>
                       </object>
                     </child>
                   </object>
                 </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="search_revealer">
+            <child>
+              <object class="GtkSearchBar" id="searchbar">
+                <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
+                <child>
+                  <object class="GtkSearchEntry" id="searchentry">
+                    <property name="placeholder-text" translatable="yes">Search for palettes</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="nw-search-box"/>
+                </style>
               </object>
             </child>
           </object>
@@ -121,30 +152,16 @@
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox" id="palette_label_box">
-                        <property name="orientation">horizontal</property>
-                        <property name="homogeneous">1</property>
+                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkLabel" id="palette_label">
                             <property name="halign">start</property>
                             <property name="margin-top">30</property>
                             <property name="margin-start">30</property>
                             <property name="margin-bottom">20</property>
-                            <property name="label" translatable="yes">Palettes</property>
+                            <property name="label" translatable="true">Palettes</property>
                             <style>
                               <class name="title-1"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSearchEntry" id="searchentry">
-                            <property name="placeholder-text" translatable="yes">Search for palettes</property>
-                            <property name="valign">center</property>
-                            <property name="halign">end</property>
-                            <property name="margin-top">30</property>
-                            <property name="margin-end">20</property>
-                            <property name="margin-bottom">20</property>
-                            <style>
-                              <class name="nw-search-box"/>
                             </style>
                           </object>
                         </child>
@@ -328,7 +345,7 @@
                             <child>
                               <object class="GtkGridView" id="color_fb">
                                 <property name="min-columns">1</property>
-                                <property name="max-columns">4</property>
+                                <property name="max-columns">5</property>
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="single-click-activate">1</property>
@@ -383,41 +400,23 @@
             <property name="width-request">128</property>
             <property name="hexpand">0</property>
             <child>
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
+              <object class="GtkLabel" id="color_name">
+                <property name="halign">start</property>
                 <property name="hexpand">1</property>
-                <child>
-                  <object class="GtkLabel" id="color_name">
-                    <property name="halign">start</property>
-                    <property name="hexpand">1</property>
-                    <binding name="label">
-                      <lookup type="EmulsionColorInfo" name="colorname">
-                          <lookup name="item">GtkListItem</lookup>
-                      </lookup>
-                    </binding>
-                    <style>
-                      <class name="nw-color-label"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="color_rname">
-                    <property name="halign">start</property>
-                    <property name="hexpand">1</property>
-                    <binding name="label">
-                      <lookup type="EmulsionColorInfo" name="color">
-                          <lookup name="item">GtkListItem</lookup>
-                      </lookup>
-                    </binding>
-                  </object>
-                </child>
+                <binding name="label">
+                  <lookup type="EmulsionColorInfo" name="name">
+                      <lookup name="item">GtkListItem</lookup>
+                  </lookup>
+                </binding>
               </object>
             </child>
             <child type="end">
               <object class="GtkMenuButton" id="color_button">
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="menu-model">cmenu</property>
-                <property name="valign">center</property>
+                <style>
+                  <class name="nw-header-toggle-button"/>
+                </style>
               </object>
             </child>
           </object>

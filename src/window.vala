@@ -24,6 +24,8 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.MenuButton menu_button2;
 	    [GtkChild]
+	    unowned Gtk.ToggleButton search_button;
+	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
 	    [GtkChild]
 	    unowned Gtk.Button import_palette_button;
@@ -31,6 +33,11 @@ namespace Emulsion {
 	    unowned Gtk.Button add_color_button;
 	    [GtkChild]
 	    unowned Gtk.Button back_button;
+
+	    [GtkChild]
+	    unowned Gtk.Revealer search_revealer;
+        [GtkChild]
+	    unowned Gtk.SearchBar searchbar;
 	    [GtkChild]
 	    unowned Gtk.FilterListModel palette_filter_model;
 
@@ -46,6 +53,11 @@ namespace Emulsion {
 	    unowned Gtk.Stack main_stack;
 	    [GtkChild]
 	    unowned Gtk.Stack palette_stack;
+
+	    [GtkChild]
+	    unowned Gtk.ScrolledWindow palette_window;
+	    [GtkChild]
+	    unowned Gtk.ScrolledWindow color_window;
 
         [GtkChild]
 	    public unowned Gtk.GridView palette_fb;
@@ -132,11 +144,15 @@ namespace Emulsion {
             menu_button2.menu_model = (MenuModel)builder.get_object ("menu");
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
+            palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
+            palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
                 header_stack.set_visible_child_name ("colheader");
                 main_stack.set_visible_child_name ("colbody");
+                search_revealer.set_reveal_child (false);
+                search_button.set_active (false);
                 color_fb.grab_focus ();
                 colorstore.remove_all ();
 
@@ -144,21 +160,13 @@ namespace Emulsion {
                     color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
                     color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
                     color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
+                    int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
-                    var arrconame = ((PaletteInfo)palettestore.get_item (pos)).colorsnames.to_array();
-                    for (int j = 0; j < arrco.length; j++) {
+                    for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
+                        a.name = arrco[j];
+                        a.color = arrco[j];
                         a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
-                        if (arrconame != null) {
-                            for (int i = 0; i < arrconame.length; i++) {
-                                if (i == j) {
-                                    a.color = arrco[i];
-                                    a.colorname = arrconame[i];
-                                }
-                            }
-                        } else {
-                            a.colorname = "";
-                        }
                         colorstore.append (a);
                     }
                 }
@@ -166,6 +174,8 @@ namespace Emulsion {
 
             colorstore = new GLib.ListStore (typeof (ColorInfo));
             color_model.set_model (colorstore);
+            color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
+            color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
 
             color_label.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,"document-edit-symbolic");
             color_label.set_icon_activatable (Gtk.EntryIconPosition.SECONDARY, true);
@@ -200,19 +210,16 @@ namespace Emulsion {
                             var pitem = palettestore.get_item (i);
 
                             var arrco = ((PaletteInfo)pitem).colors.to_array();
-                            var arrcon = ((PaletteInfo)pitem).colorsnames.to_array();
-                            for (j = 0; j < ((PaletteInfo)pitem).colors.size; j++) {
+                            for (j = 0; j < arrco.length; j++) {
                                 if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
                                     if (arrco[j] != ((ColorInfo)item).color) {
                                         ((PaletteInfo)pitem).colors.remove (arrco[pos]);
-                                        ((PaletteInfo)pitem).colorsnames.remove (arrcon[pos]);
                                         ((PaletteInfo)pitem).colors.add (cep.color_info.color);
-                                        ((PaletteInfo)pitem).colorsnames.add (cep.color_info.colorname);
                                     }
                                 }
                             }
                         }
-                        m.save_palettes.begin (palettestore);
+
                         palette_fb.queue_draw ();
                         color_fb.queue_draw ();
                     });
@@ -228,6 +235,11 @@ namespace Emulsion {
             back_button.clicked.connect (() => {
                 header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
+            });
+
+            searchbar.set_key_capture_widget (this);
+            search_button.toggled.connect (() => {
+               search_revealer.set_reveal_child (search_button.get_active());
             });
 
             palettestore.items_changed.connect (() => {
@@ -255,10 +267,12 @@ namespace Emulsion {
                     palette_label.set_visible(false);
                     palette_stack.set_visible_child_name ("palempty");
                     palette_hlabel.set_text("Emulsion");
+                    search_button.set_visible(false);
                 } else {
                     palette_label.set_visible(true);
                     palette_stack.set_visible_child_name ("palfull");
                     palette_hlabel.set_text("");
+                    search_button.set_visible(true);
                 }
             }
 
@@ -266,23 +280,20 @@ namespace Emulsion {
                 palette_stack.set_visible_child_name ("palfull");
                 palette_label.set_visible(true);
                 palette_hlabel.set_text("");
+                search_button.set_visible(true);
 
                 var rand = new GLib.Rand ();
                 string[] n = {};
-                string[] nn = {};
 
                 for (int i = 0; i <= rand.int_range (1, 16); i++) {
                     var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     n += rc;
-                    nn += rc;
                 }
 
                 var a = new PaletteInfo ();
                 a.palname = "New Palette " + "%d".printf(uid_counter++);
                 a.colors = new Gee.TreeSet<string> ();
                 a.colors.add_all_array (n);
-                a.colorsnames = new Gee.TreeSet<string> ();
-                a.colorsnames.add_all_array (nn);
 
                 palettestore.append (a);
             });
@@ -292,7 +303,7 @@ namespace Emulsion {
                 var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
 
                 var a = new ColorInfo ();
-                a.colorname = rc;
+                a.name = rc;
                 a.color = rc;
 
                 var pitem = palettestore.get_item (palette_model.get_selected ());
@@ -302,7 +313,6 @@ namespace Emulsion {
                     var arrco = ((PaletteInfo)pitem).colors.to_array();
                     for (int j = 0; j <= arrco.length; j++) {
                         ((PaletteInfo)pitem).colors.add(a.color);
-                        ((PaletteInfo)pitem).colorsnames.add(a.colorname);
                     }
                 }
                 colorstore.append (a);
@@ -345,8 +355,8 @@ namespace Emulsion {
                         print ("R:%00.0f\nG:%00.0f\nB:%00.0f\n", (float)Utils.make_srgb(color_portal.red), (float)Utils.make_srgb(color_portal.green), (float)Utils.make_srgb(color_portal.blue));
 
                         var a = new ColorInfo ();
+                        a.name = pc;
                         a.color = pc;
-                        a.colorname = pc;
 
                         var pitem = palettestore.get_item (palette_model.get_selected ());
                         a.uid = ((PaletteInfo)pitem).palname;
@@ -355,7 +365,6 @@ namespace Emulsion {
                             var arrco = ((PaletteInfo)pitem).colors.to_array();
                             for (int j = 0; j <= arrco.length; j++) {
                                 ((PaletteInfo)pitem).colors.add(a.color);
-                                ((PaletteInfo)pitem).colorsnames.add(a.color);
                             }
                         }
 
@@ -449,6 +458,7 @@ namespace Emulsion {
             if (palettestore.get_item(0) == null) {
                 palette_stack.set_visible_child_name ("palempty");
                 palette_label.set_visible(false);
+                search_button.set_visible(false);
                 palette_hlabel.set_text("Emulsion");
             }
         }
@@ -462,7 +472,6 @@ namespace Emulsion {
                 if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).palname) {
                     if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
                         ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
-                        ((PaletteInfo)pitem).colorsnames.remove(((ColorInfo)citem).colorname);
                         colorstore.remove (color_model.get_selected());
                     }
                 }
@@ -515,9 +524,6 @@ namespace Emulsion {
             string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
             g.colors = new Gee.TreeSet<string> ();
             g.colors.add_all_array (gr);
-            string[] grn = {"Black", "Infrared Moon", "Ultraviolet Sun", "White"};
-            g.colorsnames = new Gee.TreeSet<string> ();
-            g.colorsnames.add_all_array (grn);
             palettestore.append (g);
 
             var p = new PaletteInfo ();
@@ -527,11 +533,6 @@ namespace Emulsion {
                           "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
             p.colors = new Gee.TreeSet<string> ();
             p.colors.add_all_array (pr);
-            string[] prn = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
-                            "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
-                            "#29adff", "#83769c", "#ff77a8", "Peach"};
-            p.colorsnames = new Gee.TreeSet<string> ();
-            p.colorsnames.add_all_array (prn);
             palettestore.append (p);
 
             var e = new PaletteInfo ();
@@ -540,10 +541,6 @@ namespace Emulsion {
                           "#7b53ad", "#fdfdf8"};
             e.colors = new Gee.TreeSet<string> ();
             e.colors.add_all_array (er);
-            string[] ern = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
-                            "#7b53ad", "#fdfdf8"};
-            e.colorsnames = new Gee.TreeSet<string> ();
-            e.colorsnames.add_all_array (ern);
             palettestore.append (e);
 
             var d = new PaletteInfo ();
@@ -551,9 +548,6 @@ namespace Emulsion {
             string[] dr = {"#081820", "#346856", "#88c070", "#e0f8d0"};
             d.colors = new Gee.TreeSet<string> ();
             d.colors.add_all_array (dr);
-            string[] drn = {"#081820", "#346856", "#88c070", "#e0f8d0"};
-            d.colorsnames = new Gee.TreeSet<string> ();
-            d.colorsnames.add_all_array (drn);
             palettestore.append (d);
 
             var m = new PaletteInfo ();
@@ -561,9 +555,6 @@ namespace Emulsion {
             string[] mr = {"#171219", "#f2fbeb"};
             m.colors = new Gee.TreeSet<string> ();
             m.colors.add_all_array (mr);
-            string[] mrn = {"#171219", "#f2fbeb"};
-            m.colorsnames = new Gee.TreeSet<string> ();
-            m.colorsnames.add_all_array (mrn);
             palettestore.append (m);
         }
 	}
