@@ -1,0 +1,192 @@
+# ITALIAN TRANSLATION FOR EMULSION.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the io.github.lainsce.Emulsion package.
+# ALBANO BATTISTELLA <ALBANO_BATTISTELLA@HOTMAIL.COM>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.lainsce.Emulsion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2021-09-25 13:42+0100\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
+"Language-Team: Italian <LL@li.org>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:3
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
+msgid "Emulsion"
+msgstr "Emulsion"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:6
+msgid "color;palette;library;hue;swatch;"
+msgstr "colore;tavolozza;libreria;tonalità;campione;"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:7
+msgid "Stock up on colors"
+msgstr "Fai scorta di colori"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:9
+msgid "Store your palettes in an easy way, and edit them if needed."
+msgstr "Conserva le tue tavolozze in modo semplice e modificale se necessario."
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
+msgid "Lains"
+msgstr "Lains"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:6
+msgid "First Boot"
+msgstr "Primo avvio"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:7
+msgid "Whether to add the default palettes on first boot or not."
+msgstr "Aggiungere o meno le tavolozze predefinite al primo avvio."
+
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Nome∶"
+
+#: data/ui/cep.ui:62
+msgid "RGB"
+msgstr "RGB"
+
+#: data/ui/cep.ui:81
+msgid "Red∶"
+msgstr "Rosso∶"
+
+#: data/ui/cep.ui:100
+msgid "Green∶"
+msgstr "Verde:"
+
+#: data/ui/cep.ui:119
+msgid "Blue∶"
+msgstr "Blu:"
+
+#: data/ui/cep.ui:136
+msgid "Hex"
+msgstr "Esadecimale"
+
+#: data/ui/cep.ui:156
+msgid "Color Hexcode∶"
+msgstr "Codice esadecimale colore∶"
+
+#: data/ui/keys.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generale:"
+
+#: data/ui/keys.ui:16
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Esci"
+
+#: data/ui/menu.ui:7
+msgid "Keyboard Shortcuts"
+msgstr "Scorciatoie da tastiera"
+
+#: data/ui/menu.ui:11
+msgid "About Emulsion"
+msgstr "Informazioni su Emulsion"
+
+#: data/ui/pid.ui:7
+msgid " "
+msgstr " "
+
+#: data/ui/pid.ui:27
+msgid "Cancel"
+msgstr "Cancella"
+
+#: data/ui/pid.ui:36
+msgid "Import Palette"
+msgstr "Importa tavolozza"
+
+#: data/ui/pid.ui:58
+msgid "Choose Image"
+msgstr "Scegli immagine"
+
+#: data/ui/pid.ui:84
+msgid "Select an image to retrieve colors"
+msgstr "Seleziona un'immagine per recuperare i colori"
+
+#: data/ui/window.ui:38
+msgid "Add Palette"
+msgstr "Aggiungi Tavolozza"
+
+#: data/ui/window.ui:47
+msgid "Import Palette…"
+msgstr "Importa Tavolozza…"
+
+#: data/ui/window.ui:89
+msgid "Go Back to Palettes View"
+msgstr "Torna alla visualizzazione delle tavolozze"
+
+#: data/ui/window.ui:98
+msgid "Add Color to This Palette"
+msgstr "Aggiungi colore a questa tavolozza"
+
+#: data/ui/window.ui:132
+msgid "Palettes"
+msgstr "Tavolozze"
+
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Cerca Tavolozze"
+
+#: data/ui/window.ui:168
+msgid "No Palettes"
+msgstr "Nessuna Tavolozza"
+
+#: data/ui/window.ui:169
+msgid "Add a palette with the + button."
+msgstr "Aggiungi una tavolozza con il pulsante +."
+
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Copia Tavolozza negli appunti"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Copia l'immagine della tavolozza negli appunti"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Rimuovi tavolozza"
+
+#: data/ui/window.ui:318
+msgid "Pick Color"
+msgstr "Scegli Colore"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Copia il codice esadecimale negli appunti"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "Copia RGB negli appunti"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Rimuovi colore dalla tavolozza"
+
+#: src/pid.vala:95
+msgid "Import"
+msgstr "Importa"
+
+#: src/pid.vala:98
+msgid "Picture"
+msgstr "Immagine"
+
+#: src/window.vala:172
+msgid "Set New Palette Name"
+msgstr "Imposta nuovo nome tavolozza"
+
+#: src/window.vala:502
+msgid "Stock up on colors."
+msgstr "Fai scorta di colori."
+
+#: src/window.vala:508
+msgid "translator-credits"
+msgstr "Albano Battistella"
