@@ -102,8 +102,8 @@ namespace Emulsion {
               {ACTION_DELETE_COLOR, delete_color},
         };
 
-        public Gtk.Application app { get; construct; }
-		public MainWindow (Gtk.Application app) {
+        public Adw.Application app { get; construct; }
+		public MainWindow (Adw.Application app) {
 			Object (
 			    application: app,
 			    app: app
@@ -117,7 +117,6 @@ namespace Emulsion {
 
         construct {
 			// Initial settings
-            Adw.init ();
             m = new Manager (this);
 
             actions = new SimpleActionGroup ();
