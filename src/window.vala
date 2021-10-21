@@ -131,10 +131,6 @@ namespace Emulsion {
             }
             app.set_accels_for_action("app.quit", {"<Ctrl>q"});
 
-            var provider = new Gtk.CssProvider ();
-            provider.load_from_resource ("/io/github/lainsce/Emulsion/app.css");
-            Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
             default_theme.add_resource_path ("/io/github/lainsce/Emulsion");
 
@@ -324,7 +320,7 @@ namespace Emulsion {
 
             this.set_size_request (360, 360);
             var adwsm = Adw.StyleManager.get_default ();
-            adwsm.set_color_scheme (Adw.ColorScheme.FORCE_DARK);
+            adwsm.set_color_scheme (Adw.ColorScheme.PREFER_DARK);
 			this.show ();
 		}
 

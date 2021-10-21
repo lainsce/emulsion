@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/lainsce/Emulsion">
-    <file alias="app.css">app.css</file>
+    <file alias="style.css">style.css</file>
+    <file alias="style-dark.css">style-dark.css</file>
     <file alias="window.ui">ui/window.ui</file>
     <file alias="menu.ui">ui/menu.ui</file>
     <file alias="cep.ui">ui/cep.ui</file>

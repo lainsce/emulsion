@@ -1,7 +1,7 @@
 {
     "app-id" : "io.github.lainsce.EmulsionDevel",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "41",
+    "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
     "command" : "io.github.lainsce.Emulsion",
     "rename-icon" : "io.github.lainsce.EmulsionDevel",
@@ -56,22 +56,6 @@
 		}
 	    ]
 	},
-	{
-            "name" : "libadwaita",
-            "buildsystem": "meson",
-            "config-opts" : [
-                "-Dvapi=true",
-                "-Dexamples=false",
-                "-Dtests=false"
-            ],
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libadwaita.git",
-                    "branch" : "main"
-                }
-            ]
-        },
         {
             "name": "libportal",
             "buildsystem": "meson",
