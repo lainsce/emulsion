@@ -1,0 +1,104 @@
+/* app */
+@define-color accent_color @green_4;
+@define-color accent_bg_color @green_4;
+@define-color accent_fg_color @theme_fg_color;
+
+.palette,
+.color {
+	box-shadow: none;
+	border: none;
+	background: none;
+	border-radius: 8px;
+	min-height: 32px;
+	min-width: 32px;
+	outline: 1px solid @borders;
+}
+
+gridview child .palette-box,
+gridview child .color-box {
+  border-radius: 12px;
+  border: 4px solid transparent;
+  padding: 6px;
+  margin: 6px;
+  margin-bottom: 0px;
+}
+
+gridview child:selected {
+  background: none;
+  color: @theme_fg_color;
+}
+gridview child:selected .palette-box,
+gridview child:selected .color-box {
+  outline: 2px solid @borders;
+}
+
+.red trough{
+        background-image:
+            linear-gradient(
+                to right,
+                #000,
+                #FF0000
+            );
+}
+.red highlight {
+        background: none;
+}
+.green trough {
+        background-image:
+            linear-gradient(
+                to right,
+                #000,
+                #00FF00
+            );
+}
+.green highlight {
+        background: none;
+}
+.blue trough {
+        background-image:
+            linear-gradient(
+                to right,
+                #000,
+                #0000FF
+            );
+}
+.blue highlight {
+        background: none;
+}
+
+.nw-view {
+    background: @theme_bg_color;
+}
+
+.nw-title-box {
+  border-bottom: 1px solid @borders;
+  background: shade(@theme_bg_color, 0.95);
+  margin-bottom: 12px;
+}
+.nw-title-box entry:not(.nw-search-box) {
+  background: none;
+  box-shadow: none;
+  padding: 6px;
+  border: none;
+}
+.nw-search-box box {
+  background: shade(@theme_bg_color, 0.9);
+  border: none;
+  border-top: 1px solid @borders;
+}
+.nw-search-box box:backdrop {
+  background: shade(@theme_bg_color, 0.98);
+}
+.nw-title {
+  border: none;
+  box-shadow: none;
+}
+.nw-title-box:backdrop {
+  background: shade(@theme_bg_color, 1.05);
+  color: alpha(@theme_fg_color, 0.66);
+}
+
+.nw-color-label {
+  font-size: 1.33rem;
+  font-weight: 700;
+}

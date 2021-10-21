@@ -1,0 +1,26 @@
+.nw-view {
+    background: shade(@theme_bg_color, 0.1);
+}
+
+.nw-title-box {
+  background: @headerbar_bg_color;
+}
+
+.nw-title-box:backdrop {
+  background: shade(@theme_bg_color, 0.95);
+  color: alpha(@theme_fg_color, 0.66);
+}
+
+.nw-search-box box {
+  background: shade(@theme_bg_color, 0.95);
+}
+
+.nw-search-box box:backdrop {
+  background: shade(@theme_bg_color, 0.75);
+}
+
+.nw-search-box entry {
+  background: shade(@theme_bg_color, 0.1);
+}
+
+
