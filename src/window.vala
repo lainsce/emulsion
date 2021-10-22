@@ -22,8 +22,6 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.MenuButton menu_button;
 	    [GtkChild]
-	    unowned Gtk.MenuButton menu_button2;
-	    [GtkChild]
 	    unowned Gtk.ToggleButton search_button;
 	    [GtkChild]
 	    unowned Gtk.Button add_palette_button;
@@ -42,13 +40,9 @@ namespace Emulsion {
 	    unowned Gtk.FilterListModel palette_filter_model;
 
 	    [GtkChild]
-	    unowned Gtk.Label palette_hlabel;
-	    [GtkChild]
 	    unowned Gtk.Label palette_label;
 	    [GtkChild]
 	    unowned Gtk.Entry color_label;
-	    [GtkChild]
-	    unowned Gtk.Stack header_stack;
 	    [GtkChild]
 	    unowned Gtk.Stack main_stack;
 	    [GtkChild]
@@ -136,7 +130,6 @@ namespace Emulsion {
 
             var builder = new Gtk.Builder.from_resource ("/io/github/lainsce/Emulsion/menu.ui");
             menu_button.menu_model = (MenuModel)builder.get_object ("menu");
-            menu_button2.menu_model = (MenuModel)builder.get_object ("menu");
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -144,7 +137,6 @@ namespace Emulsion {
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
-                header_stack.set_visible_child_name ("colheader");
                 main_stack.set_visible_child_name ("colbody");
                 search_revealer.set_reveal_child (false);
                 search_button.set_active (false);
@@ -153,8 +145,8 @@ namespace Emulsion {
 
                 if (palette_model.is_selected (pos)) {
                     color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
-                    color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
-                    color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length);
+                    color_label.set_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length + 3);
+                    color_label.set_max_width_chars(((PaletteInfo)palettestore.get_item (pos)).palname.length + 3);
                     int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
                     for (j = 0; j < arrco.length; j++) {
@@ -228,7 +220,6 @@ namespace Emulsion {
             });
 
             back_button.clicked.connect (() => {
-                header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
             });
 
@@ -254,19 +245,16 @@ namespace Emulsion {
                 populate_palettes_view ();
                 palette_label.set_visible(true);
                 palette_stack.set_visible_child_name ("palfull");
-                palette_hlabel.set_text("");
                 Emulsion.Application.gsettings.set_boolean("first-time", false);
             } else {
                 m.load_from_file.begin ();
                 if (palettestore.get_item(0) == null) {
                     palette_label.set_visible(false);
                     palette_stack.set_visible_child_name ("palempty");
-                    palette_hlabel.set_text("Emulsion");
                     search_button.set_visible(false);
                 } else {
                     palette_label.set_visible(true);
                     palette_stack.set_visible_child_name ("palfull");
-                    palette_hlabel.set_text("");
                     search_button.set_visible(true);
                 }
             }
@@ -274,7 +262,6 @@ namespace Emulsion {
             add_palette_button.clicked.connect (() => {
                 palette_stack.set_visible_child_name ("palfull");
                 palette_label.set_visible(true);
-                palette_hlabel.set_text("");
                 search_button.set_visible(true);
 
                 var rand = new GLib.Rand ();
@@ -455,7 +442,6 @@ namespace Emulsion {
                 palette_stack.set_visible_child_name ("palempty");
                 palette_label.set_visible(false);
                 search_button.set_visible(false);
-                palette_hlabel.set_text("Emulsion");
             }
         }
 
@@ -473,7 +459,6 @@ namespace Emulsion {
                 }
             }
             if (colorstore.get_item(0) == null) {
-                header_stack.set_visible_child_name ("palheader");
                 main_stack.set_visible_child_name ("palbody");
                 palettestore.remove (palette_model.selected);
             }

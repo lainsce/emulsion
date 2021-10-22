@@ -1,5 +1,5 @@
 .nw-view {
-    background: shade(@theme_bg_color, 0.1);
+  background: @theme_base_color;
 }
 
 .nw-title-box {
@@ -20,7 +20,6 @@
 }
 
 .nw-search-box entry {
-  background: shade(@theme_bg_color, 0.1);
+  background: shade(@theme_bg_color, 0.5);
 }
-
 
