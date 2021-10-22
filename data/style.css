@@ -63,47 +63,47 @@ gridview child:selected .color-box {
             );
 }
 .blue highlight {
-        background: none;
+  background: none;
 }
 
-.nw-view {
-    background: @theme_bg_color;
+.eml-view {
+  background: @theme_bg_color;
 }
-
-.nw-title-box {
+.eml-title {
+  padding: 8px;
+}
+.eml-title-box {
   border-bottom: 1px solid @borders;
   background: shade(@theme_bg_color, 0.95);
 }
-.nw-title-box entry:not(.nw-search-box) {
+.eml-title-box entry:not(.eml-search-box) {
   background: none;
   box-shadow: none;
   padding: 8px;
-  padding-top: 0px;
-  padding-bottom: 0px;
   border: none;
   border-bottom: 2px solid @borders;
   border-radius: 0px;
 }
-.nw-search-box box {
+.eml-search-box box {
   background: shade(@theme_bg_color, 0.9);
   border: none;
 }
-.nw-search-box box:backdrop {
+.eml-search-box box:backdrop {
   background: shade(@theme_bg_color, 0.98);
 }
-.nw-title {
+.eml-title {
   border: none;
   box-shadow: none;
 }
-.nw-title-box:backdrop {
+.eml-title-box:backdrop {
   background: shade(@theme_bg_color, 1.05);
   color: alpha(@theme_fg_color, 0.66);
 }
-.nw-header-button:not(:hover):not(:active),
-.nw-header-button .toggle:not(:hover):not(:active):not(:checked) {
+.eml-header-button:not(:hover):not(:active),
+.eml-header-button .toggle:not(:hover):not(:active):not(:checked) {
   background: none;
 }
-.nw-color-label {
+.eml-color-label {
   font-size: 1.33rem;
   font-weight: 700;
 }

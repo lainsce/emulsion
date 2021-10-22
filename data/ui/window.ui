@@ -6,12 +6,12 @@
   </object>
   <object class="GtkAdjustment" id="coloradj">
   </object>
-  <template class="EmulsionMainWindow" parent="AdwApplicationWindow">
+  <template class="EmulsionMaiemlindow" parent="AdwApplicatioemlindow">
     <property name="default-width">950</property>
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
     <style>
-      <class name="nw-outline"/>
+      <class name="eml-outline"/>
     </style>
     <child>
       <object class="GtkBox" id="main_box">
@@ -21,7 +21,7 @@
           <object class="AdwHeaderBar" id="palette_headerbar">
             <property name="valign">start</property>
             <style>
-              <class name="nw-title"/>
+              <class name="eml-title"/>
             </style>
             <child type="title">
               <object class="GtkBox">
@@ -35,7 +35,7 @@
                 <property name="icon-name">go-previous-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Go Back to Palettes View</property>
                 <style>
-                  <class name="nw-header-button"/>
+                  <class name="eml-header-button"/>
                 </style>
               </object>
             </child>
@@ -43,7 +43,7 @@
               <object class="GtkMenuButton" id="menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <style>
-                  <class name="nw-header-toggle-button"/>
+                  <class name="eml-header-toggle-button"/>
                 </style>
               </object>
             </child>
@@ -53,7 +53,7 @@
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
             <style>
-              <class name="nw-view"/>
+              <class name="eml-view"/>
             </style>
             <child>
               <object class="GtkStackPage">
@@ -77,7 +77,7 @@
                                 <property name="margin-bottom">12</property>
                                 <property name="tooltip-text" translatable="yes">Add Palette</property>
                                 <style>
-                                  <class name="nw-header-button"/>
+                                  <class name="eml-header-button"/>
                                 </style>
                               </object>
                             </child>
@@ -90,6 +90,7 @@
                                 <property name="label" translatable="true">Palettes</property>
                                 <style>
                                   <class name="title-1"/>
+                                  <class name="eml-title"/>
                                 </style>
                               </object>
                             </child>
@@ -102,7 +103,7 @@
                                 <property name="margin-bottom">12</property>
                                 <property name="tooltip-text" translatable="yes">Import Palette…</property>
                                 <style>
-                                  <class name="nw-header-button"/>
+                                  <class name="eml-header-button"/>
                                 </style>
                               </object>
                             </child>
@@ -116,12 +117,12 @@
                                 <property name="margin-end">6</property>
                                 <property name="tooltip-text" translatable="yes">Search Palette Names</property>
                                 <style>
-                                  <class name="nw-header-button"/>
+                                  <class name="eml-header-button"/>
                                 </style>
                               </object>
                             </child>
                             <style>
-                              <class name="nw-title-box"/>
+                              <class name="eml-title-box"/>
                             </style>
                           </object>
                         </child>
@@ -138,7 +139,7 @@
                               </object>
                             </child>
                             <style>
-                              <class name="nw-search-box"/>
+                              <class name="eml-search-box"/>
                             </style>
                           </object>
                         </child>
@@ -171,7 +172,7 @@
                                     <property name="max-columns">4</property>
                                     <property name="single-click-activate">1</property>
                                     <style>
-                                      <class name="nw-view"/>
+                                      <class name="eml-view"/>
                                     </style>
                                     <property name="model">
                                       <object class="GtkSingleSelection" id="palette_model">
@@ -252,7 +253,7 @@
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="menu-model">pmenu</property>
                 <style>
-                  <class name="nw-header-toggle-button"/>
+                  <class name="eml-header-toggle-button"/>
                 </style>
               </object>
             </child>
@@ -299,7 +300,7 @@
                                     <property name="margin-start">6</property>
                                     <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
                                     <style>
-                                      <class name="nw-header-button"/>
+                                      <class name="eml-header-button"/>
                                     </style>
                                   </object>
                                 </child>
@@ -325,12 +326,12 @@
                                     <property name="margin-end">6</property>
                                     <property name="tooltip-text" translatable="yes">Pick Color</property>
                                     <style>
-                                      <class name="nw-header-button"/>
+                                      <class name="eml-header-button"/>
                                     </style>
                                   </object>
                                 </child>
                                 <style>
-                                  <class name="nw-title-box"/>
+                                  <class name="eml-title-box"/>
                                 </style>
                               </object>
                             </child>
@@ -346,7 +347,7 @@
                                 <property name="hexpand">1</property>
                                 <property name="single-click-activate">1</property>
                                 <style>
-                                  <class name="nw-view"/>
+                                  <class name="eml-view"/>
                                 </style>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"/>
@@ -412,7 +413,7 @@
                 <property name="icon-name">view-more-symbolic</property>
                 <property name="menu-model">cmenu</property>
                 <style>
-                  <class name="nw-header-toggle-button"/>
+                  <class name="eml-header-toggle-button"/>
                 </style>
               </object>
             </child>
