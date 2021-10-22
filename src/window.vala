@@ -142,6 +142,7 @@ namespace Emulsion {
                 search_button.set_active (false);
                 color_fb.grab_focus ();
                 colorstore.remove_all ();
+                back_button.set_visible (true);
 
                 if (palette_model.is_selected (pos)) {
                     color_label.set_text(((PaletteInfo)palettestore.get_item (pos)).palname);
@@ -219,8 +220,10 @@ namespace Emulsion {
                 pid.show ();
             });
 
+            back_button.set_visible (false);
             back_button.clicked.connect (() => {
                 main_stack.set_visible_child_name ("palbody");
+                back_button.set_visible (false);
             });
 
             searchbar.set_key_capture_widget (this);
