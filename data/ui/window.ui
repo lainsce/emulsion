@@ -6,7 +6,7 @@
   </object>
   <object class="GtkAdjustment" id="coloradj">
   </object>
-  <template class="EmulsionMaiemlindow" parent="AdwApplicatioemlindow">
+  <template class="EmulsionMainWindow" parent="AdwApplicationWindow">
     <property name="default-width">950</property>
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
@@ -90,7 +90,7 @@
                                 <property name="label" translatable="true">Palettes</property>
                                 <style>
                                   <class name="title-1"/>
-                                  <class name="eml-title"/>
+                                  <class name="eml-title-label"/>
                                 </style>
                               </object>
                             </child>
