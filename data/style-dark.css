@@ -1,5 +1,20 @@
+@define-color accent_color #48e188;
+@define-color accent_bg_color #48e188;
+@define-color accent_fg_color #00391a;
+@define-color accent_secondary_color #b6ccb8;
+@define-color accent_secondary_bg_color #b6ccb8;
+@define-color accent_secondary_fg_color #223527;
+@define-color window_bg_color #1a1c1a;
+@define-color view_bg_color #252725;
+@define-color headerbar_bg_color #1a1c1a;
+@define-color popover_bg_color #252725;
+@define-color popover_fg_color #e1e3de;
+@define-color window_fg_color #e1e3de;
+@define-color view_fg_color #e1e3de;
+@define-color headerbar_fg_color #e1e3de;
+
 .eml-view {
-  background: @theme_base_color;
+  background: @window_bg_color;
 }
 
 .eml-title-box {
@@ -7,19 +22,19 @@
 }
 
 .eml-title-box:backdrop {
-  background: shade(@theme_bg_color, 0.99);
-  color: alpha(@theme_fg_color, 0.5);
+  background: shade(@headerbar_bg_color, 0.99);
+  color: alpha(@view_fg_color, 0.5);
 }
 
 .eml-search-box box {
-  background: shade(@theme_bg_color, 0.95);
+  background: @window_bg_color;
 }
 
 .eml-search-box box:backdrop {
-  background: shade(@theme_bg_color, 0.75);
+  background: shade(@view_bg_color, 0.75);
 }
 
 .eml-search-box entry {
-  background: shade(@theme_bg_color, 0.5);
+  background: shade(@view_bg_color, 0.5);
 }
 

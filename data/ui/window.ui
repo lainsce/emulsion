@@ -11,7 +11,7 @@
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
     <style>
-      <class name="eml-outline"/>
+      <class name="eml-view"/>
     </style>
     <child>
       <object class="GtkBox" id="main_box">
@@ -26,7 +26,12 @@
             <child type="title">
               <object class="GtkBox">
                 <child>
-                  <placeholder />
+                  <object class="GtkLabel" id="palette_label">
+                    <property name="label" translatable="true">Palettes</property>
+                    <style>
+                      <class name="title"/>
+                    </style>
+                  </object>
                 </child>
               </object>
             </child>
@@ -47,87 +52,26 @@
                 </style>
               </object>
             </child>
+            <child type="end">
+              <object class="GtkToggleButton" id="search_button">
+                <property name="icon-name">edit-find-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Search Palette Names</property>
+                <style>
+                  <class name="eml-header-toggle-button"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkStack" id="main_stack">
             <property name="vexpand">1</property>
-            <style>
-              <class name="eml-view"/>
-            </style>
             <child>
               <object class="GtkStackPage">
                 <property name="name">palbody</property>
                 <property name="child">
                   <object class="GtkBox" id="palette_box">
                     <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkWindowHandle">
-                        <child>
-                          <object class="GtkBox" id="palette_label_box">
-                            <property name="orientation">horizontal</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkButton" id="add_palette_button">
-                                <property name="icon-name">list-add-symbolic</property>
-                                <property name="valign">center</property>
-                                <property name="halign">end</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-start">6</property>
-                                <property name="margin-bottom">12</property>
-                                <property name="tooltip-text" translatable="yes">Add Palette</property>
-                                <style>
-                                  <class name="eml-header-button"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="palette_label">
-                                <property name="halign">start</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="true">Palettes</property>
-                                <style>
-                                  <class name="title-1"/>
-                                  <class name="eml-title-label"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="import_palette_button">
-                                <property name="icon-name">insert-image-symbolic</property>
-                                <property name="valign">center</property>
-                                <property name="halign">end</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                                <property name="tooltip-text" translatable="yes">Import Palette…</property>
-                                <style>
-                                  <class name="eml-header-button"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkToggleButton" id="search_button">
-                                <property name="icon-name">edit-find-symbolic</property>
-                                <property name="valign">center</property>
-                                <property name="halign">end</property>
-                                <property name="margin-top">12</property>
-                                <property name="margin-bottom">12</property>
-                                <property name="margin-end">6</property>
-                                <property name="tooltip-text" translatable="yes">Search Palette Names</property>
-                                <style>
-                                  <class name="eml-header-button"/>
-                                </style>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="eml-title-box"/>
-                            </style>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
                     <child>
                       <object class="GtkRevealer" id="search_revealer">
                         <child>
@@ -146,54 +90,86 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="palette_window">
-                        <child>
-                          <object class="GtkStack" id="palette_stack">
-                            <property name="vexpand">1</property>
+                      <object class="GtkOverlay">
+                        <style>
+                          <class name="eml-view"/>
+                        </style>
+                        <child type="overlay">
+                          <object class="GtkBox">
+                            <property name="valign">end</property>
+                            <property name="halign">end</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="spacing">12</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkStackPage">
-                                <property name="name">palempty</property>
-                                <property name="child">
-                                  <object class="AdwStatusPage" id="placeholder">
-                                    <property name="valign">center</property>
-                                    <property name="icon-name">rgb-symbolic</property>
-                                    <property name="title" translatable="yes">No Palettes</property>
-                                    <property name="description" translatable="yes">Add a palette with the + button.</property>
-                                  </object>
-                                </property>
+                              <object class="GtkButton" id="import_palette_button">
+                                <property name="icon-name">insert-image-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Import Palette…</property>
+                                <style>
+                                  <class name="list-action-button"/>
+                                  <class name="accent-secondary-button"/>
+                                </style>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkStackPage">
-                                <property name="name">palfull</property>
-                                <property name="child">
-                                  <object class="GtkGridView" id="palette_fb">
-                                    <property name="min-columns">1</property>
-                                    <property name="max-columns">4</property>
-                                    <property name="single-click-activate">1</property>
-                                    <style>
-                                      <class name="eml-view"/>
-                                    </style>
-                                    <property name="model">
-                                      <object class="GtkSingleSelection" id="palette_model">
+                              <object class="GtkButton" id="add_palette_button">
+                                <property name="icon-name">list-add-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Add Palette</property>
+                                <style>
+                                  <class name="list-action-button"/>
+                                  <class name="accent-button"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="palette_window">
+                            <child>
+                              <object class="GtkStack" id="palette_stack">
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkStackPage">
+                                    <property name="name">palempty</property>
+                                    <property name="child">
+                                      <object class="AdwStatusPage" id="placeholder">
+                                        <property name="valign">center</property>
+                                        <property name="icon-name">rgb-symbolic</property>
+                                        <property name="title" translatable="yes">No Palettes</property>
+                                        <property name="description" translatable="yes">Add a palette with the + button.</property>
+                                      </object>
+                                    </property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkStackPage">
+                                    <property name="name">palfull</property>
+                                    <property name="child">
+                                      <object class="GtkGridView" id="palette_fb">
+                                        <property name="min-columns">1</property>
+                                        <property name="max-columns">4</property>
+                                        <property name="single-click-activate">1</property>
                                         <property name="model">
-                                          <object class="GtkFilterListModel" id="palette_filter_model">
-                                            <property name="incremental">1</property>
-                                            <property name="filter">
-                                              <object class="GtkStringFilter">
-                                                <property name="expression">
-                                                  <lookup name="palname" type="EmulsionPaletteInfo"></lookup>
+                                          <object class="GtkSingleSelection" id="palette_model">
+                                            <property name="model">
+                                              <object class="GtkFilterListModel" id="palette_filter_model">
+                                                <property name="incremental">1</property>
+                                                <property name="filter">
+                                                  <object class="GtkStringFilter">
+                                                    <property name="expression">
+                                                      <lookup name="palname" type="EmulsionPaletteInfo"></lookup>
+                                                    </property>
+                                                    <property name="search" bind-source="searchentry" bind-property="text"/>
+                                                  </object>
                                                 </property>
-                                                <property name="search" bind-source="searchentry" bind-property="text"/>
                                               </object>
                                             </property>
                                           </object>
                                         </property>
-                                      </object>
-                                    </property>
-                                    <property name="factory">
-                                      <object class="GtkBuilderListItemFactory" id="palette_factory">
-                                        <property name="bytes"><![CDATA[
+                                        <property name="factory">
+                                          <object class="GtkBuilderListItemFactory" id="palette_factory">
+                                            <property name="bytes"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <menu id="pmenu">
@@ -275,6 +251,8 @@
                           </object>
                         </child>
                       </object>
+                    </child>
+                  </object>
                 </property>
               </object>
             </child>
@@ -282,56 +260,38 @@
               <object class="GtkStackPage">
                 <property name="name">colbody</property>
                 <property name="child">
-                      <object class="GtkBox" id="color_box">
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkWindowHandle">
+                  <object class="GtkBox" id="color_box">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkOverlay">
+                        <style>
+                          <class name="eml-view"/>
+                        </style>
+                        <child type="overlay">
+                          <object class="GtkBox">
+                            <property name="valign">end</property>
+                            <property name="halign">end</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-bottom">12</property>
+                            <property name="spacing">12</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="color_label_box">
-                                <property name="orientation">horizontal</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkButton" id="add_color_button">
-                                    <property name="icon-name">list-add-symbolic</property>
-                                    <property name="valign">center</property>
-                                    <property name="halign">end</property>
-                                    <property name="margin-top">12</property>
-                                    <property name="margin-bottom">12</property>
-                                    <property name="margin-start">6</property>
-                                    <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
-                                    <style>
-                                      <class name="eml-header-button"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="color_label">
-                                    <property name="valign">center</property>
-                                    <property name="halign">start</property>
-                                    <property name="hexpand">1</property>
-                                    <property name="margin-top">12</property>
-                                    <property name="margin-bottom">12</property>
-                                    <style>
-                                      <class name="title-1"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="picker_button">
-                                    <property name="icon-name">color-picker-symbolic</property>
-                                    <property name="valign">center</property>
-                                    <property name="halign">end</property>
-                                    <property name="margin-top">12</property>
-                                    <property name="margin-bottom">12</property>
-                                    <property name="margin-end">6</property>
-                                    <property name="tooltip-text" translatable="yes">Pick Color</property>
-                                    <style>
-                                      <class name="eml-header-button"/>
-                                    </style>
-                                  </object>
-                                </child>
+                             <object class="GtkButton" id="picker_button">
+                                <property name="icon-name">color-picker-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Pick Color</property>
                                 <style>
-                                  <class name="eml-title-box"/>
+                                  <class name="list-action-button"/>
+                                  <class name="accent-secondary-button"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                             <object class="GtkButton" id="add_color_button">
+                                <property name="icon-name">list-add-symbolic</property>
+                                <property name="tooltip-text" translatable="yes">Add Color to This Palette</property>
+                                <style>
+                                  <class name="list-action-button"/>
+                                  <class name="accent-button"/>
                                 </style>
                               </object>
                             </child>
@@ -346,9 +306,6 @@
                                 <property name="vexpand">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="single-click-activate">1</property>
-                                <style>
-                                  <class name="eml-view"/>
-                                </style>
                                 <property name="model">
                                   <object class="GtkSingleSelection" id="color_model"/>
                                 </property>
@@ -423,9 +380,11 @@
     </property>
   </template>
 </interface>
-                                ]]></property>
+                                    ]]></property>
+                                  </object>
+                                </property>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>

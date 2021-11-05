@@ -1,7 +1,18 @@
 /* app */
-@define-color accent_color @green_4;
-@define-color accent_bg_color @green_4;
-@define-color accent_fg_color @theme_fg_color;
+@define-color accent_color #006d37;
+@define-color accent_bg_color #006d37;
+@define-color accent_fg_color #fff;
+@define-color accent_secondary_color #506353;
+@define-color accent_secondary_bg_color #506353;
+@define-color accent_secondary_fg_color #fff;
+@define-color window_bg_color #eff1eb;
+@define-color view_bg_color #fbfdf7;
+@define-color headerbar_bg_color #eff1eb;
+@define-color popover_bg_color #fbfdf7;
+@define-color popover_fg_color #1a1c1a;
+@define-color window_fg_color #1a1c1a;
+@define-color view_fg_color #1a1c1a;
+@define-color headerbar_fg_color #1a1c1a;
 
 .palette,
 .color {
@@ -25,7 +36,7 @@ gridview child .color-box {
 
 gridview child:selected {
   background: none;
-  color: @theme_fg_color;
+  color: @view_fg_color;
 }
 gridview child:selected .palette-box,
 gridview child:selected .color-box {
@@ -66,38 +77,51 @@ gridview child:selected .color-box {
   background: none;
 }
 
+.list-action-button {
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 alpha(black, 0.3),
+              0 4px 8px 3px alpha(black, 0.15);
+}
+.list-action-button:hover {
+  box-shadow: 0 2px 3px 0 alpha(black, 0.3),
+              0 6px 10px 4px alpha(black, 0.15);
+}
+.accent-button {
+  background: @accent_bg_color;
+  color: @accent_fg_color;
+}
+.accent-secondary-button {
+  background: @accent_secondary_color;
+  color: @accent_secondary_fg_color;
+}
 .eml-view {
-  background: @theme_bg_color;
+  background: @window_bg_color;
+  border-radius: 6px;
+  margin: 6px;
+  margin-top: 0px;
+}
+.eml-view gridview {
+  border-radius: 6px;
 }
 .eml-title-label {
-  padding: 8px;
-}
-.eml-title-box {
-  border-bottom: 1px solid @borders;
-  background: shade(@theme_bg_color, 0.95);
-}
-.eml-title-box entry:not(.eml-search-box) {
-  background: none;
-  box-shadow: none;
-  padding: 8px;
-  border: none;
-  border-bottom: 2px solid @borders;
-  border-radius: 0px;
+  padding: 8px 12px;
 }
 .eml-search-box box {
-  background: shade(@theme_bg_color, 0.9);
+  background: @window_bg_color;
   border: none;
+  box-shadow: none;
 }
 .eml-search-box box:backdrop {
-  background: shade(@theme_bg_color, 0.98);
+  background: shade(@view_bg_color, 0.98);
 }
 .eml-title {
   border: none;
   box-shadow: none;
 }
 .eml-title-box:backdrop {
-  background: shade(@theme_bg_color, 1.05);
-  color: alpha(@theme_fg_color, 0.66);
+  background: shade(@view_bg_color, 1.05);
+  color: alpha(@view_fg_color, 0.66);
 }
 .eml-header-button:not(:hover):not(:active),
 .eml-header-button .toggle:not(:hover):not(:active):not(:checked) {
