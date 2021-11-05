@@ -91,6 +91,12 @@ gridview child:selected .color-box {
   background: @accent_bg_color;
   color: @accent_fg_color;
 }
+.accent-button:hover {
+  background: shade(@accent_bg_color, 1.05);
+}
+.accent-button:active {
+  background: shade(@accent_bg_color, 0.95);
+}
 .accent-secondary-button {
   background: @accent_secondary_bg_color;
   color: @accent_secondary_fg_color;
