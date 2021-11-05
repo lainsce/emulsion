@@ -1,10 +1,10 @@
 /* app */
 @define-color accent_color #006d37;
-@define-color accent_bg_color #006d37;
-@define-color accent_fg_color #fff;
-@define-color accent_secondary_color #506353;
-@define-color accent_secondary_bg_color #506353;
-@define-color accent_secondary_fg_color #fff;
+@define-color accent_bg_color #78fbb0;
+@define-color accent_fg_color #006d3e;
+@define-color accent_secondary_color #d1e8d5;
+@define-color accent_secondary_bg_color #d1e8d5;
+@define-color accent_secondary_fg_color #006d3e;
 @define-color window_bg_color #eff1eb;
 @define-color view_bg_color #fbfdf7;
 @define-color headerbar_bg_color #eff1eb;
@@ -27,7 +27,7 @@
 
 gridview child .palette-box,
 gridview child .color-box {
-  border-radius: 12px;
+  border-radius: 6px;
   border: 4px solid transparent;
   padding: 6px;
   margin: 6px;
@@ -92,7 +92,7 @@ gridview child:selected .color-box {
   color: @accent_fg_color;
 }
 .accent-secondary-button {
-  background: @accent_secondary_color;
+  background: @accent_secondary_bg_color;
   color: @accent_secondary_fg_color;
 }
 .eml-view {
