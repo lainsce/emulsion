@@ -39,6 +39,13 @@
     </custom>
     <translation type="gettext">io.github.lainsce.Emulsion</translation>
     <releases>
+        <release version="3.1.1" date="2021-11-22">
+            <description>
+                <p>Release: Rollercolor</p>
+                <p>Changed: Highly experimental UI.</p>
+                <p>Changed: Using even more libadwaita-isms.</p>
+            </description>
+        </release>
         <release version="3.1.0" date="2021-10-22">
             <description>
                 <p>Release: When the Prism Grows in your Garden</p>
