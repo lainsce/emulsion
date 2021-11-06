@@ -1,18 +1,18 @@
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 name: CI
 jobs:
-  flatpak-builder:
-    name: "Flatpak Builder"
+  flatpak:
+    name: "Flatpak"
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-40
+      image: bilelmoussaoui/flatpak-github-actions:gnome-nightly
       options: --privileged
     steps:
-      - uses: actions/checkout@v2
-      - uses: bilelmoussaoui/flatpak-github-actions@v2
+      - uses: actions/checkout@v2.3.5
+      - uses: bilelmoussaoui/flatpak-github-actions@v4
         with:
           bundle: "emulsion-nightly.flatpak"
           manifest-path: "build-aux/flatpak/io.github.lainsce.Emulsion.json"
