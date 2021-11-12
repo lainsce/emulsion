@@ -231,6 +231,9 @@
                       <lookup name="item">GtkListItem</lookup>
                   </lookup>
                 </binding>
+                <style>
+                  <class name="eml-color-label"/>
+                </style>
               </object>
             </child>
             <child type="end">
@@ -372,6 +375,9 @@
                       <lookup name="item">GtkListItem</lookup>
                   </lookup>
                 </binding>
+                <style>
+                  <class name="eml-color-label"/>
+                </style>
               </object>
             </child>
             <child type="end">
