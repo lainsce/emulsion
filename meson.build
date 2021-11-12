@@ -1,4 +1,4 @@
-project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '3.1.1')
+project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '3.2.0')
 gnome = import('gnome')
 i18n = import('i18n')
 

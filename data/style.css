@@ -109,7 +109,7 @@ gridview child:selected .color-box {
 }
 .eml-view {
   background: @window_bg_color;
-  border-radius: 6px;
+  border-radius: 12px;
   margin: 6px;
   margin-top: 0px;
 }
