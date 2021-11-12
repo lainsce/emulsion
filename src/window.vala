@@ -42,6 +42,8 @@ namespace Emulsion {
 	    [GtkChild]
 	    unowned Gtk.Label palette_label;
 	    [GtkChild]
+	    unowned Gtk.Entry color_label;
+	    [GtkChild]
 	    unowned Gtk.Stack main_stack;
 	    [GtkChild]
 	    unowned Gtk.Stack palette_stack;
@@ -144,7 +146,9 @@ namespace Emulsion {
                 search_button.set_visible (false);
 
                 if (palette_model.is_selected (pos)) {
-                    palette_label.set_label (((PaletteInfo)palettestore.get_item (pos)).palname);
+                    palette_label.set_visible (false);
+                    color_label.set_visible (true);
+                    color_label.set_text (((PaletteInfo)palettestore.get_item (pos)).palname);
                     int j = 0;
                     var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
                     for (j = 0; j < arrco.length; j++) {
@@ -161,6 +165,18 @@ namespace Emulsion {
             color_model.set_model (colorstore);
             color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+
+            color_label.set_icon_from_icon_name (Gtk.EntryIconPosition.SECONDARY,"document-edit-symbolic");
+            color_label.set_icon_activatable (Gtk.EntryIconPosition.SECONDARY, true);
+            color_label.set_icon_tooltip_text (Gtk.EntryIconPosition.SECONDARY, _("Set New Palette Name"));
+            color_label.activate.connect (() => {
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                ((PaletteInfo)pitem).palname = color_label.get_text ();
+            });
+            color_label.icon_press.connect (() => {
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                ((PaletteInfo)pitem).palname = color_label.get_text ();
+            });
 
             color_fb.activate.connect ((pos) => {
                 if (color_model.is_selected (pos)) {
@@ -210,7 +226,8 @@ namespace Emulsion {
                 main_stack.set_visible_child_name ("palbody");
                 back_button.set_visible (false);
                 search_button.set_visible (true);
-                palette_label.set_label (_("Palettes"));
+                palette_label.set_visible (true);
+                color_label.set_visible (false);
             });
 
             searchbar.set_key_capture_widget (this);

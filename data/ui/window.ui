@@ -33,6 +33,15 @@
                     </style>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkEntry" id="color_label">
+                    <property name="visible">0</property>
+                    <style>
+                      <class name="eml-entry"/>
+                      <class name="title"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
             <child>

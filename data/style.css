@@ -143,3 +143,9 @@ gridview child:selected .color-box {
   font-size: 1.33rem;
   font-weight: 700;
 }
+.eml-entry {
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid @borders;
+}
