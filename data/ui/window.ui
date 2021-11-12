@@ -223,8 +223,18 @@
             <property name="width-request">260</property>
             <property name="hexpand">0</property>
             <child>
+              <object class="GtkMenuButton" id="palette_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">pmenu</property>
+                <style>
+                  <class name="eml-header-toggle-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel" id="palette_name">
                 <property name="halign">start</property>
+                <property name="margin-start">12</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionPaletteInfo" name="palname">
@@ -233,15 +243,6 @@
                 </binding>
                 <style>
                   <class name="eml-color-label"/>
-                </style>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkMenuButton" id="palette_button">
-                <property name="icon-name">view-more-symbolic</property>
-                <property name="menu-model">pmenu</property>
-                <style>
-                  <class name="eml-header-toggle-button"/>
                 </style>
               </object>
             </child>
@@ -367,8 +368,18 @@
             <property name="width-request">128</property>
             <property name="hexpand">0</property>
             <child>
+              <object class="GtkMenuButton" id="color_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">cmenu</property>
+                <style>
+                  <class name="eml-header-toggle-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkLabel" id="color_name">
                 <property name="halign">start</property>
+                <property name="margin-start">12</property>
                 <property name="hexpand">1</property>
                 <binding name="label">
                   <lookup type="EmulsionColorInfo" name="name">
@@ -377,15 +388,6 @@
                 </binding>
                 <style>
                   <class name="eml-color-label"/>
-                </style>
-              </object>
-            </child>
-            <child type="end">
-              <object class="GtkMenuButton" id="color_button">
-                <property name="icon-name">view-more-symbolic</property>
-                <property name="menu-model">cmenu</property>
-                <style>
-                  <class name="eml-header-toggle-button"/>
                 </style>
               </object>
             </child>
