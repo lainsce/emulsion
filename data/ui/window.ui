@@ -102,6 +102,7 @@
                       <object class="GtkOverlay">
                         <style>
                           <class name="eml-view"/>
+                          <class name="card"/>
                         </style>
                         <child type="overlay">
                           <object class="GtkBox">
