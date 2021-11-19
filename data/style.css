@@ -5,10 +5,10 @@
 @define-color accent_secondary_color #d1e8d5;
 @define-color accent_secondary_bg_color #d1e8d5;
 @define-color accent_secondary_fg_color #006d3e;
-@define-color window_bg_color #eff1eb;
-@define-color view_bg_color #fbfdf7;
-@define-color headerbar_bg_color #eff1eb;
-@define-color popover_bg_color #fbfdf7;
+@define-color window_bg_color #fbfdf7;
+@define-color view_bg_color #eff1eb;
+@define-color headerbar_bg_color #fbfdf7;
+@define-color popover_bg_color #eff1eb;
 @define-color popover_fg_color #1a1c1a;
 @define-color window_fg_color #1a1c1a;
 @define-color view_fg_color #1a1c1a;
