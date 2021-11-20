@@ -29,6 +29,7 @@
                   <object class="GtkLabel" id="palette_label">
                     <property name="label" translatable="true">Palettes</property>
                     <style>
+                      <class name="eml-header-title"/>
                       <class name="title"/>
                     </style>
                   </object>
