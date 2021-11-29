@@ -316,7 +316,7 @@ namespace Emulsion {
             this.set_size_request (360, 360);
             this.show ();
             var adwsm = Adw.StyleManager.get_default ();
-            adwsm.set_color_scheme (Adw.ColorScheme.PREFER_DARK);
+            adwsm.set_color_scheme (Adw.ColorScheme.FORCE_DARK);
         }
 
         public async void pick_color () {
