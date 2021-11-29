@@ -1,4 +1,3 @@
-/* app */
 @define-color accent_color #006d37;
 @define-color accent_bg_color #78fbb0;
 @define-color accent_fg_color #006d3e;
@@ -109,12 +108,11 @@ gridview child:selected .color-box {
 }
 .eml-view {
   background: @window_bg_color;
-  border-radius: 12px;
-  margin: 6px;
-  margin-top: 0px;
 }
 .eml-view gridview {
   border-radius: 6px;
+  margin: 6px;
+  margin-top: 0px;
 }
 .eml-title-label {
   padding: 8px 12px;

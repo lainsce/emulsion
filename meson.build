@@ -1,11 +1,12 @@
-project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '3.2.0')
+project('io.github.lainsce.Emulsion', ['vala', 'c'], version: '3.2.1')
 gnome = import('gnome')
 i18n = import('i18n')
 
-add_project_arguments([
-		'--target-glib=2.40',
-	],
-	language: 'vala',
+add_project_arguments(
+    [
+        '--target-glib=2.40',
+    ],
+    language: 'vala',
 )
 
 if get_option('profile') == 'development'
@@ -55,6 +56,7 @@ sources = files(
    'src/color.vala',
    'src/coloreditpopover.vala',
    'src/portal.vala',
+   'src/settings.vala',
 )
 
 dependencies = [

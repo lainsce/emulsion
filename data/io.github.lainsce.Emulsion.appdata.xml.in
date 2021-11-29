@@ -41,6 +41,13 @@
     <releases>
         <release version="3.2.0" date="2021-11-28">
             <description>
+                <p>Release: </p>
+                <p>Changed: Highly experimental UI.</p>
+                <p>Changed: Using even more libadwaita-isms.</p>
+            </description>
+        </release>
+        <release version="3.2.0" date="2021-11-28">
+            <description>
                 <p>Release: Rollercolor</p>
                 <p>Changed: Highly experimental UI.</p>
                 <p>Changed: Using even more libadwaita-isms.</p>

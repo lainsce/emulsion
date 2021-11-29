@@ -13,7 +13,7 @@
 @define-color view_fg_color #e1e3de;
 @define-color headerbar_fg_color #e1e3de;
 
-.eml-view {
+.eml-view box {
   background: @window_bg_color;
 }
 

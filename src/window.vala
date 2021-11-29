@@ -17,64 +17,64 @@
  */
 
 namespace Emulsion {
-	[GtkTemplate (ui = "/io/github/lainsce/Emulsion/window.ui")]
-	public class MainWindow : Adw.ApplicationWindow {
-	    [GtkChild]
-	    unowned Gtk.MenuButton menu_button;
-	    [GtkChild]
-	    unowned Gtk.ToggleButton search_button;
-	    [GtkChild]
-	    unowned Gtk.Button add_palette_button;
-	    [GtkChild]
-	    unowned Gtk.Button import_palette_button;
-	    [GtkChild]
-	    unowned Gtk.Button add_color_button;
-	    [GtkChild]
-	    unowned Gtk.Button back_button;
-
-	    [GtkChild]
-	    unowned Gtk.Revealer search_revealer;
+    [GtkTemplate (ui = "/io/github/lainsce/Emulsion/window.ui")]
+    public class MainWindow : Adw.ApplicationWindow {
         [GtkChild]
-	    unowned Gtk.SearchBar searchbar;
-	    [GtkChild]
-	    unowned Gtk.FilterListModel palette_filter_model;
-
-	    [GtkChild]
-	    unowned Gtk.Label palette_label;
-	    [GtkChild]
-	    unowned Gtk.Entry color_label;
-	    [GtkChild]
-	    unowned Gtk.Stack main_stack;
-	    [GtkChild]
-	    unowned Gtk.Stack palette_stack;
-
-	    [GtkChild]
-	    unowned Gtk.ScrolledWindow palette_window;
-	    [GtkChild]
-	    unowned Gtk.ScrolledWindow color_window;
+        unowned Gtk.MenuButton menu_button;
+        [GtkChild]
+        unowned Gtk.ToggleButton search_button;
+        [GtkChild]
+        unowned Gtk.Button add_palette_button;
+        [GtkChild]
+        unowned Gtk.Button import_palette_button;
+        [GtkChild]
+        unowned Gtk.Button add_color_button;
+        [GtkChild]
+        unowned Gtk.Button back_button;
 
         [GtkChild]
-	    public unowned Gtk.GridView palette_fb;
-	    [GtkChild]
-	    unowned Gtk.SingleSelection palette_model;
-	    [GtkChild]
-	    public unowned Gtk.GridView color_fb;
-	    [GtkChild]
-	    unowned Gtk.SingleSelection color_model;
+        unowned Gtk.Revealer search_revealer;
+        [GtkChild]
+        unowned Gtk.SearchBar searchbar;
+        [GtkChild]
+        unowned Gtk.FilterListModel palette_filter_model;
 
-	    [GtkChild]
+        [GtkChild]
+        unowned Gtk.Label palette_label;
+        [GtkChild]
+        unowned Gtk.Entry color_label;
+        [GtkChild]
+        unowned Gtk.Stack main_stack;
+        [GtkChild]
+        unowned Gtk.Stack palette_stack;
+
+        [GtkChild]
+        unowned Gtk.ScrolledWindow palette_window;
+        [GtkChild]
+        unowned Gtk.ScrolledWindow color_window;
+
+        [GtkChild]
+        public unowned Gtk.GridView palette_fb;
+        [GtkChild]
+        unowned Gtk.SingleSelection palette_model;
+        [GtkChild]
+        public unowned Gtk.GridView color_fb;
+        [GtkChild]
+        unowned Gtk.SingleSelection color_model;
+
+        [GtkChild]
         public unowned Gtk.Button picker_button;
 
-	    public GLib.ListStore palettestore;
-	    public GLib.ListStore colorstore;
-	    public Manager m;
-	    public ColorInfo win_color_info;
-	    int uid_counter = 1;
+        public GLib.ListStore palettestore;
+        public GLib.ListStore colorstore;
+        public Manager m;
+        public ColorInfo win_color_info;
+        int uid_counter = 1;
 
-	    public signal void clicked ();
-	    public signal void toggled ();
+        public signal void clicked ();
+        public signal void toggled ();
 
-	    public SimpleActionGroup actions { get; construct; }
+        public SimpleActionGroup actions { get; construct; }
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_ABOUT = "action_about";
         public const string ACTION_KEYS = "action_keys";
@@ -97,20 +97,20 @@ namespace Emulsion {
         };
 
         public Adw.Application app { get; construct; }
-		public MainWindow (Adw.Application app) {
-			Object (
-			    application: app,
-			    app: app
-			);
-		}
+        public MainWindow (Adw.Application app) {
+            Object (
+                application: app,
+                app: app
+            );
+        }
 
-		static construct {
-		    install_action ("win.delete_palette", null, (Gtk.WidgetActionActivateFunc)delete_palette);
+        static construct {
+            install_action ("win.delete_palette", null, (Gtk.WidgetActionActivateFunc)delete_palette);
             install_action ("win.delete_color", null, (Gtk.WidgetActionActivateFunc)delete_color);
-		}
+        }
 
         construct {
-			// Initial settings
+            // Initial settings
             m = new Manager (this);
 
             actions = new SimpleActionGroup ();
@@ -248,11 +248,12 @@ namespace Emulsion {
             });
 
             // Some palettes to start
-            if (Emulsion.Application.gsettings.get_boolean("first-time")) {
+            var settings = new Settings ();
+            if (settings.first_time == true) {
                 populate_palettes_view ();
                 palette_label.set_visible(true);
                 palette_stack.set_visible_child_name ("palfull");
-                Emulsion.Application.gsettings.set_boolean("first-time", false);
+                settings.first_time = false;
             } else {
                 m.load_from_file.begin ();
                 if (palettestore.get_item(0) == null) {
@@ -313,12 +314,12 @@ namespace Emulsion {
             });
 
             this.set_size_request (360, 360);
+            this.show ();
             var adwsm = Adw.StyleManager.get_default ();
             adwsm.set_color_scheme (Adw.ColorScheme.PREFER_DARK);
-			this.show ();
-		}
+        }
 
-		public async void pick_color () {
+        public async void pick_color () {
             try {
                 var bus = yield Bus.get(BusType.SESSION);
                 var shot = yield bus.get_proxy<org.freedesktop.portal.Screenshot>("org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop");
@@ -373,7 +374,7 @@ namespace Emulsion {
             }
         }
 
-		public void action_ex_txt () {
+        public void action_ex_txt () {
             if (palettestore.get_item(palette_model.selected) != null) {
                 string ext_txt = "";
                 var item = palettestore.get_item(palette_model.selected);
@@ -389,9 +390,9 @@ namespace Emulsion {
                 unowned var clipboard = display.get_clipboard ();
                 clipboard.set_text (ext_txt);
             }
-		}
+        }
 
-		public void action_exc_txt () {
+        public void action_exc_txt () {
             if (colorstore.get_item(color_model.selected) != null) {
                 string ext_txt = "";
                 var item = colorstore.get_item(color_model.selected);
@@ -403,9 +404,9 @@ namespace Emulsion {
                 unowned var clipboard = display.get_clipboard ();
                 clipboard.set_text (ext_txt);
             }
-		}
+        }
 
-		public void action_exc_txt_rgb () {
+        public void action_exc_txt_rgb () {
             if (colorstore.get_item(color_model.selected) != null) {
                 string ext_txt = "";
                 var item = colorstore.get_item(color_model.selected);
@@ -419,10 +420,10 @@ namespace Emulsion {
                 unowned var clipboard = display.get_clipboard ();
                 clipboard.set_text (ext_txt);
             }
-		}
+        }
 
-		public void action_ex_png () {
-		    if (palettestore.get_item(palette_model.selected) != null) {
+        public void action_ex_png () {
+            if (palettestore.get_item(palette_model.selected) != null) {
                 var palren = new PaletteRenderer ();
                 palren.palette = ((PaletteInfo)palettestore.get_item(palette_model.selected));
                 var snap = new Gtk.Snapshot ();
@@ -442,7 +443,7 @@ namespace Emulsion {
             }
         }
 
-	    public void delete_palette () {
+        public void delete_palette () {
             palettestore.remove (palette_model.selected);
 
             if (palettestore.get_item(0) == null) {
@@ -545,5 +546,5 @@ namespace Emulsion {
             m.colors.add_all_array (mr);
             palettestore.append (m);
         }
-	}
+    }
 }
