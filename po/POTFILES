@@ -1,5 +1,5 @@
 data/io.github.lainsce.Emulsion.desktop.in
-data/io.github.lainsce.Emulsion.appdata.xml.in
+data/io.github.lainsce.Emulsion.metainfo.xml.in
 data/io.github.lainsce.Emulsion.gschema.xml
 
 data/ui/cep.ui
