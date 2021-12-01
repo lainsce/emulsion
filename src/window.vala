@@ -313,6 +313,9 @@ namespace Emulsion {
                 m.save_palettes.begin (palettestore);
             });
 
+            if (Config.PROFILE == "Devel")
+                add_css_class ("devel");
+
             this.set_size_request (360, 360);
             this.show ();
             var adwsm = Adw.StyleManager.get_default ();
