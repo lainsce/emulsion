@@ -105,7 +105,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/lainsce/emulsion",
-                    "branch" : "master"
+                    "branch" : "main"
                 }
             ]
         }
