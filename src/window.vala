@@ -22,7 +22,7 @@ namespace Emulsion {
         [GtkChild]
         unowned Gtk.MenuButton menu_button;
         [GtkChild]
-        unowned Gtk.ToggleButton search_button;
+        public unowned Gtk.ToggleButton search_button;
         [GtkChild]
         unowned Gtk.Button add_palette_button;
         [GtkChild]
@@ -40,13 +40,13 @@ namespace Emulsion {
         unowned Gtk.FilterListModel palette_filter_model;
 
         [GtkChild]
-        unowned Gtk.Label palette_label;
+        public unowned Gtk.Label palette_label;
         [GtkChild]
         unowned Gtk.Entry color_label;
         [GtkChild]
         unowned Gtk.Stack main_stack;
         [GtkChild]
-        unowned Gtk.Stack palette_stack;
+        public unowned Gtk.Stack palette_stack;
 
         [GtkChild]
         unowned Gtk.ScrolledWindow palette_window;
