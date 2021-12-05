@@ -86,6 +86,9 @@ namespace Emulsion {
                 a.colors.add_all_array (n);
 
                 win.palettestore.append (a);
+                win.palette_label.set_visible(true);
+                win.palette_stack.set_visible_child_name ("palfull");
+                win.search_button.set_visible(true);
                 this.dispose ();
             });
         }

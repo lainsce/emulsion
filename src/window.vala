@@ -253,6 +253,7 @@ namespace Emulsion {
                 populate_palettes_view ();
                 palette_label.set_visible(true);
                 palette_stack.set_visible_child_name ("palfull");
+                search_button.set_visible(true);
                 settings.first_time = false;
             } else {
                 m.load_from_file.begin ();
