@@ -33,6 +33,8 @@ namespace Emulsion {
         public unowned Gtk.Entry blue_entry;
         [GtkChild]
         public unowned Gtk.Entry hex_entry;
+        [GtkChild]
+        public unowned Gtk.Entry name_entry;
 
         public MainWindow win { get; construct; }
         public Gdk.RGBA color = {};
@@ -60,6 +62,7 @@ namespace Emulsion {
                 blue_scale.set_value (Utils.make_srgb(color.blue));
 
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
+                name_entry.set_text (_color_info.name);
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
                 queue_draw ();
@@ -79,7 +82,6 @@ namespace Emulsion {
                 color.red = (float)(double.parse(red_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -92,7 +94,6 @@ namespace Emulsion {
                 color.green = (float)(double.parse(green_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -105,7 +106,6 @@ namespace Emulsion {
                 color.blue = (float)(double.parse(blue_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -117,7 +117,6 @@ namespace Emulsion {
                 color.red = (float)(double.parse(red_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -129,7 +128,6 @@ namespace Emulsion {
                 color.green = (float)(double.parse(green_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -141,7 +139,6 @@ namespace Emulsion {
                 color.blue = (float)(double.parse(blue_entry.get_text ()) / 255);
                 hex_entry.set_text ("%s".printf(Utils.make_hex((float)red_scale.get_value (), (float)green_scale.get_value (), (float)blue_scale.get_value ())));
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();
@@ -151,7 +148,15 @@ namespace Emulsion {
 
             hex_entry.activate.connect (() => {
                 _color_info.color = hex_entry.get_text ();
-                _color_info.name = hex_entry.get_text ();
+
+                win.m.save_palettes.begin (win.palettestore);
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
+                queue_draw ();
+            });
+
+            name_entry.activate.connect (() => {
+                _color_info.name = name_entry.get_text ();
 
                 win.m.save_palettes.begin (win.palettestore);
                 win.palette_fb.queue_draw ();

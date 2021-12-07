@@ -41,8 +41,11 @@ namespace Emulsion {
                 var item = liststore.get_item (i);
                 builder.add_string_value (((PaletteInfo)item).palname);
                 builder.begin_array ();
-                foreach (string col in ((PaletteInfo)item).colors) {
-                    builder.add_string_value (col);
+                foreach (var col in ((PaletteInfo)item).colors.entries) {
+                    builder.begin_object ();
+                    builder.set_member_name (col.key);
+                    builder.add_string_value (col.value);
+                    builder.end_object ();
                 }
                 builder.end_array ();
                 builder.end_array ();
@@ -75,27 +78,46 @@ namespace Emulsion {
 
                 if (file.query_exists()) {
                     string line;
-                    GLib.FileUtils.get_contents (file.get_path (), out line);
+
                     var parser = new Json.Parser();
+
+                    GLib.FileUtils.get_contents (file.get_path (), out line);
                     parser.load_from_data(line);
+
                     var root = parser.get_root();
                     var array = root.get_array();
                     foreach (var t in array.get_elements()) {
                         var pi = t.get_array ();
                         var name = pi.get_string_element(0);
-                        var color = pi.get_array_element(1);
+                        var color = pi.get_array_element (1);
 
-                        var a = new PaletteInfo ();
-                        string[] arrco = {};
+                        var am = new PaletteInfo ();
+                        am.palname = name;
+                        am.colors = new Gee.HashMap<string, string> ();
 
-                        color.foreach_element ((a, b, c) => {
-                            arrco += color.get_string_element(b);
-                        });
+                        foreach (var c in color.get_elements ()) {
+                            string[] arrco = {};
+                            string[] arrcon = {};
 
-                        a.palname = name;
-                        a.colors = new Gee.TreeSet<string> ();
-                        a.colors.add_all_array (arrco);
-                        win.palettestore.append (a);
+                            var settings = new Settings ();
+                            if (settings.schema_version == 0) {
+                                color.foreach_element ((a, b, c) => {
+                                    am.colors.set (color.get_string_element(b), color.get_string_element(b));
+                                });
+                                settings.schema_version = 1;
+                            } else {
+                                c.get_object ().foreach_member ((a, b, c) => {
+                                    arrco += c.get_string ();
+                                    arrcon += b;
+                                });
+
+                                for (int i = 0; i < c.get_object ().get_size (); i++) {
+                                    am.colors.set (arrcon[i], arrco[i]);
+                                }
+                            }
+                        }
+
+                        win.palettestore.append (am);
                     }
                 }
             } catch (Error e) {

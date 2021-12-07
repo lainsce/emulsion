@@ -2,13 +2,11 @@ namespace Emulsion {
     public class PaletteInfo : Object {
         /*
          * palname : string of the Palette's name e.g. "GNOME";
-         * colors : string array of the Palette, all in hexcodes;
-         * colorsnames : string array of the Palette, for color names;
+         * colors : string key:value pair of the Palette, key is color's name, value is color's hexcode e.g. "White:#fff";
          */
 
         public string palname { get; set; }
-        public Gee.TreeSet<string> colors { get; set; }
-        public Gee.TreeSet<string> colorsnames { get; set; }
+        public Gee.HashMap<string, string> colors { get; set; }
     }
 
     public class PaletteRenderer : Gtk.Box {
@@ -40,7 +38,7 @@ namespace Emulsion {
 
 	    protected override void snapshot (Gtk.Snapshot snapshot) {
 	        int j = 0;
-	        var arrco = palette.colors.to_array ();
+	        var arrco = palette.colors.values.to_array();
             for (int i = 0; i < arrco.length; i++) {
                 Gdk.RGBA gc = {};
                 gc.parse (arrco[i]);

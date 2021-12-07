@@ -26,7 +26,7 @@
 
 gridview child .palette-box,
 gridview child .color-box {
-  border-radius: 6px;
+  border-radius: 8px;
   border: 4px solid transparent;
   padding: 6px;
   margin: 6px;
@@ -39,7 +39,7 @@ gridview child:selected {
 }
 gridview child:selected .palette-box,
 gridview child:selected .color-box {
-  outline: 2px solid @borders;
+  outline: 3px solid @borders;
 }
 
 .red trough{
@@ -144,8 +144,12 @@ gridview child:selected .color-box {
 .eml-entry {
   background: none;
   border-radius: 8px;
-  border: 2px solid @borders;
+  border: 1px solid @borders;
 }
 .eml-header-title {
   padding: 15px;
+}
+
+.eml-header-toggle-button .toggle {
+  border-radius: 9999px;
 }

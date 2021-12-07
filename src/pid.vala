@@ -82,8 +82,11 @@ namespace Emulsion {
 
                 var a = new PaletteInfo ();
                 a.palname = "%s".printf(file.get_basename().replace(".jpg","").replace(".png",""));
-                a.colors = new Gee.TreeSet<string> ();
-                a.colors.add_all_array (n);
+                a.colors = new Gee.HashMap<string, string> ();
+
+                for (int i = 0; i > n.length; i++) {
+                    a.colors.set ("Imported Color #%d".printf(i), n[i]);
+                }
 
                 win.palettestore.append (a);
                 win.palette_label.set_visible(true);

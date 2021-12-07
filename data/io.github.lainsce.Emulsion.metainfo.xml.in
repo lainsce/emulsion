@@ -39,11 +39,10 @@
     </custom>
     <translation type="gettext">io.github.lainsce.Emulsion</translation>
     <releases>
-        <release version="3.2.0" date="2021-11-28">
+        <release version="3.2.1" date="2021-12-07">
             <description>
-                <p>Release: </p>
-                <p>Changed: Highly experimental UI.</p>
-                <p>Changed: Using even more libadwaita-isms.</p>
+                <p>Release: Marshmallow Easel Window</p>
+                <p>Added: The option to name your colors.</p>
             </description>
         </release>
         <release version="3.2.0" date="2021-11-28">

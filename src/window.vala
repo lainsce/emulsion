@@ -150,10 +150,12 @@ namespace Emulsion {
                     color_label.set_visible (true);
                     color_label.set_text (((PaletteInfo)palettestore.get_item (pos)).palname);
                     int j = 0;
-                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.to_array();
+
+                    var arrcom = ((PaletteInfo)palettestore.get_item (pos)).colors.keys.to_array();
+                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.values.to_array();
                     for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
-                        a.name = arrco[j];
+                        a.name = arrcom[j];
                         a.color = arrco[j];
                         a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
                         colorstore.append (a);
@@ -186,7 +188,7 @@ namespace Emulsion {
                     Gtk.Allocation alloc;
                     color_fb.get_focus_child ().get_allocation (out alloc);
                     cep.set_pointing_to (alloc);
-                    cep.set_offset (100, 100);
+                    cep.set_offset (25, 50);
                     cep.popup ();
 
                     cep.closed.connect (() => {
@@ -198,12 +200,11 @@ namespace Emulsion {
                         for (i = 0; i < n; i++) {
                             var pitem = palettestore.get_item (i);
 
-                            var arrco = ((PaletteInfo)pitem).colors.to_array();
+                            var arrco = ((PaletteInfo)pitem).colors.values.to_array();
                             for (j = 0; j < arrco.length; j++) {
                                 if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
                                     if (arrco[j] != ((ColorInfo)item).color) {
-                                        ((PaletteInfo)pitem).colors.remove (arrco[pos]);
-                                        ((PaletteInfo)pitem).colors.add (cep.color_info.color);
+                                        ((PaletteInfo)pitem).colors.set (cep.color_info.name, cep.color_info.color);
                                     }
                                 }
                             }
@@ -277,14 +278,17 @@ namespace Emulsion {
                 string[] n = {};
 
                 for (int i = 0; i <= rand.int_range (1, 16); i++) {
-                    var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
+                    var rc = "#%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
                     n += rc;
                 }
 
                 var a = new PaletteInfo ();
-                a.palname = "New Palette " + "%d".printf(uid_counter++);
-                a.colors = new Gee.TreeSet<string> ();
-                a.colors.add_all_array (n);
+                a.palname = "New Palette %d".printf(uid_counter++);
+                a.colors = new Gee.HashMap<string, string> ();
+
+                for (int i = 0; i < n.length; i++) {
+                    a.colors.set(n[i], n[i]);
+                }
 
                 palettestore.append (a);
             });
@@ -294,16 +298,16 @@ namespace Emulsion {
                 var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
 
                 var a = new ColorInfo ();
-                a.name = rc;
                 a.color = rc;
+                a.name = "Color %d".printf(rand.int_range(1, 255));
 
                 var pitem = palettestore.get_item (palette_model.get_selected ());
                 a.uid = ((PaletteInfo)pitem).palname;
 
                 if (a.uid == ((PaletteInfo)pitem).palname) {
-                    var arrco = ((PaletteInfo)pitem).colors.to_array();
+                    var arrco = ((PaletteInfo)pitem).colors.values.to_array();
                     for (int j = 0; j <= arrco.length; j++) {
-                        ((PaletteInfo)pitem).colors.add(a.color);
+                        ((PaletteInfo)pitem).colors.set(a.name, a.color);
                     }
                 }
                 colorstore.append (a);
@@ -330,6 +334,7 @@ namespace Emulsion {
                 var options = new GLib.HashTable<string, GLib.Variant>(str_hash, str_equal);
                 var handle = shot.pick_color ("", options);
                 var request = yield bus.get_proxy<org.freedesktop.portal.Request>("org.freedesktop.portal.Desktop", handle);
+                var rand = new GLib.Rand ();
 
                 request.response.connect ((response, results) => {
                     if (response == 0) {
@@ -350,16 +355,16 @@ namespace Emulsion {
                         print ("R:%00.0f\nG:%00.0f\nB:%00.0f\n", (float)Utils.make_srgb(color_portal.red), (float)Utils.make_srgb(color_portal.green), (float)Utils.make_srgb(color_portal.blue));
 
                         var a = new ColorInfo ();
-                        a.name = pc;
+                        a.name = "Picked Color %d".printf (rand.int_range(1, 255));
                         a.color = pc;
 
                         var pitem = palettestore.get_item (palette_model.get_selected ());
                         a.uid = ((PaletteInfo)pitem).palname;
 
                         if (a.uid == ((PaletteInfo)pitem).palname) {
-                            var arrco = ((PaletteInfo)pitem).colors.to_array();
+                            var arrco = ((PaletteInfo)pitem).colors.values.to_array();
                             for (int j = 0; j <= arrco.length; j++) {
-                                ((PaletteInfo)pitem).colors.add(a.color);
+                                ((PaletteInfo)pitem).colors.set(a.name, a.color);
                             }
                         }
 
@@ -385,7 +390,7 @@ namespace Emulsion {
 
                 ext_txt += ((PaletteInfo)item).palname + "\n";
 
-                foreach (string c in ((PaletteInfo)item).colors) {
+                foreach (string c in ((PaletteInfo)item).colors.values) {
                     ext_txt += c + "\n";
                 }
 
@@ -460,12 +465,12 @@ namespace Emulsion {
         public void delete_color () {
             var pitem = palettestore.get_item (palette_model.get_selected());
             var citem = colorstore.get_item (color_model.get_selected());
-            var arrco = ((PaletteInfo)pitem).colors.to_array();
+            var arrco = ((PaletteInfo)pitem).colors.values.to_array();
 
             if (arrco[0] != null) {
                 if (((ColorInfo)citem).uid == ((PaletteInfo)pitem).palname) {
                     if (((ColorInfo)citem).color == arrco[color_model.get_selected()]) {
-                        ((PaletteInfo)pitem).colors.remove(((ColorInfo)citem).color);
+                        ((PaletteInfo)pitem).colors.unset(((ColorInfo)citem).name);
                         colorstore.remove (color_model.get_selected());
                     }
                 }
@@ -513,42 +518,70 @@ namespace Emulsion {
 
         void populate_palettes_view () {
             var g = new PaletteInfo ();
+            g.colors = new Gee.HashMap<string, string> ();
             g.palname = "Merveilles";
             string[] gr = {"#000000", "#72dec2", "#ffb545", "#ffffff"};
-            g.colors = new Gee.TreeSet<string> ();
-            g.colors.add_all_array (gr);
+            string[] grn = {"Black", "Ultraviolet Sun", "Infrared Moon", "White"};
+
+            for (int i = 0; i < gr.length; i++) {
+                g.colors.set (grn[i], gr[i]);
+            }
             palettestore.append (g);
+            print("Merveilles loaded in!\n");
 
             var p = new PaletteInfo ();
             p.palname = "Pico-8";
+            p.colors = new Gee.HashMap<string, string> ();
             string[] pr = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
                           "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
                           "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
-            p.colors = new Gee.TreeSet<string> ();
-            p.colors.add_all_array (pr);
+            string[] prn = {"#000000", "#1d2b53", "#7e2553", "#008751", "#ab5236", "#5f574f",
+                          "#c2c3c7", "#fff1e8", "#ff004d", "#ffa300", "#ffec27", "#00e436",
+                          "#29adff", "#83769c", "#ff77a8", "#ffccaa"};
+
+            for (int i = 0; i < pr.length; i++) {
+                p.colors.set (prn[i], pr[i]);
+            }
             palettestore.append (p);
+            print("Pico-8 loaded in!\n");
 
             var e = new PaletteInfo ();
             e.palname = "Endesga 8";
+            e.colors = new Gee.HashMap<string, string> ();
             string[] er = {"#1b1c33", "#d32734", "#da7d22", "#e6da29", "#28c641", "#2d93dd",
                           "#7b53ad", "#fdfdf8"};
-            e.colors = new Gee.TreeSet<string> ();
-            e.colors.add_all_array (er);
+            string[] ern = {"BLK", "RED", "ORG", "YLW", "GRN", "BLU",
+                          "MAG", "WHT"};
+
+            for (int i = 0; i < er.length; i++) {
+                e.colors.set (ern[i], er[i]);
+            }
             palettestore.append (e);
+            print("Endesga 8 loaded in!\n");
 
             var d = new PaletteInfo ();
             d.palname = "Dot Matrix Game";
+            d.colors = new Gee.HashMap<string, string> ();
             string[] dr = {"#081820", "#346856", "#88c070", "#e0f8d0"};
-            d.colors = new Gee.TreeSet<string> ();
-            d.colors.add_all_array (dr);
+            string[] drn = {"FG", "MD1", "MD2", "BG"};
+
+            for (int i = 0; i < dr.length; i++) {
+                d.colors.set (drn[i], dr[i]);
+            }
             palettestore.append (d);
+            print("Dot Matrix Game loaded in!\n");
 
             var m = new PaletteInfo ();
             m.palname = "Monochroma";
+            m.colors = new Gee.HashMap<string, string> ();
             string[] mr = {"#171219", "#f2fbeb"};
-            m.colors = new Gee.TreeSet<string> ();
-            m.colors.add_all_array (mr);
+            string[] mrn = {"Murky Water", "Glistening Moon"};
+
+            for (int i = 0; i < mr.length; i++) {
+                m.colors.set (mrn[i], mr[i]);
+            }
             palettestore.append (m);
+            print("Monochroma loaded in!\n");
         }
     }
 }

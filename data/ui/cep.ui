@@ -167,9 +167,13 @@
               <property name="spacing">6</property>
               <property name="visible">1</property>
               <child>
-                <object class="GtkFixed">
-                  <property name="margin-top">40</property>
+                <object class="GtkEntry" id="name_entry">
+                  <property name="margin-top">6</property>
+                  <property name="margin-bottom">6</property>
+                  <property name="margin-start">6</property>
+                  <property name="margin-end">6</property>
                   <property name="hexpand">1</property>
+                  <property name="placeholder-text" translatable="yes">Color Name</property>
                 </object>
               </child>
               </object>

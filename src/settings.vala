@@ -20,9 +20,11 @@
 public class Emulsion.Settings : Object {
     private GLib.Settings settings = new GLib.Settings ("io.github.lainsce.Emulsion");
     public bool first_time { get; set; }
+    public int schema_version { get; set; }
 
     construct {
         settings.bind ("first-time", this, "first-time", DEFAULT);
+        settings.bind ("schema-version", this, "schema-version", DEFAULT);
     }
 
     public Action create_action (string key) {
