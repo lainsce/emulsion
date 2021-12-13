@@ -19,11 +19,7 @@
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/pid.ui")]
     public class PaletteImportDialog : Adw.Window {
-        const string COLORED_SURFACE = """
-            * {
-                background: %s;
-            }
-        """;
+        const string COLORED_SURFACE = "* { background: %s; }";
 
         [GtkChild]
         unowned Gtk.Box color_box;
@@ -54,7 +50,7 @@ namespace Emulsion {
             file_label.set_visible (true);
             file_image.set_visible (true);
             image.set_sensitive (true);
-            image.set_margin_top (12);
+            image.set_margin_top (6);
             ok_button.set_sensitive (false);
 
             cancel_button.clicked.connect (() => {
@@ -84,8 +80,8 @@ namespace Emulsion {
                 a.palname = "%s".printf(file.get_basename().replace(".jpg","").replace(".png",""));
                 a.colors = new Gee.HashMap<string, string> ();
 
-                for (int i = 0; i > n.length; i++) {
-                    a.colors.set ("Imported Color #%d".printf(i), n[i]);
+                for (int i = 0; i < n.length; i++) {
+                    a.colors.set (n[i], n[i]);
                 }
 
                 win.palettestore.append (a);
