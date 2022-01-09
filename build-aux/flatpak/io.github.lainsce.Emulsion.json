@@ -85,7 +85,7 @@
             "buildsystem": "meson",
             "builddir": true,
             "config-opts": [
-              "-Dgtk_doc=false",
+              "-Ddocs=false",
               "-Dbackends=gtk4"
             ],
             "sources": [
@@ -103,9 +103,8 @@
             ],
             "sources" : [
                 {
-                    "type": "git",
-                    "url": "https://github.com/lainsce/emulsion",
-                    "branch" : "main"
+                    "type": "dir",
+                    "path": "../../"
                 }
             ]
         }
