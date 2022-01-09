@@ -103,9 +103,8 @@
             ],
             "sources" : [
                 {
-                    "type": "git",
-                    "url": "https://github.com/lainsce/emulsion",
-                    "branch" : "main"
+                    "type": "dir",
+                    "path": "../../"
                 }
             ]
         }
