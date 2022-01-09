@@ -85,7 +85,7 @@
             "buildsystem": "meson",
             "builddir": true,
             "config-opts": [
-              "-Dgtk_doc=false",
+              "-Ddocs=false",
               "-Dbackends=gtk4"
             ],
             "sources": [
