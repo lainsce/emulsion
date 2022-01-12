@@ -318,7 +318,7 @@ namespace Emulsion {
                 m.save_palettes.begin (palettestore);
             });
 
-            if (Config.PROFILE == "Devel")
+            if (Config.DEVELOPMENT)
                 add_css_class ("devel");
 
             this.set_size_request (360, 360);
@@ -501,7 +501,7 @@ namespace Emulsion {
                 null
             };
 
-            var program_name = Config.NAME_PREFIX + _("Emulsion");
+            var program_name = "Emulsion" + Config.NAME_SUFFIX;
             Gtk.show_about_dialog (this,
                                    "program-name", program_name,
                                    "logo-icon-name", Config.APP_ID,
