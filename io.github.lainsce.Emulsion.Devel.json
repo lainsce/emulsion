@@ -1,0 +1,42 @@
+{
+    "app-id" : "io.github.lainsce.Emulsion.Devel",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "master",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "io.github.lainsce.Emulsion",
+    "finish-args" : [
+        "--filesystem=xdg-run/gvfsd",
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--socket=session-bus",
+        "--share=ipc",
+        "--device=dri"
+    ],
+    "cleanup" : [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "/share/vala",
+        "*.la",
+        "*.a"
+    ],
+    "modules" : [
+        {
+            "name" : "emulsion",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dprofile=development"
+            ],
+            "sources" : [
+                {
+                    "type": "dir",
+                    "path": "."
+                }
+            ]
+        }
+    ]
+}
