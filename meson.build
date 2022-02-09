@@ -1,5 +1,5 @@
 project('io.github.lainsce.Emulsion', 'vala',
-        version: '3.2.1',
+        version: '3.2.2',
         meson_version: '>= 0.59.0'
 )
 

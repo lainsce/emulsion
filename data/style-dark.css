@@ -1,17 +1,17 @@
-@define-color accent_color #48e188;
-@define-color accent_bg_color #00522d;
-@define-color accent_fg_color #59de96;
-@define-color accent_secondary_color #b6ccb8;
-@define-color accent_secondary_bg_color #374b3d;
-@define-color accent_secondary_fg_color #b6ccba;
-@define-color window_bg_color #1a1c1a;
-@define-color view_bg_color #252725;
-@define-color headerbar_bg_color #1a1c1a;
-@define-color popover_bg_color #252725;
-@define-color popover_fg_color #e1e3de;
-@define-color window_fg_color #e1e3de;
-@define-color view_fg_color #e1e3de;
-@define-color headerbar_fg_color #e1e3de;
+@define-color accent_color #00620f;
+@define-color accent_bg_color #00620f;
+@define-color accent_fg_color #90ff92;
+@define-color accent_secondary_color #3a4e39;
+@define-color accent_secondary_bg_color #3a4e39;
+@define-color accent_secondary_fg_color #d2edd0;
+@define-color window_bg_color #1a1d19;
+@define-color view_bg_color #2f312e;
+@define-color headerbar_bg_color #1a1d19;
+@define-color popover_bg_color #2f312e;
+@define-color popover_fg_color #fafef9;
+@define-color window_fg_color #fafef9;
+@define-color view_fg_color #fafef9;
+@define-color headerbar_fg_color #fafef9;
 
 .eml-view {
   background: @window_bg_color;

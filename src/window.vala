@@ -1,6 +1,6 @@
 /* window.vala
  *
- * Copyright 2021 Lains
+ * Copyright 2021-2022 Lains
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -324,7 +324,7 @@ namespace Emulsion {
             this.set_size_request (360, 360);
             this.show ();
             var adwsm = Adw.StyleManager.get_default ();
-            adwsm.set_color_scheme (Adw.ColorScheme.FORCE_DARK);
+            adwsm.set_color_scheme (Adw.ColorScheme.PREFER_DARK);
         }
 
         public async void pick_color () {
