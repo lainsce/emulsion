@@ -1,9 +1,9 @@
 @define-color accent_color #007816;
-@define-color accent_bg_color #007816;
-@define-color accent_fg_color #ffffff;
-@define-color accent_secondary_color #516650;
-@define-color accent_secondary_bg_color #516650;
-@define-color accent_secondary_fg_color #ffffff;
+@define-color accent_bg_color #90ff92;
+@define-color accent_fg_color #004407;
+@define-color accent_secondary_color #d2edd0;
+@define-color accent_secondary_bg_color #d2edd0;
+@define-color accent_secondary_fg_color #0d220d;
 @define-color window_bg_color #eff1eb;
 @define-color view_bg_color #fbfdf7;
 @define-color headerbar_bg_color #eff1eb;
