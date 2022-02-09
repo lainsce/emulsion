@@ -1,0 +1,7 @@
+.list-action-button {
+  border: 1px solid @borders;
+}
+
+.eml-view gridview {
+  border: 1px solid @borders;
+}
