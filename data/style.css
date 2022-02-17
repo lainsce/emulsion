@@ -12,6 +12,7 @@
 @define-color window_fg_color #1a1d19;
 @define-color view_fg_color #1a1d19;
 @define-color headerbar_fg_color #1a1d19;
+@define-color borders alpha(#73796f, 0.5);
 
 .solid-csd {
   box-shadow: none;
@@ -52,7 +53,7 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #FF0000
+                #a83900
             );
 }
 .red highlight {
@@ -63,7 +64,7 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #00FF00
+                #006e00
             );
 }
 .green highlight {
@@ -74,7 +75,7 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #0000FF
+                #2758c3
             );
 }
 .blue highlight {

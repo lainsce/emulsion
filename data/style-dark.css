@@ -12,6 +12,7 @@
 @define-color window_fg_color #fafef9;
 @define-color view_fg_color #fafef9;
 @define-color headerbar_fg_color #fafef9;
+@define-color borders alpha(#8c9288, 0.5);
 
 .eml-view {
   background: @window_bg_color;
