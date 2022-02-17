@@ -3,7 +3,7 @@
     <id>io.github.lainsce.Emulsion</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
-    <name>Emulsion</name>
+    <name translatable="no">Emulsion</name>
     <summary>Stock up on colors</summary>
     <description>
         <p>Store your palettes in an easy way, and edit them if needed.</p>
@@ -15,7 +15,7 @@
       <kudo>ModernToolkit</kudo>
       <kudo>HiDpiIcon</kudo>
     </kudos>
-    <developer_name>Lains</developer_name>
+    <developer_name translatable="no">Lains</developer_name>
     <url type="homepage">https://github.com/lainsce/emulsion/</url>
     <url type="bugtracker">https://github.com/lainsce/emulsion/issues</url>
     <url type="donation">https://www.ko-fi.com/lainsce/</url>
