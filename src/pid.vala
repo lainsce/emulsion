@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Lains
+ * Copyright (c) 2021-2022 Lains
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,11 +46,13 @@ namespace Emulsion {
             color_box.get_style_context ().add_class ("palette");
             color_box.set_overflow(Gtk.Overflow.HIDDEN);
             color_box.set_margin_bottom (12);
+            color_box.set_margin_end (12);
+            color_box.set_margin_start (12);
             color_box.set_visible (false);
             file_label.set_visible (true);
             file_image.set_visible (true);
             image.set_sensitive (true);
-            image.set_margin_top (6);
+            image.set_margin_top (12);
             ok_button.set_sensitive (false);
 
             cancel_button.clicked.connect (() => {
@@ -75,6 +77,10 @@ namespace Emulsion {
                     n += Utils.make_hex(palette.muted_swatch.red, palette.muted_swatch.green, palette.muted_swatch.blue);
                 if (palette.light_muted_swatch != null)
                     n += Utils.make_hex(palette.light_muted_swatch.red, palette.light_muted_swatch.green, palette.light_muted_swatch.blue);
+                if (palette.muted_swatch != null)
+                    n += Utils.make_hex(palette.dominant_swatch.red, palette.dominant_swatch.green, palette.dominant_swatch.blue);
+                if (palette.light_muted_swatch != null)
+                    n += Utils.make_hex(palette.body_swatch.red, palette.body_swatch.green, palette.body_swatch.blue);
 
                 var a = new PaletteInfo ();
                 a.palname = "%s".printf(file.get_basename().replace(".jpg","").replace(".png",""));
@@ -117,7 +123,6 @@ namespace Emulsion {
                             file_image.set_from_pixbuf (pixbuf);
 
                             image.set_sensitive (false);
-                            image.set_margin_top (0);
                             file_image.set_pixel_size (256);
                             image.get_style_context ().remove_class ("dim-label");
 
@@ -166,6 +171,10 @@ namespace Emulsion {
                 add_swatch (palette.muted_swatch, "Muted color");
             if (palette.light_muted_swatch != null)
                 add_swatch (palette.light_muted_swatch, "Light muted color");
+            if (palette.body_swatch != null)
+                add_swatch (palette.body_swatch, "Body color");
+            if (palette.dominant_swatch != null)
+                add_swatch (palette.dominant_swatch, "Dominant color");
         }
 
         private void add_swatch (Utils.Palette.Swatch? swatch, string tooltip) {

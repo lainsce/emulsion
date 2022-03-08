@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2021 Lains
+* Copyright (c) 2021-2022 Lains
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
@@ -61,17 +61,17 @@ namespace Emulsion.Utils {
     }
 
     public class Palette : Object {
-        const double TARGET_DARK_LUMA = 0.2;
-        const double MAX_DARK_LUMA = 0.4;
+        const double TARGET_DARK_LUMA = 0.1;
+        const double MAX_DARK_LUMA = 0.5;
         const double MIN_LIGHT_LUMA = 0.5;
-        const double TARGET_LIGHT_LUMA = 0.7;
-        const double MIN_NORMAL_LUMA = 0.3;
+        const double TARGET_LIGHT_LUMA = 1;
+        const double MIN_NORMAL_LUMA = 0.1;
         const double TARGET_NORMAL_LUMA = 0.5;
-        const double MAX_NORMAL_LUMA = 0.7;
-        const double TARGET_MUTED_SATURATION = 0.3;
-        const double MAX_MUTED_SATURATION = 0.4;
+        const double MAX_NORMAL_LUMA = 1;
+        const double TARGET_MUTED_SATURATION = 0.1;
+        const double MAX_MUTED_SATURATION = 1;
         const double TARGET_VIBRANT_SATURATION = 1;
-        const double MIN_VIBRANT_SATURATION = 0.3;
+        const double MIN_VIBRANT_SATURATION = 0.1;
         const double WEIGHT_SATURATION = 0.2;
         const double WEIGHT_LUMA = 0.5;
         const double WEIGHT_POPULATION = 0.2;
@@ -144,7 +144,6 @@ namespace Emulsion.Utils {
         public Swatch? muted_swatch { get; private set; }
         public Swatch? light_muted_swatch { get; private set; }
         public Swatch? dark_muted_swatch { get; private set; }
-
         public Swatch? dominant_swatch { get; private set; }
         public Swatch? title_swatch { get; private set; }
         public Swatch? body_swatch { get; private set; }
@@ -364,6 +363,8 @@ namespace Emulsion.Utils {
             muted_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
             light_muted_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
             dark_muted_swatch = find_color_variation (TARGET_DARK_LUMA, 0, MAX_DARK_LUMA, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
+            body_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_NORMAL_LUMA, 1, TARGET_VIBRANT_SATURATION, 0, MAX_MUTED_SATURATION);
+            dominant_swatch = find_color_variation (TARGET_NORMAL_LUMA, 0, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, 0, TARGET_VIBRANT_SATURATION);
 
             foreach (var swatch in _swatches) {
                 bool aa_level, aaa_level;
@@ -405,11 +406,10 @@ namespace Emulsion.Utils {
 
         private static double sanitize_color (double color) {
             if (color <= 0.03928) {
-                color = color / 12.92;
-            } else {
-                color = Math.pow ((color + 0.055) / 1.055, 2.4);
+                return color / 12.92;
             }
-            return color;
+
+            return Math.pow ((color + 0.055) / 1.055, 2.4);
         }
 
         private static double get_saturation (Swatch color) {
