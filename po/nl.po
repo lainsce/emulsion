@@ -91,7 +91,7 @@ msgstr "Sneltoetsen"
 
 #: data/ui/menu.ui:11
 msgid "About Emulsion"
-msgstr "Over Emulsie"
+msgstr "Over Emulsion"
 
 #: data/ui/pid.ui:7
 msgid " "
