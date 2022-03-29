@@ -21,7 +21,7 @@ msgstr ""
 #: data/io.github.lainsce.Emulsion.desktop.in:3
 #: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
 msgid "Emulsion"
-msgstr "Emulsie"
+msgstr "Emulsion"
 
 #: data/io.github.lainsce.Emulsion.desktop.in:6
 msgid "color;palette;library;hue;swatch;"
