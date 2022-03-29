@@ -1,0 +1,194 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the io.github.lainsce.Emulsion package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.lainsce.Emulsion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2022-03-29 17:15+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:3
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
+msgid "Emulsion"
+msgstr "Emulsion"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:6
+msgid "color;palette;library;hue;swatch;"
+msgstr "kleur;palet;verzameling;tint;staal;"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:7
+msgid "Stock up on colors"
+msgstr "Breid je kleurvoorraad uit"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:9
+msgid "Store your palettes in an easy way, and edit them if needed."
+msgstr "Bewaar je kleuren in een eenvoudige toepassing en bewerk ze indien nodig."
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
+msgid "Lains"
+msgstr "Lains"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:6
+msgid "First Boot"
+msgstr "Eerste opstart"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:7
+msgid "Whether to add the default palettes on first boot or not."
+msgstr "Of de standaardpaletten dienen te worden toegevoegd na de eerste keer opstarten."
+
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Naam:"
+
+#: data/ui/cep.ui:62
+msgid "RGB"
+msgstr "Rgb"
+
+#: data/ui/cep.ui:81
+msgid "Red∶"
+msgstr "Rood:"
+
+#: data/ui/cep.ui:100
+msgid "Green∶"
+msgstr "Groen:"
+
+#: data/ui/cep.ui:119
+msgid "Blue∶"
+msgstr "Blauw:"
+
+#: data/ui/cep.ui:136
+msgid "Hex"
+msgstr "Hexcode"
+
+#: data/ui/cep.ui:156
+msgid "Color Hexcode∶"
+msgstr "Hexcode van kleur:"
+
+#: data/ui/keys.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Algemeen"
+
+#: data/ui/keys.ui:16
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Afsluiten"
+
+#: data/ui/menu.ui:7
+msgid "Keyboard Shortcuts"
+msgstr "Sneltoetsen"
+
+#: data/ui/menu.ui:11
+msgid "About Emulsion"
+msgstr "Over Emulsion"
+
+#: data/ui/pid.ui:7
+msgid " "
+msgstr " "
+
+#: data/ui/pid.ui:27
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: data/ui/pid.ui:36
+msgid "Import Palette"
+msgstr "Palet importeren"
+
+#: data/ui/pid.ui:58
+msgid "Choose Image"
+msgstr "Kies een afbeelding"
+
+#: data/ui/pid.ui:84
+msgid "Select an image to retrieve colors"
+msgstr "Kies een afbeelding om kleuren uit op te halen"
+
+#: data/ui/window.ui:38
+msgid "Add Palette"
+msgstr "Palet toevoegen"
+
+#: data/ui/window.ui:47
+msgid "Import Palette…"
+msgstr "Palet importeren…"
+
+#: data/ui/window.ui:89
+msgid "Go Back to Palettes View"
+msgstr "Terug naar paletoverzicht"
+
+#: data/ui/window.ui:98
+msgid "Add Color to This Palette"
+msgstr "Kleur toevoegen aan palet"
+
+#: data/ui/window.ui:132
+msgid "Palettes"
+msgstr "Paletten"
+
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Zoeken naar paletten"
+
+#: data/ui/window.ui:168
+msgid "No Palettes"
+msgstr "Geen paletten"
+
+#: data/ui/window.ui:169
+msgid "Add a palette with the + button."
+msgstr "Klik op de plusknop om een palet toe te voegen."
+
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Palet kopiëren naar klembord"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Paletafbeelding kopiëren naar klembord"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Palet verwijderen"
+
+#: data/ui/window.ui:318
+msgid "Pick Color"
+msgstr "Kleur kiezen"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Hexcode kopiëren naar klembord"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "Rgb kopiëren naar klembord"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Kleur verwijderen van palet"
+
+#: src/pid.vala:95
+msgid "Import"
+msgstr "Importeren"
+
+#: src/pid.vala:98
+msgid "Picture"
+msgstr "Afbeelding"
+
+#: src/window.vala:172
+msgid "Set New Palette Name"
+msgstr "Geef het palet een naam"
+
+#: src/window.vala:502
+msgid "Stock up on colors."
+msgstr "Breid je kleurvoorraad uit."
+
+#: src/window.vala:508
+msgid "translator-credits"
+msgstr "Heimen Stoffels <vistausss@fastmail.com>"
