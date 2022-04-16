@@ -90,11 +90,11 @@
                             <property name="margin-bottom">18</property>
                             <property name="hexpand">0</property>
                             <property name="placeholder-text" translatable="yes">Search for palettes</property>
+                            <style>
+                              <class name="eml-search-box"/>
+                            </style>
                           </object>
                         </child>
-                        <style>
-                          <class name="eml-search-box"/>
-                        </style>
                     </object>
                     </child>
                     <child>
@@ -222,15 +222,6 @@
             <property name="width-request">260</property>
             <property name="hexpand">0</property>
             <child>
-              <object class="GtkMenuButton" id="palette_button">
-                <property name="icon-name">view-more-symbolic</property>
-                <property name="menu-model">pmenu</property>
-                <style>
-                  <class name="eml-header-toggle-button"/>
-                </style>
-              </object>
-            </child>
-            <child>
               <object class="GtkLabel" id="palette_name">
                 <property name="halign">start</property>
                 <property name="margin-start">12</property>
@@ -242,6 +233,15 @@
                 </binding>
                 <style>
                   <class name="eml-color-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="palette_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">pmenu</property>
+                <style>
+                  <class name="flat"/>
                 </style>
               </object>
             </child>
@@ -364,18 +364,8 @@
         <child>
           <object class="GtkBox">
             <property name="halign">center</property>
-            <property name="width-request">128</property>
+            <property name="width-request">100</property>
             <property name="hexpand">0</property>
-            <child>
-              <object class="GtkMenuButton" id="color_button">
-                <property name="icon-name">view-more-symbolic</property>
-                <property name="menu-model">cmenu</property>
-                <property name="valign">center</property>
-                <style>
-                  <class name="eml-header-toggle-button"/>
-                </style>
-              </object>
-            </child>
             <child>
               <object class="GtkBox">
                 <property name="valign">center</property>
@@ -408,6 +398,16 @@
                     </binding>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="color_button">
+                <property name="icon-name">view-more-symbolic</property>
+                <property name="menu-model">cmenu</property>
+                <property name="valign">center</property>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
           </object>

@@ -113,10 +113,10 @@ gridview child:selected .color-box {
   margin-top: 0px;
   background: none;
 }
-.eml-search-box box {
-  background: none;
+.eml-search-box {
   border: none;
   box-shadow: none;
+  border-radius: 999px;
 }
 .eml-title {
   border: none;
@@ -126,10 +126,6 @@ gridview child:selected .color-box {
 .eml-color-label {
   font-size: 1.1rem;
   font-weight: 700;
-}
-
-.eml-header-toggle-button .toggle {
-  border-radius: 9999px;
 }
 
 .view-title {
