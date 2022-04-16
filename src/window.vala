@@ -147,6 +147,7 @@ namespace Emulsion {
                 if (palette_model.is_selected (pos)) {
                     color_label.set_visible (true);
                     color_label.set_text (((PaletteInfo)palettestore.get_item (pos)).palname);
+                    color_label.set_max_width_chars (((int)((PaletteInfo)palettestore.get_item (pos)).palname.length));
                     int j = 0;
 
                     var arrcom = ((PaletteInfo)palettestore.get_item (pos)).colors.keys.to_array();
