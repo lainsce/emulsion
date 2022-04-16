@@ -4,15 +4,8 @@
 @define-color accent_secondary_color #d2edd0;
 @define-color accent_secondary_bg_color #d2edd0;
 @define-color accent_secondary_fg_color #0d220d;
-@define-color window_bg_color #eff1eb;
-@define-color view_bg_color #fbfdf7;
-@define-color headerbar_bg_color #eff1eb;
-@define-color popover_bg_color #fbfdf7;
-@define-color popover_fg_color #1a1d19;
-@define-color window_fg_color #1a1d19;
-@define-color view_fg_color #1a1d19;
-@define-color headerbar_fg_color #1a1d19;
-@define-color borders alpha(#73796f, 0.5);
+@define-color window_bg_color #fff;
+@define-color headerbar_bg_color #fff;
 
 .solid-csd {
   box-shadow: none;
@@ -113,49 +106,53 @@ gridview child:selected .color-box {
   background: shade(@accent_secondary_bg_color, 0.95);
 }
 .eml-view {
-  background: @window_bg_color;
+  background: linear-gradient(135deg, @window_bg_color, mix(@window_bg_color, @accent_bg_color, 0.1));
 }
 .eml-view gridview {
-  border-radius: 6px;
   margin: 6px;
   margin-top: 0px;
-}
-.eml-title-label {
-  padding: 8px 12px;
+  background: none;
 }
 .eml-search-box box {
-  background: @window_bg_color;
+  background: none;
   border: none;
   box-shadow: none;
-}
-.eml-search-box box:backdrop {
-  background: shade(@view_bg_color, 0.98);
 }
 .eml-title {
   border: none;
   box-shadow: none;
-}
-.eml-title-box:backdrop {
-  background: shade(@view_bg_color, 1.05);
-  color: alpha(@view_fg_color, 0.66);
-}
-.eml-header-button:not(:hover):not(:active),
-.eml-header-button .toggle:not(:hover):not(:active):not(:checked) {
   background: none;
 }
 .eml-color-label {
   font-size: 1.1rem;
   font-weight: 700;
 }
-.eml-entry {
-  background: none;
-  border-radius: 8px;
-  border: 1px solid @borders;
-}
-.eml-header-title {
-  padding: 15px;
-}
 
 .eml-header-toggle-button .toggle {
   border-radius: 9999px;
+}
+
+.view-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  background: none;
+  padding: 8px;
+}
+.title-label {
+  padding: 8px;
+}
+
+entry.view-title {
+  font-weight: 600;
+  margin: 0;
+  padding: 4px;
+}
+
+.eml-box {
+  background: none;
+  box-shadow: inset 0 0 0 5px @borders;
+}
+
+.eml-box:hover {
+  background: alpha(@window_fg_color, 0.05);
 }

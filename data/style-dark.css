@@ -4,38 +4,10 @@
 @define-color accent_secondary_color #3a4e39;
 @define-color accent_secondary_bg_color #3a4e39;
 @define-color accent_secondary_fg_color #d2edd0;
-@define-color window_bg_color #1a1d19;
-@define-color view_bg_color #2f312e;
-@define-color headerbar_bg_color #1a1d19;
-@define-color popover_bg_color #2f312e;
-@define-color popover_fg_color #fafef9;
-@define-color window_fg_color #fafef9;
-@define-color view_fg_color #fafef9;
-@define-color headerbar_fg_color #fafef9;
-@define-color borders alpha(#8c9288, 0.5);
+@define-color window_bg_color #111;
+@define-color headerbar_bg_color #111;
 
 .eml-view {
-  background: @window_bg_color;
-}
-
-.eml-title-box {
-  background: @headerbar_bg_color;
-}
-
-.eml-title-box:backdrop {
-  background: shade(@headerbar_bg_color, 0.99);
-  color: alpha(@view_fg_color, 0.5);
-}
-
-.eml-search-box box {
-  background: @window_bg_color;
-}
-
-.eml-search-box box:backdrop {
-  background: shade(@view_bg_color, 0.75);
-}
-
-.eml-search-box entry {
-  background: shade(@view_bg_color, 0.5);
+  background: linear-gradient(135deg, @window_bg_color, mix(@window_bg_color, @accent_bg_color, 0.1));
 }
 

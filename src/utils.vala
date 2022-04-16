@@ -62,16 +62,20 @@ namespace Emulsion.Utils {
 
     public class Palette : Object {
         const double TARGET_DARK_LUMA = 0.1;
+        const double MIN_DARK_LUMA = 0.0;
         const double MAX_DARK_LUMA = 0.5;
-        const double MIN_LIGHT_LUMA = 0.5;
         const double TARGET_LIGHT_LUMA = 1;
-        const double MIN_NORMAL_LUMA = 0.1;
+        const double MIN_LIGHT_LUMA = 0.5;
+        const double MAX_LIGHT_LUMA = 0.9;
         const double TARGET_NORMAL_LUMA = 0.5;
+        const double MIN_NORMAL_LUMA = 0.0;
         const double MAX_NORMAL_LUMA = 1;
         const double TARGET_MUTED_SATURATION = 0.1;
+        const double MIN_MUTED_SATURATION = 0.0;
         const double MAX_MUTED_SATURATION = 1;
         const double TARGET_VIBRANT_SATURATION = 1;
-        const double MIN_VIBRANT_SATURATION = 0.1;
+        const double MIN_VIBRANT_SATURATION = 0.0;
+        const double MAX_VIBRANT_SATURATION = 0.9;
         const double WEIGHT_SATURATION = 0.2;
         const double WEIGHT_LUMA = 0.5;
         const double WEIGHT_POPULATION = 0.2;
@@ -125,11 +129,11 @@ namespace Emulsion.Utils {
         }
 
         public const uint8 MAX_QUALITY = 10;
-        public const uint8 MIN_QUALITY = 2;
-        public const uint8 DEFAULT_QUALITY = 10;
-        public const uint16 MAX_COLORS = 256;
-        public const uint16 DEFAULT_COLORS = 64;
-        public const uint16 MIN_COLORS = 16;
+        public const uint8 MIN_QUALITY = 1;
+        public const uint8 DEFAULT_QUALITY = 5;
+        public const uint16 MAX_COLORS = 16;
+        public const uint16 DEFAULT_COLORS = 9;
+        public const uint16 MIN_COLORS = 9;
 
         private Gee.List<Swatch> _swatches;
         public Gee.List<Swatch> swatches {
@@ -357,14 +361,14 @@ namespace Emulsion.Utils {
         }
 
         private void create_swatch_targets () {
-            vibrant_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1);
-            light_vibrant_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1);
-            dark_vibrant_swatch = find_color_variation (TARGET_DARK_LUMA, 0, MAX_DARK_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1);
-            muted_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
-            light_muted_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
-            dark_muted_swatch = find_color_variation (TARGET_DARK_LUMA, 0, MAX_DARK_LUMA, TARGET_MUTED_SATURATION, 0, MAX_MUTED_SATURATION);
-            body_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_NORMAL_LUMA, 1, TARGET_VIBRANT_SATURATION, 0, MAX_MUTED_SATURATION);
-            dominant_swatch = find_color_variation (TARGET_NORMAL_LUMA, 0, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, 0, TARGET_VIBRANT_SATURATION);
+            vibrant_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, MAX_VIBRANT_SATURATION);
+            light_vibrant_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, MAX_LIGHT_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, MAX_VIBRANT_SATURATION);
+            dark_vibrant_swatch = find_color_variation (TARGET_DARK_LUMA, MIN_LIGHT_LUMA, MAX_DARK_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, MAX_VIBRANT_SATURATION);
+            muted_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, MIN_MUTED_SATURATION, MAX_MUTED_SATURATION);
+            light_muted_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, MAX_LIGHT_LUMA, TARGET_MUTED_SATURATION, MIN_MUTED_SATURATION, MAX_MUTED_SATURATION);
+            dark_muted_swatch = find_color_variation (TARGET_DARK_LUMA, MIN_DARK_LUMA, MAX_DARK_LUMA, TARGET_MUTED_SATURATION, MIN_MUTED_SATURATION, MAX_MUTED_SATURATION);
+            body_swatch = find_color_variation (TARGET_LIGHT_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, MAX_MUTED_SATURATION);
+            dominant_swatch = find_color_variation (TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA, TARGET_MUTED_SATURATION, MIN_VIBRANT_SATURATION, TARGET_VIBRANT_SATURATION);
 
             foreach (var swatch in _swatches) {
                 bool aa_level, aaa_level;
@@ -402,14 +406,6 @@ namespace Emulsion.Utils {
             var blue = sanitize_color (color.B) * 0.0722;
 
             return (red + green + blue);
-        }
-
-        private static double sanitize_color (double color) {
-            if (color <= 0.03928) {
-                return color / 12.92;
-            }
-
-            return Math.pow ((color + 0.055) / 1.055, 2.4);
         }
 
         private static double get_saturation (Swatch color) {

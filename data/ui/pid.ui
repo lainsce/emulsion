@@ -9,6 +9,9 @@
     <property name="modal">1</property>
     <property name="default-width">360</property>
     <property name="destroy-with-parent">1</property>
+    <style>
+      <class name="eml-view"/>
+    </style>
     <child>
       <object class="GtkBox">
         <property name="orientation">vertical</property>
@@ -19,6 +22,9 @@
             <property name="valign">start</property>
             <property name="visible">1</property>
             <property name="show-end-title-buttons">0</property>
+            <style>
+              <class name="eml-title"/>
+            </style>
             <child>
               <object class="GtkButton" id="cancel_button">
                 <property name="label" translatable="yes">Cancel</property>
@@ -49,8 +55,11 @@
                 <property name="margin-bottom">6</property>
                 <property name="width-request">350</property>
                 <property name="height-request">206</property>
-                <property name="tooltip-text" translatable="yes">Choose Image</property>
+                <property name="tooltip-text" translatable="yes">Choose image</property>
                 <signal name="clicked" handler="on_clicked" swapped="no"/>
+                <style>
+                  <class name="eml-box"/>
+                </style>
                 <child>
                   <object class="GtkBox" id="file_box">
                     <property name="can-focus">0</property>
