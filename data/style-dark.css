@@ -8,6 +8,6 @@
 @define-color headerbar_bg_color #111;
 
 .eml-view {
-  background: linear-gradient(135deg, @window_bg_color, mix(@window_bg_color, @accent_bg_color, 0.1));
+  background: linear-gradient(135deg, @window_bg_color, mix(@window_bg_color, @accent_bg_color, 0.2));
 }
 
