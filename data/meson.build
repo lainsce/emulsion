@@ -35,6 +35,7 @@ appdata_file = i18n.merge_file(
   install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
 # Validate Appdata
+appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test(
     'validate-appdata', appstream_util,
