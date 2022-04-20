@@ -27,7 +27,6 @@ endif
 # Appdata
 appdata_conf = configuration_data()
 appdata_conf.set('app-id', app_id)
-appdata_conf.set('gettext-package', gettext_package)
 appdata_file = i18n.merge_file(
   input: configure_file(
     input: '@0@.metainfo.xml.in.in'.format(base_id),
