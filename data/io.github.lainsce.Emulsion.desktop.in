@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Emulsion
 Exec=io.github.lainsce.Emulsion
-Icon=@icon@
+Icon=@app_id@
 Keywords=color;palette;library;hue;swatch;
 Terminal=false
 Type=Application
