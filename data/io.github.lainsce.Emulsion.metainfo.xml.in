@@ -11,7 +11,7 @@
     <provides>
         <binary>io.github.lainsce.Emulsion</binary>
     </provides>
-    <launchable type="desktop-id">@app-id@.desktop</launchable>
+    <launchable type="desktop-id">@app_id@.desktop</launchable>
     <kudos>
       <kudo>ModernToolkit</kudo>
       <kudo>HiDpiIcon</kudo>
