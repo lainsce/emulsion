@@ -32,7 +32,7 @@ appdata_file = i18n.merge_file(
   output: '@0@.metainfo.xml'.format(app_id),
   po_dir: '../po',
   install: true,
-  install_dir: datadir / 'metainfo'
+  install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
 # Validate Appdata
 if appstream_util.found()
