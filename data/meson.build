@@ -30,7 +30,7 @@ appdata_conf.set('app-id', app_id)
 appdata_file = i18n.merge_file(
   input: '@0@.metainfo.xml.in'.format(app_id),
   output: '@0@.metainfo.xml'.format(app_id),
-  po_dir: podir,
+  po_dir: '../po',
   install: true,
   install_dir: datadir / 'metainfo'
 )
