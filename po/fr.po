@@ -1,0 +1,194 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the io.github.lainsce.Emulsion package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.lainsce.Emulsion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-11 21:12+0200\n"
+"PO-Revision-Date: 2022-05-24 09:45+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:3
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:6 src/window.vala:497
+msgid "Emulsion"
+msgstr "Émulsion"
+
+#: data/io.github.lainsce.Emulsion.desktop.in:6
+msgid "color;palette;library;hue;swatch;"
+msgstr "color;palette;library;hue;swatch;couleurs;"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:7
+msgid "Stock up on colors"
+msgstr "Faites le plein de couleurs"
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:9
+msgid "Store your palettes in an easy way, and edit them if needed."
+msgstr "Stockez vos palettes de manière simple et modifiez-les si besoin."
+
+#: data/io.github.lainsce.Emulsion.appdata.xml.in:18
+msgid "Lains"
+msgstr "Lains"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:6
+msgid "First Boot"
+msgstr "Premier démarrage"
+
+#: data/io.github.lainsce.Emulsion.gschema.xml:7
+msgid "Whether to add the default palettes on first boot or not."
+msgstr "Ajouter ou non les palettes par défaut au premier démarrage."
+
+#: data/ui/cep.ui:32
+msgid "Name∶"
+msgstr "Nom ∶"
+
+#: data/ui/cep.ui:62
+msgid "RGB"
+msgstr "RVB"
+
+#: data/ui/cep.ui:81
+msgid "Red∶"
+msgstr "Rouge ∶"
+
+#: data/ui/cep.ui:100
+msgid "Green∶"
+msgstr "Vert ∶"
+
+#: data/ui/cep.ui:119
+msgid "Blue∶"
+msgstr "Bleu ∶"
+
+#: data/ui/cep.ui:136
+msgid "Hex"
+msgstr "Hex"
+
+#: data/ui/cep.ui:156
+msgid "Color Hexcode∶"
+msgstr "Code hexadécimal ∶"
+
+#: data/ui/keys.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Général"
+
+#: data/ui/keys.ui:16
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Quitter"
+
+#: data/ui/menu.ui:7
+msgid "Keyboard Shortcuts"
+msgstr "Raccourcis clavier"
+
+#: data/ui/menu.ui:11
+msgid "About Emulsion"
+msgstr "À propos de Émulsion"
+
+#: data/ui/pid.ui:7
+msgid " "
+msgstr ""
+
+#: data/ui/pid.ui:27
+msgid "Cancel"
+msgstr "Annuler"
+
+#: data/ui/pid.ui:36
+msgid "Import Palette"
+msgstr "Importer la palette"
+
+#: data/ui/pid.ui:58
+msgid "Choose Image"
+msgstr "Choisir une image"
+
+#: data/ui/pid.ui:84
+msgid "Select an image to retrieve colors"
+msgstr "Sélectionnez une image pour en récupérer les couleurs"
+
+#: data/ui/window.ui:38
+msgid "Add Palette"
+msgstr "Ajouter une palette"
+
+#: data/ui/window.ui:47
+msgid "Import Palette…"
+msgstr "Importer une palette…"
+
+#: data/ui/window.ui:89
+msgid "Go Back to Palettes View"
+msgstr "Retourner à la vue des palettes"
+
+#: data/ui/window.ui:98
+msgid "Add Color to This Palette"
+msgstr "Ajouter une couleur à cette palette"
+
+#: data/ui/window.ui:132
+msgid "Palettes"
+msgstr "Palettes"
+
+#: data/ui/window.ui:140
+msgid "Search for palettes"
+msgstr "Rechercher des palettes"
+
+#: data/ui/window.ui:168
+msgid "No Palettes"
+msgstr "Pas de palettes"
+
+#: data/ui/window.ui:169
+msgid "Add a palette with the + button."
+msgstr "Ajoutez une palette avec le bouton +."
+
+#: data/ui/window.ui:210
+msgid "Copy Palette to Clipboard"
+msgstr "Copier la palette dans le presse-papiers"
+
+#: data/ui/window.ui:214
+msgid "Copy Palette Image to Clipboard"
+msgstr "Copier l'image de la palette dans le presse-papiers"
+
+#: data/ui/window.ui:220
+msgid "Remove Palette"
+msgstr "Supprimer la palette"
+
+#: data/ui/window.ui:318
+msgid "Pick Color"
+msgstr "Choisir une couleur"
+
+#: data/ui/window.ui:349
+msgid "Copy Hexcode to Clipboard"
+msgstr "Copier le code hexadécimal dans le presse-papiers"
+
+#: data/ui/window.ui:353
+msgid "Copy RGB to Clipboard"
+msgstr "Copier le RVB dans le presse-papiers"
+
+#: data/ui/window.ui:359
+msgid "Remove Color from Palette"
+msgstr "Supprimer la couleur de la palette"
+
+#: src/pid.vala:95
+msgid "Import"
+msgstr "Importer"
+
+#: src/pid.vala:98
+msgid "Picture"
+msgstr "Image"
+
+#: src/window.vala:172
+msgid "Set New Palette Name"
+msgstr "Définir un nouveau nom de palette"
+
+#: src/window.vala:502
+msgid "Stock up on colors."
+msgstr "Faites le plein de couleurs."
+
+#: src/window.vala:508
+msgid "translator-credits"
+msgstr "Irénée Thirion"
