@@ -135,7 +135,8 @@ namespace Emulsion {
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
-                if (palettestore.get_item (pos) != null) {
+                var pitem = palettestore.get_item (pos);
+                if (pitem != null) {
                     main_stack.set_visible_child_name ("colbody");
                     searchbar.set_reveal_child (false);
                     search_button.set_active (false);
@@ -147,17 +148,17 @@ namespace Emulsion {
 
 
                     color_label.set_visible (true);
-                    color_label.set_text (((PaletteInfo)palettestore.get_item (pos)).palname);
-                    color_label.set_max_width_chars (((int)((PaletteInfo)palettestore.get_item (pos)).palname.length));
+                    color_label.set_text (((PaletteInfo)pitem).palname);
+                    color_label.set_max_width_chars (((int)((PaletteInfo)pitem).palname.length));
                     int j = 0;
 
-                    var arrcom = ((PaletteInfo)palettestore.get_item (pos)).colors.keys.to_array();
-                    var arrco = ((PaletteInfo)palettestore.get_item (pos)).colors.values.to_array();
+                    var arrcom = ((PaletteInfo)pitem).colors.keys.to_array();
+                    var arrco = ((PaletteInfo)pitem).colors.values.to_array();
                     for (j = 0; j < arrco.length; j++) {
                         var a = new ColorInfo ();
                         a.name = arrcom[j];
                         a.color = arrco[j];
-                        a.uid = ((PaletteInfo)palettestore.get_item (pos)).palname;
+                        a.uid = ((PaletteInfo)pitem).palname;
                         colorstore.append (a);
                     }
                 }
