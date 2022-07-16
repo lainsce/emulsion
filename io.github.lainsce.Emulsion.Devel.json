@@ -29,7 +29,7 @@
             "name" : "emulsion",
             "buildsystem" : "meson",
             "config-opts" : [
-                "-Dprofile=development"
+                "-Ddevelopment=true"
             ],
             "sources" : [
                 {
