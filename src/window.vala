@@ -135,16 +135,17 @@ namespace Emulsion {
             palette_filter_model.set_model (palettestore);
 
             palette_fb.activate.connect ((pos) => {
-                main_stack.set_visible_child_name ("colbody");
-                searchbar.set_reveal_child (false);
-                search_button.set_active (false);
-                color_fb.grab_focus ();
-                colorstore.remove_all ();
-                back_button.set_visible (true);
-                search_button.set_visible (false);
-                arrow.set_visible (true);
+                if (palettestore.get_item (pos) != null) {
+                    main_stack.set_visible_child_name ("colbody");
+                    searchbar.set_reveal_child (false);
+                    search_button.set_active (false);
+                    color_fb.grab_focus ();
+                    colorstore.remove_all ();
+                    back_button.set_visible (true);
+                    search_button.set_visible (false);
+                    arrow.set_visible (true);
 
-                if (palette_model.is_selected (pos)) {
+
                     color_label.set_visible (true);
                     color_label.set_text (((PaletteInfo)palettestore.get_item (pos)).palname);
                     color_label.set_max_width_chars (((int)((PaletteInfo)palettestore.get_item (pos)).palname.length));
@@ -577,3 +578,4 @@ namespace Emulsion {
         }
     }
 }
+
