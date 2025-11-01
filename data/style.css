@@ -77,6 +77,7 @@ gridview child:selected .color-box {
   padding: 8px;
   background: none;
   color: @window_fg_color;
+  font-weight: 600;
 }
 
 .eml-box {
