@@ -17,13 +17,13 @@
 * Boston, MA 02110-1301 USA
 *
 */
-public class Emulsion.Application : Adw.Application {
+public class Emulsion.Application : He.Application {
     private const GLib.ActionEntry app_entries[] = {
         { "quit", quit },
     };
 
     public Application () {
-        Object (application_id: Config.APP_ID);
+        Object (application_id: Config.APP_ID, flags: ApplicationFlags.FLAGS_NONE);
     }
     public static int main (string[] args) {
         Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.LOCALEDIR);

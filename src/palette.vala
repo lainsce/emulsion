@@ -26,7 +26,7 @@ namespace Emulsion {
         }
 
         construct {
-            this.get_style_context().add_class ("palette");
+            this.add_css_class ("palette");
             this.set_overflow(Gtk.Overflow.HIDDEN);
             this.set_orientation (Gtk.Orientation.HORIZONTAL);
             this.set_halign (Gtk.Align.CENTER);

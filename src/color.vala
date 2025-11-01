@@ -11,23 +11,76 @@ namespace Emulsion {
     }
 
     public class ColorRenderer : Gtk.Box {
-        public ColorInfo _color;
-        public ColorInfo color {
+        private Object? _color_obj;
+        private string _color_string = "";
+        
+        // Support for ColorInfo
+        public ColorInfo? color {
             get {
-                return _color;
+                return _color_obj as ColorInfo;
             }
-
             set {
-                if(_color == value) {
+                if (_color_obj == value) {
                     return;
                 }
-                _color = value;
+                _color_obj = value;
+                if (value != null) {
+                    _color_string = value.color;
+                } else {
+                    _color_string = "";
+                }
+                queue_draw ();
+            }
+        }
+
+        // Support for RecentColorInfo
+        public RecentColorInfo? recent_color {
+            get {
+                return _color_obj as RecentColorInfo;
+            }
+            set {
+                if (_color_obj == value) {
+                    return;
+                }
+                _color_obj = value;
+                if (value != null) {
+                    _color_string = value.color;
+                } else {
+                    _color_string = "";
+                }
+                queue_draw ();
+            }
+        }
+
+        // Generic binding support - bind to "color" property
+        public Object? item {
+            get {
+                return _color_obj;
+            }
+            set {
+                if (_color_obj == value) {
+                    return;
+                }
+                _color_obj = value;
+                
+                if (value is ColorInfo) {
+                    _color_string = ((ColorInfo)value).color;
+                } else if (value is RecentColorInfo) {
+                    _color_string = ((RecentColorInfo)value).color;
+                } else if (value != null) {
+                    // Try to get "color" property via GObject
+                    Value color_val = Value (typeof (string));
+                    value.get_property ("color", ref color_val);
+                    _color_string = color_val.get_string () ?? "";
+                } else {
+                    _color_string = "";
+                }
                 queue_draw ();
             }
         }
 
         construct {
-            this.get_style_context().add_class ("color");
+            this.add_css_class ("color");
             this.set_overflow(Gtk.Overflow.HIDDEN);
             this.set_orientation (Gtk.Orientation.HORIZONTAL);
             this.set_halign (Gtk.Align.CENTER);
@@ -38,8 +91,11 @@ namespace Emulsion {
 	    }
 
 	    protected override void snapshot (Gtk.Snapshot snapshot) {
+            if (_color_string == null || _color_string.length == 0) {
+                return;
+            }
             Gdk.RGBA gc = {};
-            gc.parse (color.color);
+            gc.parse (_color_string);
             snapshot.append_color (gc, {{0, 0}, {128, 128}});
         }
     }

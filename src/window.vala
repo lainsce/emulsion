@@ -18,21 +18,39 @@
 
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/window.ui")]
-    public class MainWindow : Adw.ApplicationWindow {
+    public class MainWindow : He.ApplicationWindow {
         [GtkChild]
         unowned Gtk.MenuButton menu_button;
         [GtkChild]
         public unowned Gtk.ToggleButton search_button;
         [GtkChild]
-        unowned Gtk.Button add_palette_button;
+        unowned He.OverlayButton palette_overlay_button;
         [GtkChild]
-        unowned Gtk.Button import_palette_button;
+        unowned He.OverlayButton color_overlay_button;
         [GtkChild]
-        unowned Gtk.Button add_color_button;
+        unowned He.SideBar sidebar;
+        [GtkChild]
+        unowned Gtk.ListBox library_list;
+        [GtkChild]
+        unowned Gtk.ListBox collections_list;
+        [GtkChild]
+        unowned Gtk.ListBoxRow all_palettes_row;
+        [GtkChild]
+        unowned Gtk.ListBoxRow recents_row;
+        [GtkChild]
+        unowned Gtk.ListBoxRow colors_row;
+        [GtkChild]
+        unowned Gtk.Button add_collection_button;
         [GtkChild]
         public unowned Gtk.Button back_button;
         [GtkChild]
         unowned Gtk.Image arrow;
+        [GtkChild]
+        unowned Gtk.Box viewtitle_box;
+        [GtkChild]
+        unowned He.AppBar palette_headerbar;
+        [GtkChild]
+        unowned Gtk.Label view_title_label;
 
         [GtkChild]
         unowned Gtk.Revealer searchbar;
@@ -40,7 +58,7 @@ namespace Emulsion {
         unowned Gtk.FilterListModel palette_filter_model;
 
         [GtkChild]
-        unowned Gtk.Entry color_label;
+        unowned He.TextField color_label;
         [GtkChild]
         unowned Gtk.Stack main_stack;
         [GtkChild]
@@ -59,43 +77,199 @@ namespace Emulsion {
         public unowned Gtk.GridView color_fb;
         [GtkChild]
         unowned Gtk.SingleSelection color_model;
-
         [GtkChild]
-        public unowned Gtk.Button picker_button;
+        unowned Gtk.GridView recents_fb;
+        [GtkChild]
+        unowned Gtk.SingleSelection recents_model;
+        [GtkChild]
+        unowned He.OverlayButton recents_overlay_button;
+        [GtkChild]
+        unowned Gtk.GridView collections_fb;
+        [GtkChild]
+        unowned Gtk.SingleSelection collections_model;
+        [GtkChild]
+        unowned Gtk.GridView colors_fb;
+        [GtkChild]
+        unowned Gtk.SingleSelection colors_model;
+
 
         public GLib.ListStore palettestore;
         public GLib.ListStore colorstore;
+        public GLib.ListStore recent_colors_store;
+        public GLib.ListStore collections_store;
+        public GLib.ListStore all_colors_store;
         public Manager m;
         public ColorInfo win_color_info;
         int uid_counter = 1;
+        private const int MAX_RECENT_COLORS = 100;
+        private CollectionInfo? current_collection_filter = null;
+
+        /**
+         * Populate the collections sidebar ListBox with rows for each collection
+         */
+        private void populate_collections_sidebar () {
+            // Remove all existing rows (except any static ones)
+            var rows = collections_list.get_row_at_index (0);
+            while (rows != null) {
+                var next = rows.get_next_sibling () as Gtk.ListBoxRow;
+                collections_list.remove (rows);
+                rows = next;
+            }
+
+            // Add rows for each collection
+            uint n = collections_store.get_n_items ();
+            for (uint i = 0; i < n; i++) {
+                var collection = (CollectionInfo)collections_store.get_item (i);
+                if (collection == null) continue;
+
+                var row = new Gtk.ListBoxRow ();
+                var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 12);
+                box.margin_start = 18;
+                box.margin_end = 12;
+
+                var label = new Gtk.Label (collection.name);
+                label.xalign = 0;
+                label.hexpand = true;
+
+                box.append (label);
+                row.set_child (box);
+                collections_list.append (row);
+            }
+        }
+
+        /**
+         * Update AppBar title and back button based on current view
+         */
+        private void update_appbar_title () {
+            var visible_child = main_stack.get_visible_child_name ();
+            
+            if (visible_child == "palbody") {
+                // Main palettes view - hide back button, hide title
+                palette_headerbar.show_back = false;
+                viewtitle_box.set_visible (true);
+                back_button.set_visible (false);
+                arrow.set_visible (false);
+                color_label.set_visible (false);
+                if (view_title_label != null) {
+                    view_title_label.label = _("Palettes");
+                    view_title_label.set_visible (true);
+                }
+            } else if (visible_child == "colbody") {
+                // Color view - show back button, show palette name in custom format
+                palette_headerbar.show_back = true;
+                viewtitle_box.set_visible (true);
+                back_button.set_visible (true);
+                arrow.set_visible (true);
+                color_label.set_visible (true);
+                if (view_title_label != null) {
+                    view_title_label.set_visible (false);
+                }
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                if (pitem != null) {
+                    color_label.text = ((PaletteInfo)pitem).palname;
+                }
+            } else if (visible_child == "recentsbody") {
+                // Recents view - show back button, show "Recents" title
+                palette_headerbar.show_back = true;
+                viewtitle_box.set_visible (true);
+                back_button.set_visible (false);
+                arrow.set_visible (false);
+                color_label.set_visible (false);
+                if (view_title_label != null) {
+                    view_title_label.label = _("Recents");
+                    view_title_label.set_visible (true);
+                }
+            } else if (visible_child == "colorsbody") {
+                // Colors view - show back button, show "All Colors" title
+                palette_headerbar.show_back = true;
+                viewtitle_box.set_visible (true);
+                back_button.set_visible (false);
+                arrow.set_visible (false);
+                color_label.set_visible (false);
+                if (view_title_label != null) {
+                    view_title_label.label = _("All Colors");
+                    view_title_label.set_visible (true);
+                }
+            } else {
+                // Default - hide back button
+                palette_headerbar.show_back = false;
+                viewtitle_box.set_visible (false);
+            }
+        }
+
+        /**
+         * Update the all_colors_store with all colors from all palettes
+         */
+        private void update_all_colors_store () {
+            all_colors_store.remove_all ();
+            
+            uint n = palettestore.get_n_items ();
+            for (uint i = 0; i < n; i++) {
+                var palette = (PaletteInfo)palettestore.get_item (i);
+                if (palette == null) continue;
+                
+                foreach (var entry in palette.colors.entries) {
+                    var color_info = new ColorInfo ();
+                    color_info.name = entry.key;
+                    color_info.color = entry.value;
+                    color_info.uid = palette.palname;
+                    all_colors_store.append (color_info);
+                }
+            }
+        }
 
         public signal void clicked ();
         public signal void toggled ();
 
+        /**
+         * Add or update a color in the recent colors list
+         */
+        private void add_to_recent_colors (string name, string color) {
+            // Remove existing entry if present
+            for (uint i = 0; i < recent_colors_store.get_n_items (); i++) {
+                var item = (RecentColorInfo)recent_colors_store.get_item (i);
+                if (item.color == color && item.name == name) {
+                    recent_colors_store.remove (i);
+                    break;
+                }
+            }
+
+            // Add to front
+            var recent = new RecentColorInfo (name, color);
+            recent_colors_store.insert (0, recent);
+
+            // Limit to MAX_RECENT_COLORS
+            while (recent_colors_store.get_n_items () > MAX_RECENT_COLORS) {
+                recent_colors_store.remove (recent_colors_store.get_n_items () - 1);
+            }
+        }
+
         public SimpleActionGroup actions { get; construct; }
         public const string ACTION_PREFIX = "win.";
         public const string ACTION_ABOUT = "action_about";
-        public const string ACTION_KEYS = "action_keys";
         public const string ACTION_EX_TXT = "action_ex_txt";
         public const string ACTION_EX_PNG = "action_ex_png";
         public const string ACTION_EXC_TXT = "action_exc_txt";
         public const string ACTION_EXC_TXT_RGB = "action_exc_txt_rgb";
         public const string ACTION_DELETE_PALETTE = "delete_palette";
         public const string ACTION_DELETE_COLOR = "delete_color";
+        public const string ACTION_EDIT_COLLECTION = "edit_collection";
+        public const string ACTION_DELETE_COLLECTION = "delete_collection";
         public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
         private const GLib.ActionEntry[] ACTION_ENTRIES = {
               {ACTION_ABOUT, action_about},
-              {ACTION_KEYS, action_keys},
               {ACTION_EX_TXT, action_ex_txt},
               {ACTION_EX_PNG, action_ex_png},
               {ACTION_EXC_TXT, action_exc_txt},
               {ACTION_EXC_TXT_RGB, action_exc_txt_rgb},
               {ACTION_DELETE_PALETTE, delete_palette},
               {ACTION_DELETE_COLOR, delete_color},
+              {ACTION_EDIT_COLLECTION, edit_collection},
+              {ACTION_DELETE_COLLECTION, delete_collection},
         };
 
-        public Adw.Application app { get; construct; }
-        public MainWindow (Adw.Application app) {
+        public He.Application app { get; construct; }
+        public MainWindow (He.Application app) {
             Object (
                 application: app,
                 app: app
@@ -130,9 +304,52 @@ namespace Emulsion {
             menu_button.menu_model = (MenuModel)builder.get_object ("menu");
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
+            recent_colors_store = new GLib.ListStore (typeof (RecentColorInfo));
+            collections_store = new GLib.ListStore (typeof (CollectionInfo));
+            all_colors_store = new GLib.ListStore (typeof (ColorInfo));
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+            
             palette_filter_model.set_model (palettestore);
+            
+            // Create collection filter that will be applied on top of search filter
+            var collection_filter = new Gtk.CustomFilter ((item) => {
+                if (current_collection_filter == null) {
+                    return true; // Show all if no collection selected
+                }
+                var palette = (PaletteInfo)item;
+                return current_collection_filter.palette_names.contains (palette.palname);
+            });
+            
+            // Get the existing search filter (from UI binding)
+            var existing_filter = palette_filter_model.get_filter ();
+            
+            // Combine filters: first apply collection filter, then search filter
+            // Use EveryFilter which is the concrete implementation of MultiFilter
+            var every_filter = new Gtk.EveryFilter ();
+            every_filter.append (collection_filter);
+            if (existing_filter != null && !(existing_filter is Gtk.MultiFilter)) {
+                // If there's an existing single filter, add it to the multi-filter
+                every_filter.append (existing_filter);
+            } else if (existing_filter is Gtk.MultiFilter) {
+                // If it's already a multi-filter, we need to rebuild it
+                // For now, just replace it entirely
+                palette_filter_model.set_filter (collection_filter);
+                // Reapply search filter after a delay to let the UI binding work
+                Timeout.add (100, () => {
+                    var search_filt = palette_filter_model.get_filter ();
+                    if (search_filt != null && search_filt != collection_filter) {
+                        var new_every = new Gtk.EveryFilter ();
+                        new_every.append (collection_filter);
+                        new_every.append (search_filt);
+                        palette_filter_model.set_filter (new_every);
+                    }
+                    return false;
+                });
+                return;
+            }
+            
+            palette_filter_model.set_filter (every_filter);
 
             palette_fb.activate.connect ((pos) => {
                 var pitem = palettestore.get_item (pos);
@@ -148,8 +365,8 @@ namespace Emulsion {
 
 
                     color_label.set_visible (true);
-                    color_label.set_text (((PaletteInfo)pitem).palname);
-                    color_label.set_max_width_chars (((int)((PaletteInfo)pitem).palname.length));
+                    color_label.text = ((PaletteInfo)pitem).palname;
+                    update_appbar_title ();
                     int j = 0;
 
                     var arrcom = ((PaletteInfo)pitem).colors.keys.to_array();
@@ -169,10 +386,10 @@ namespace Emulsion {
             color_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             color_fb.hscroll_policy = color_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
 
-            color_label.set_tooltip_text (_("Set New Palette Name"));
-            color_label.activate.connect (() => {
+            color_label.entry.set_tooltip_text (_("Set New Palette Name"));
+            color_label.entry.activate.connect (() => {
                 var pitem = palettestore.get_item (palette_model.get_selected ());
-                ((PaletteInfo)pitem).palname = color_label.get_text ();
+                ((PaletteInfo)pitem).palname = color_label.text ?? "";
             });
 
             color_fb.activate.connect ((pos) => {
@@ -189,6 +406,8 @@ namespace Emulsion {
                     cep.closed.connect (() => {
                         colorstore.remove (pos);
                         colorstore.insert (pos, cep.color_info);
+                        add_to_recent_colors (cep.color_info.name, cep.color_info.color);
+                        update_all_colors_store ();
 
                         int j;
                         uint i, n = palettestore.get_n_items ();
@@ -211,19 +430,46 @@ namespace Emulsion {
                 }
             });
 
-            import_palette_button.clicked.connect (() => {
+            palette_overlay_button.secondary_clicked.connect (() => {
                 var pid = new PaletteImportDialog (this);
                 pid.set_transient_for (this);
                 pid.show ();
             });
 
             arrow.set_visible (false);
+            
+            // Connect to stack changes to update title and back button
+            main_stack.notify["visible-child-name"].connect (update_appbar_title);
+            
+            // Handle AppBar back button with custom navigation
+            // We manually control show_back, so we don't set the stack property
+            // This prevents automatic stack navigation and lets us handle it manually
+            palette_headerbar.back_button.clicked.connect (() => {
+                var visible_child = main_stack.get_visible_child_name ();
+                if (visible_child == "colbody") {
+                    // From color view back to palette view
+                    main_stack.set_visible_child_name ("palbody");
+                } else if (visible_child == "recentsbody" || visible_child == "colorsbody") {
+                    // From recents/colors back to palettes
+                    library_list.select_row (all_palettes_row);
+                } else {
+                    // Default: go back to palettes
+                    main_stack.set_visible_child_name ("palbody");
+                    library_list.select_row (all_palettes_row);
+                }
+            });
+            
+            // Keep old back_button handler for color view navigation
             back_button.clicked.connect (() => {
                 main_stack.set_visible_child_name ("palbody");
                 search_button.set_visible (true);
                 color_label.set_visible (false);
                 arrow.set_visible (false);
+                update_appbar_title ();
             });
+            
+            // Initialize AppBar state
+            update_appbar_title ();
 
             search_button.toggled.connect (() => {
                searchbar.set_reveal_child (search_button.get_active());
@@ -251,6 +497,11 @@ namespace Emulsion {
                 settings.first_time = false;
             } else {
                 m.load_from_file.begin ();
+                m.load_collections.begin ((obj, res) => {
+                    m.load_collections.end (res);
+                    populate_collections_sidebar ();
+                });
+                update_all_colors_store ();
                 if (palettestore.get_item(0) == null) {
                     back_button.set_visible(false);
                     palette_stack.set_visible_child_name ("palempty");
@@ -262,7 +513,7 @@ namespace Emulsion {
                 }
             }
 
-            add_palette_button.clicked.connect (() => {
+            palette_overlay_button.clicked.connect (() => {
                 palette_stack.set_visible_child_name ("palfull");
                 back_button.set_visible(true);
                 search_button.set_visible(true);
@@ -284,9 +535,10 @@ namespace Emulsion {
                 }
 
                 palettestore.append (a);
+                update_all_colors_store ();
             });
 
-            add_color_button.clicked.connect (() => {
+            color_overlay_button.clicked.connect (() => {
                 var rand = new GLib.Rand ();
                 var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
 
@@ -304,11 +556,161 @@ namespace Emulsion {
                     }
                 }
                 colorstore.append (a);
+                add_to_recent_colors (a.name, a.color);
+                update_all_colors_store ();
             });
 
-            picker_button.clicked.connect (() => {
+            color_overlay_button.secondary_clicked.connect (() => {
                 pick_color.begin ();
                 m.save_palettes.begin (palettestore);
+            });
+
+            // Initialize recents view
+            recents_model.set_model (recent_colors_store);
+            recents_fb.hscroll_policy = recents_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+
+            // Initialize collections view
+            collections_model.set_model (collections_store);
+            collections_fb.hscroll_policy = collections_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+
+            // Populate collections sidebar list
+            populate_collections_sidebar ();
+
+            // Watch for changes to collections_store and update sidebar
+            collections_store.items_changed.connect ((pos, removed, added) => {
+                populate_collections_sidebar ();
+            });
+
+            // Initialize colors view
+            colors_model.set_model (all_colors_store);
+            colors_fb.hscroll_policy = colors_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+            update_all_colors_store ();
+
+            // Sidebar navigation handlers
+            library_list.row_selected.connect ((row) => {
+                // Clear collection filter when selecting library items
+                current_collection_filter = null;
+                var filter_obj = palette_filter_model.get_filter ();
+                if (filter_obj is Gtk.MultiFilter) {
+                    var multi_filter = (Gtk.MultiFilter)filter_obj;
+                    // Get the first filter (collection filter) if it exists
+                    if (multi_filter.get_n_items () > 0) {
+                        var filter_item = multi_filter.get_item (0);
+                        if (filter_item is Gtk.CustomFilter) {
+                            var coll_filter = (Gtk.CustomFilter)filter_item;
+                            coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                        }
+                    }
+                }
+                
+                if (row == all_palettes_row) {
+                    main_stack.set_visible_child_name ("palbody");
+                    palette_stack.set_visible_child_name (palettestore.get_n_items () > 0 ? "palfull" : "palempty");
+                    update_appbar_title ();
+                } else if (row == recents_row) {
+                    main_stack.set_visible_child_name ("recentsbody");
+                    update_appbar_title ();
+                } else if (row == colors_row) {
+                    main_stack.set_visible_child_name ("colorsbody");
+                    update_all_colors_store ();
+                    update_appbar_title ();
+                }
+            });
+
+            // Collections list selection handler
+            collections_list.row_selected.connect ((row) => {
+                if (row != null) {
+                    int pos = row.get_index ();
+                    if (pos >= 0 && pos < (int)collections_store.get_n_items ()) {
+                        var collection = (CollectionInfo)collections_store.get_item ((uint)pos);
+                        if (collection != null) {
+                            // Filter palettes by collection
+                            current_collection_filter = collection;
+                            var filter_obj = palette_filter_model.get_filter ();
+                            if (filter_obj is Gtk.MultiFilter) {
+                                var multi_filter = (Gtk.MultiFilter)filter_obj;
+                                if (multi_filter.get_n_items () > 0) {
+                                    var filter_item = multi_filter.get_item (0);
+                                    if (filter_item is Gtk.CustomFilter) {
+                                        var coll_filter = (Gtk.CustomFilter)filter_item;
+                                        coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                                    }
+                                }
+                            }
+                            // Deselect library items
+                            library_list.unselect_all ();
+                            main_stack.set_visible_child_name ("palbody");
+                            palette_stack.set_visible_child_name ("palfull");
+                            update_appbar_title ();
+                        }
+                    }
+                } else {
+                    // Deselected - clear filter
+                    current_collection_filter = null;
+                    var filter_obj = palette_filter_model.get_filter ();
+                    if (filter_obj is Gtk.MultiFilter) {
+                        var multi_filter = (Gtk.MultiFilter)filter_obj;
+                        if (multi_filter.get_n_items () > 0) {
+                            var filter_item = multi_filter.get_item (0);
+                            if (filter_item is Gtk.CustomFilter) {
+                                var coll_filter = (Gtk.CustomFilter)filter_item;
+                                coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Select "All Palettes" by default
+            library_list.select_row (all_palettes_row);
+
+            // Recents overlay button handlers
+            recents_overlay_button.clicked.connect (() => {
+                var rand = new GLib.Rand ();
+                var rc = "#" + "%02x%02x%02x".printf (rand.int_range(15, 255), rand.int_range(15, 255), rand.int_range(15, 255));
+                var recent = new RecentColorInfo ("Color %d".printf(rand.int_range(1, 255)), rc);
+                add_to_recent_colors (recent.name, recent.color);
+            });
+
+            recents_overlay_button.secondary_clicked.connect (() => {
+                pick_color.begin ();
+            });
+
+            add_collection_button.clicked.connect (() => {
+                // Create dialog for new collection
+                var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+
+                var name_label = new Gtk.Label (_("Collection Name:"));
+                name_label.halign = Gtk.Align.START;
+                var name_entry = new He.TextField ();
+                name_entry.text = "New Collection %d".printf(uid_counter++);
+                name_entry.is_outline = true;
+
+                content.append (name_label);
+                content.append (name_entry);
+
+                var create_button = new He.Button (null, _("Create"));
+                var dialog = new He.Dialog (this,
+                    _("New Collection"),
+                    null,
+                    null,
+                    create_button,
+                    null);
+
+                create_button.clicked.connect (() => {
+                    if (name_entry.text != null && name_entry.text.strip () != "") {
+                        var collection = new CollectionInfo ();
+                        collection.name = name_entry.text.strip ();
+                        collections_store.append (collection);
+                        m.save_collections.begin (collections_store);
+                        dialog.hide_dialog ();
+                    }
+                });
+
+                dialog.add (content);
+                dialog.present ();
+                name_entry.entry.grab_focus ();
+                name_entry.entry.select_region (0, -1);
             });
 
             if (Config.DEVELOPMENT)
@@ -316,8 +718,8 @@ namespace Emulsion {
 
             this.set_size_request (360, 360);
             this.show ();
-            var adwsm = Adw.StyleManager.get_default ();
-            adwsm.set_color_scheme (Adw.ColorScheme.PREFER_DARK);
+
+            viewtitle_box.remove_css_class ("disclosure-button");
         }
 
         public async void pick_color () {
@@ -362,6 +764,8 @@ namespace Emulsion {
                         }
 
                         colorstore.append (a);
+                        add_to_recent_colors (a.name, a.color);
+                        update_all_colors_store ();
 
                         pick_color.callback();
                     } else {
@@ -447,6 +851,7 @@ namespace Emulsion {
 
         public void delete_palette () {
             palettestore.remove (palette_model.selected);
+            update_all_colors_store ();
 
             if (palettestore.get_item(0) == null) {
                 palette_stack.set_visible_child_name ("palempty");
@@ -471,43 +876,135 @@ namespace Emulsion {
             if (colorstore.get_item(0) == null) {
                 main_stack.set_visible_child_name ("palbody");
                 palettestore.remove (palette_model.selected);
+                update_all_colors_store ();
+                update_appbar_title ();
+            } else {
+                update_all_colors_store ();
             }
         }
 
-        public void action_keys () {
-            try {
-                var build = new Gtk.Builder ();
-                build.add_from_resource ("/io/github/lainsce/Emulsion/keys.ui");
-                var window =  (Gtk.ShortcutsWindow) build.get_object ("shortcuts-emulsion");
-                window.set_transient_for (this);
-                window.show ();
-            } catch (Error e) {
-                warning ("Failed to open shortcuts window: %s\n", e.message);
+        public void edit_collection () {
+            if (collections_model.selected == Gtk.INVALID_LIST_POSITION) {
+                return;
             }
+
+            uint pos = collections_model.selected;
+            var collection = (CollectionInfo)collections_store.get_item (pos);
+            if (collection == null) {
+                return;
+            }
+
+            // Create a simple dialog to edit collection name
+            var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+
+            var name_label = new Gtk.Label (_("Collection Name:"));
+            name_label.halign = Gtk.Align.START;
+            var name_entry = new He.TextField ();
+            name_entry.text = collection.name;
+            name_entry.is_outline = true;
+
+            content.append (name_label);
+            content.append (name_entry);
+
+            var save_button = new He.Button (null, _("Save"));
+            var dialog = new He.Dialog (this,
+                _("Edit Collection"),
+                null,
+                null,
+                save_button,
+                null);
+            
+            save_button.clicked.connect (() => {
+                if (name_entry.text != null && name_entry.text.strip () != "") {
+                    collection.name = name_entry.text.strip ();
+                    m.save_collections.begin (collections_store);
+                    dialog.hide_dialog ();
+                }
+            });
+
+            dialog.add (content);
+            dialog.present ();
+            name_entry.entry.grab_focus ();
         }
+
+        public void delete_collection () {
+            if (collections_model.selected == Gtk.INVALID_LIST_POSITION) {
+                return;
+            }
+
+            uint pos = collections_model.selected;
+            var collection = (CollectionInfo)collections_store.get_item (pos);
+            if (collection == null) {
+                return;
+            }
+
+            // Confirm deletion
+            var delete_button = new He.Button (null, _("Delete"));
+            var dialog = new He.Dialog (this,
+                _("Delete Collection"),
+                _("Are you sure you want to delete the collection \"%s\"?").printf (collection.name),
+                null,
+                delete_button,
+                null);
+            
+            delete_button.clicked.connect (() => {
+                // Clear filter if deleting current filter
+                if (current_collection_filter == collection) {
+                    current_collection_filter = null;
+                    var filter_obj = palette_filter_model.get_filter ();
+                    if (filter_obj is Gtk.MultiFilter) {
+                        var multi_filter = (Gtk.MultiFilter)filter_obj;
+                        if (multi_filter.get_n_items () > 0) {
+                            var filter_item = multi_filter.get_item (0);
+                            if (filter_item is Gtk.CustomFilter) {
+                                var coll_filter = (Gtk.CustomFilter)filter_item;
+                                coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                            }
+                        }
+                    }
+                    library_list.select_row (all_palettes_row);
+                }
+
+                collections_store.remove (pos);
+                m.save_collections.begin (collections_store);
+                dialog.hide_dialog ();
+            });
+
+            dialog.present ();
+        }
+
+        private He.AboutWindow? about_window = null;
 
         public void action_about () {
-            const string COPYRIGHT = "Copyright \xc2\xa9 2021 Paulo \"Lains\" Galardi\n";
+            if (about_window == null) {
+                string[]? translators = null;
+                string translator_credits = _("translator-credits");
+                if (translator_credits != "translator-credits" && translator_credits != "") {
+                    translators = {translator_credits};
+                }
 
-            const string? AUTHORS[] = {
-                "Paulo \"Lains\" Galardi",
-                null
-            };
+                string[] developers = {"Paulo \"Lains\" Galardi"};
 
-            var program_name = "Emulsion" + Config.NAME_SUFFIX;
-            Gtk.show_about_dialog (this,
-                                   "program-name", program_name,
-                                   "logo-icon-name", Config.APP_ID,
-                                   "version", Config.VERSION,
-                                   "comments", _("Stock up on colors."),
-                                   "copyright", COPYRIGHT,
-                                   "authors", AUTHORS,
-                                   "artists", null,
-                                   "license-type", Gtk.License.GPL_3_0,
-                                   "wrap-license", false,
-                                   // TRANSLATORS: 'Name <email@domain.com>' or 'Name https://website.example'
-                                   "translator-credits", _("translator-credits"),
-                                   null);
+                about_window = new He.AboutWindow (
+                    this,
+                    "Emulsion" + Config.NAME_SUFFIX,
+                    Config.APP_ID,
+                    Config.VERSION,
+                    Config.APP_ID,
+                    "https://github.com/lainsce/Emulsion/blob/main/TRANSLATE.md", // translate_url
+                    "https://github.com/lainsce/Emulsion/issues", // issue_url
+                    "https://github.com/lainsce/Emulsion", // more_info_url
+                    translators,
+                    developers,
+                    2021, // copyright_year
+                    He.AboutWindow.Licenses.GPLV3,
+                    He.Colors.PURPLE
+                );
+                about_window.hidden.connect (() => {
+                    about_window = null;
+                });
+            }
+            about_window.present ();
         }
 
         void populate_palettes_view () {

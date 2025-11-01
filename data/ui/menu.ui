@@ -4,10 +4,6 @@
   <menu id="menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
-        <attribute name="action">win.action_keys</attribute>
-      </item>
-      <item>
         <attribute name="label" translatable="yes">About Emulsion</attribute>
         <attribute name="action">win.action_about</attribute>
       </item>

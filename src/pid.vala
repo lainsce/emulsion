@@ -18,7 +18,7 @@
  */
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/pid.ui")]
-    public class PaletteImportDialog : Adw.Window {
+    public class PaletteImportDialog : He.Window {
         const string COLORED_SURFACE = "* { background: %s; }";
 
         [GtkChild]
@@ -43,7 +43,7 @@ namespace Emulsion {
         }
 
         construct {
-            color_box.get_style_context ().add_class ("palette");
+            color_box.add_css_class ("palette");
             color_box.set_overflow(Gtk.Overflow.HIDDEN);
             color_box.set_margin_bottom (12);
             color_box.set_margin_end (12);
@@ -119,7 +119,7 @@ namespace Emulsion {
                             file = null;
                             file = File.new_for_uri (chooser.get_file ().get_uri ());
 						    var pixbuf = new Gdk.Pixbuf.from_file (file.get_path ());
-                            pixbuf = pixbuf.scale_simple (file_image.get_allocated_width (), file_image.get_allocated_height ()*2, Gdk.InterpType.BILINEAR);
+                            pixbuf = pixbuf.scale_simple (file_image.get_width (), file_image.get_height ()*2, Gdk.InterpType.BILINEAR);
                             file_image.set_from_pixbuf (pixbuf);
 
                             image.set_sensitive (false);

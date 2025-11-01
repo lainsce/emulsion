@@ -1,5 +1,5 @@
 project('io.github.lainsce.Emulsion', 'vala',
-        version: '3.2.3',
+        version: '4.0.0',
         meson_version: '>= 0.59.0'
 )
 
@@ -50,6 +50,7 @@ sources = [
   'src/utils.vala',
   'src/palette.vala',
   'src/color.vala',
+  'src/collection.vala',
   'src/coloreditpopover.vala',
   'src/portal.vala',
   'src/settings.vala',
@@ -61,7 +62,7 @@ dependencies = [
   dependency('glib-2.0'),
   dependency('gobject-2.0'),
   dependency('gee-0.8'),
-  dependency('libadwaita-1'),
+  dependency('libhelium-1'),
   dependency('gmodule-2.0'),
   dependency('json-glib-1.0'),
   meson.get_compiler('c').find_library('m', required: true)

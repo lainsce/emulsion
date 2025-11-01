@@ -1,12 +1,3 @@
-@define-color accent_color #007816;
-@define-color accent_bg_color #90ff92;
-@define-color accent_fg_color #004407;
-@define-color accent_secondary_color #d2edd0;
-@define-color accent_secondary_bg_color #d2edd0;
-@define-color accent_secondary_fg_color #0d220d;
-@define-color window_bg_color #fff;
-@define-color headerbar_bg_color #fff;
-
 .solid-csd {
   box-shadow: none;
   outline: 1px solid @borders;
@@ -34,11 +25,11 @@ gridview child .color-box {
 
 gridview child:selected {
   background: none;
-  color: @view_fg_color;
+  color: @window_fg_color;
 }
 gridview child:selected .palette-box,
 gridview child:selected .color-box {
-  outline: 3px solid @borders;
+  outline: 2px solid @borders;
 }
 
 .red trough{
@@ -46,7 +37,7 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #a83900
+                #ff0000
             );
 }
 .red highlight {
@@ -57,7 +48,7 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #006e00
+                #00ff00
             );
 }
 .green highlight {
@@ -68,83 +59,29 @@ gridview child:selected .color-box {
             linear-gradient(
                 to right,
                 #000,
-                #2758c3
+                #0000ff
             );
 }
 .blue highlight {
   background: none;
 }
 
-.list-action-button {
-  padding: 10px;
-  border-radius: 999px;
-}
-.accent-button {
-  background: @accent_bg_color;
-  color: @accent_fg_color;
-  box-shadow: 0 4px 8px 3px alpha(@accent_bg_color, 0.30);
-}
-.accent-button:hover {
-  background: shade(@accent_bg_color, 1.05);
-  box-shadow: 0 6px 10px 4px alpha(@accent_bg_color, 0.30);
-}
-.accent-button:active {
-  background: shade(@accent_bg_color, 0.95);
-}
-.accent-secondary-button {
-  background: @accent_secondary_bg_color;
-  color: @accent_secondary_fg_color;
-  box-shadow: 0 4px 8px 3px alpha(@accent_secondary_bg_color, 0.30);
-}
-.accent-secondary-button:hover {
-  background: shade(@accent_secondary_bg_color, 1.05);
-  box-shadow: 0 6px 10px 4px alpha(@accent_secondary_bg_color, 0.30);
-}
-.accent-secondary-button:active {
-  background: shade(@accent_secondary_bg_color, 0.95);
-}
-.eml-view {
-  background: linear-gradient(135deg, @window_bg_color, mix(@window_bg_color, @accent_bg_color, 0.2));
-}
 .eml-view gridview {
   margin: 6px;
   margin-top: 0px;
-  background: none;
-}
-.eml-search-box {
-  border: none;
-  box-shadow: none;
-  border-radius: 999px;
-}
-.eml-title {
-  border: none;
-  box-shadow: none;
-  background: none;
-}
-.eml-color-label {
-  font-size: 1.1rem;
-  font-weight: 700;
+  background: @surface_container_lowest_bg_color;
+  border-radius: 10px;
 }
 
-.view-title {
-  font-size: 1.5rem;
-  font-weight: 300;
-  background: none;
-  padding: 10px;
-}
 .title-label {
   padding: 8px;
-}
-
-entry.view-title {
-  font-weight: 600;
-  margin: 0;
-  padding: 4px;
+  background: none;
+  color: @window_fg_color;
 }
 
 .eml-box {
   background: none;
-  box-shadow: inset 0 0 0 5px @borders;
+  box-shadow: inset 0 0 0 1px @borders;
 }
 
 .eml-box:hover {
