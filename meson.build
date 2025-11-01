@@ -32,6 +32,7 @@ config_h_dir = include_directories('.')
 
 add_project_arguments(
   '-include', 'config.h',
+  '-w',
   '-DGETTEXT_PACKAGE="@0@"'.format(app_id),
   language: 'c'
 )

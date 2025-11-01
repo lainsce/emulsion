@@ -8,7 +8,7 @@
 	box-shadow: none;
 	border: none;
 	background: none;
-	border-radius: 8px;
+	border-radius: 10px;
 	min-height: 32px;
 	min-width: 32px;
 	outline: 1px solid @borders;
@@ -16,7 +16,7 @@
 
 gridview child .palette-box,
 gridview child .color-box {
-  border-radius: 8px;
+  border-radius: 10px;
   border: 4px solid transparent;
   padding: 6px;
   margin: 6px;
@@ -29,7 +29,7 @@ gridview child:selected {
 }
 gridview child:selected .palette-box,
 gridview child:selected .color-box {
-  outline: 2px solid @borders;
+  outline: 1px solid @borders;
 }
 
 .red trough{
@@ -76,15 +76,29 @@ gridview child:selected .color-box {
 .title-label {
   padding: 8px;
   background: none;
+}
+.title-label label {
   color: @window_fg_color;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 29.333px;
 }
 
 .eml-box {
   background: none;
-  box-shadow: inset 0 0 0 1px @borders;
+  box-shadow: 0 0 0 1px alpha(@window_fg_color, 0.1);
 }
-
+.eml-box label {
+  color: @window_fg_color;
+}
+.eml-box image {
+  color: @window_fg_color;
+}
 .eml-box:hover {
   background: alpha(@window_fg_color, 0.05);
+}
+
+.sidebar-view {
+  margin: 6px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px alpha(white, 0.32), 0 2px 4px 0 alpha(black, 0.32);
 }

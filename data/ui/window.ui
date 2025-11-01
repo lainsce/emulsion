@@ -23,6 +23,7 @@
             <property name="show-left-title-buttons">1</property>
             <property name="show-right-title-buttons">0</property>
             <property name="show-back">0</property>
+            <property name="has-margins">0</property>
             <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
@@ -33,10 +34,9 @@
                     <property name="label" translatable="yes">Library</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">18</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
+                    <property name="margin-top">4</property>
                     <style>
-                      <class name="caption-heading"/>
+                      <class name="view-title"/>
                     </style>
                   </object>
                 </child>
@@ -108,8 +108,8 @@
                 </child>
                 <child>
                   <object class="GtkSeparator">
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
+                    <property name="margin-top">4</property>
+                    <property name="margin-bottom">4</property>
                   </object>
                 </child>
                 <child>
@@ -117,10 +117,9 @@
                     <property name="label" translatable="yes">Collections</property>
                     <property name="xalign">0</property>
                     <property name="margin-start">18</property>
-                    <property name="margin-top">6</property>
-                    <property name="margin-bottom">6</property>
+                    <property name="margin-top">8</property>
                     <style>
-                      <class name="caption-heading"/>
+                      <class name="caption"/>
                     </style>
                   </object>
                 </child>
@@ -136,7 +135,7 @@
                 </child>
                 <child>
                   <object class="HeButton" id="add_collection_button">
-                    <property name="halign">start</property>
+                    <property name="halign">center</property>
                     <property name="margin-start">18</property>
                     <property name="margin-end">18</property>
                     <property name="margin-top">6</property>
@@ -189,6 +188,14 @@
                     <property name="valign">center</property>
                   </object>
                 </child>
+                <child type="titlebar-button">
+                  <object class="GtkButton" id="add_to_collection_button">
+                    <property name="icon-name">list-add-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Add palette to collection</property>
+                    <property name="valign">center</property>
+                    <property name="visible">0</property>
+                  </object>
+                </child>
                 <child type="viewtitle-widget">
                   <object class="GtkBox" id="viewtitle_box">
                     <property name="hexpand">1</property>
@@ -218,7 +225,7 @@
                     </child>
                     <child>
                       <object class="GtkImage" id="arrow">
-                        <property name="icon-name">pan-right-symbolic</property>
+                        <property name="icon-name">pan-end-symbolic</property>
                         <property name="visible">0</property>
                         <property name="valign">center</property>
                       </object>

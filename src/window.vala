@@ -28,8 +28,6 @@ namespace Emulsion {
         [GtkChild]
         unowned He.OverlayButton color_overlay_button;
         [GtkChild]
-        unowned He.SideBar sidebar;
-        [GtkChild]
         unowned Gtk.ListBox library_list;
         [GtkChild]
         unowned Gtk.ListBox collections_list;
@@ -41,6 +39,8 @@ namespace Emulsion {
         unowned Gtk.ListBoxRow colors_row;
         [GtkChild]
         unowned Gtk.Button add_collection_button;
+        [GtkChild]
+        unowned Gtk.Button add_to_collection_button;
         [GtkChild]
         public unowned Gtk.Button back_button;
         [GtkChild]
@@ -150,6 +150,7 @@ namespace Emulsion {
                 back_button.set_visible (false);
                 arrow.set_visible (false);
                 color_label.set_visible (false);
+                add_to_collection_button.set_visible (false);
                 if (view_title_label != null) {
                     view_title_label.label = _("Palettes");
                     view_title_label.set_visible (true);
@@ -161,6 +162,7 @@ namespace Emulsion {
                 back_button.set_visible (true);
                 arrow.set_visible (true);
                 color_label.set_visible (true);
+                add_to_collection_button.set_visible (true);
                 if (view_title_label != null) {
                     view_title_label.set_visible (false);
                 }
@@ -175,6 +177,7 @@ namespace Emulsion {
                 back_button.set_visible (false);
                 arrow.set_visible (false);
                 color_label.set_visible (false);
+                add_to_collection_button.set_visible (false);
                 if (view_title_label != null) {
                     view_title_label.label = _("Recents");
                     view_title_label.set_visible (true);
@@ -186,6 +189,7 @@ namespace Emulsion {
                 back_button.set_visible (false);
                 arrow.set_visible (false);
                 color_label.set_visible (false);
+                add_to_collection_button.set_visible (false);
                 if (view_title_label != null) {
                     view_title_label.label = _("All Colors");
                     view_title_label.set_visible (true);
@@ -194,6 +198,7 @@ namespace Emulsion {
                 // Default - hide back button
                 palette_headerbar.show_back = false;
                 viewtitle_box.set_visible (false);
+                add_to_collection_button.set_visible (false);
             }
         }
 
@@ -397,13 +402,19 @@ namespace Emulsion {
                     var cep = new ColorEditPopover (this);
                     var item = colorstore.get_item (pos);
                     cep.color_info = ((ColorInfo)item);
-                    Gtk.Allocation alloc;
-                    color_fb.get_focus_child ().get_allocation (out alloc);
-                    cep.set_pointing_to (alloc);
-                    cep.set_offset (25, 50);
+                    // GTK4 automatically positions the popover relative to its parent
                     cep.popup ();
 
                     cep.closed.connect (() => {
+                        // Ensure we're still in the color view after popover closes
+                        if (main_stack.get_visible_child_name () != "colbody") {
+                            main_stack.set_visible_child_name ("colbody");
+                            update_appbar_title ();
+                        }
+                        
+                        // Return focus to color grid view
+                        color_fb.grab_focus ();
+                        
                         colorstore.remove (pos);
                         colorstore.insert (pos, cep.color_info);
                         add_to_recent_colors (cep.color_info.name, cep.color_info.color);
@@ -602,6 +613,8 @@ namespace Emulsion {
                         }
                     }
                 }
+                // Deselect any selected collection
+                collections_list.unselect_all ();
                 
                 if (row == all_palettes_row) {
                     main_stack.set_visible_child_name ("palbody");
@@ -711,6 +724,116 @@ namespace Emulsion {
                 dialog.present ();
                 name_entry.entry.grab_focus ();
                 name_entry.entry.select_region (0, -1);
+            });
+
+            add_to_collection_button.clicked.connect (() => {
+                var pitem = palettestore.get_item (palette_model.get_selected ());
+                if (pitem == null) {
+                    return;
+                }
+                
+                var palette_name = ((PaletteInfo)pitem).palname;
+                
+                // Create dialog content
+                var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+                content.margin_top = 12;
+                content.margin_bottom = 12;
+                content.margin_start = 12;
+                content.margin_end = 12;
+                
+                var label = new Gtk.Label (_("Select collections to add \"%s\" to:").printf (palette_name));
+                label.halign = Gtk.Align.START;
+                label.wrap = true;
+                content.append (label);
+                
+                var scrolled = new Gtk.ScrolledWindow ();
+                scrolled.height_request = 200;
+                scrolled.vexpand = true;
+                
+                var collections_list = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+                scrolled.child = collections_list;
+                content.append (scrolled);
+                
+                // Store checkboxes and their corresponding collections
+                var checkboxes = new Gee.HashMap<Gtk.CheckButton, CollectionInfo> ();
+                
+                // Populate list with collections
+                uint n = collections_store.get_n_items ();
+                if (n == 0) {
+                    var empty_label = new Gtk.Label (_("No collections available. Create one first."));
+                    empty_label.halign = Gtk.Align.CENTER;
+                    empty_label.valign = Gtk.Align.CENTER;
+                    empty_label.margin_top = 12;
+                    collections_list.append (empty_label);
+                } else {
+                    for (uint i = 0; i < n; i++) {
+                        var item = collections_store.get_item (i);
+                        if (item == null) {
+                            continue;
+                        }
+                        
+                        var collection = (CollectionInfo)item;
+                        var check = new Gtk.CheckButton ();
+                        check.label = collection.name;
+                        check.active = collection.palette_names.contains (palette_name);
+                        check.halign = Gtk.Align.START;
+                        check.margin_start = 6;
+                        
+                        checkboxes.set (check, collection);
+                        collections_list.append (check);
+                    }
+                }
+                
+                var save_button = new He.Button (null, _("Save"));
+                var dialog = new He.Dialog (this,
+                    _("Add to Collection"),
+                    null,
+                    null,
+                    save_button,
+                    null);
+                
+                save_button.clicked.connect (() => {
+                    bool changed = false;
+                    
+                    foreach (var entry in checkboxes.entries) {
+                        var checkbox = entry.key;
+                        var collection = entry.value;
+                        
+                        bool should_contain = checkbox.active;
+                        bool currently_contains = collection.palette_names.contains (palette_name);
+                        
+                        if (should_contain && !currently_contains) {
+                            collection.palette_names.add (palette_name);
+                            changed = true;
+                        } else if (!should_contain && currently_contains) {
+                            collection.palette_names.remove (palette_name);
+                            changed = true;
+                        }
+                    }
+                    
+                    if (changed) {
+                        m.save_collections.begin (collections_store);
+                        // Update filter if we're viewing a collection
+                        if (current_collection_filter != null) {
+                            var filter_obj = palette_filter_model.get_filter ();
+                            if (filter_obj is Gtk.MultiFilter) {
+                                var multi_filter = (Gtk.MultiFilter)filter_obj;
+                                if (multi_filter.get_n_items () > 0) {
+                                    var filter_item = multi_filter.get_item (0);
+                                    if (filter_item is Gtk.CustomFilter) {
+                                        var coll_filter = (Gtk.CustomFilter)filter_item;
+                                        coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    dialog.hide_dialog ();
+                });
+                
+                dialog.add (content);
+                dialog.present ();
             });
 
             if (Config.DEVELOPMENT)
@@ -840,12 +963,36 @@ namespace Emulsion {
                 var node = snap.to_node ();
                 node.draw(cr);
 
-                var pb = Gdk.pixbuf_get_from_surface (sf, 0, 0, 256, 64);
-                var mt = Gdk.Texture.for_pixbuf (pb);
-
-                var display = Gdk.Display.get_default ();
-                unowned var clipboard = display.get_clipboard ();
-                clipboard.set_texture (mt);
+                // Extract pixel data from Cairo surface and create texture
+                int width = sf.get_width ();
+                int height = sf.get_height ();
+                int stride = sf.get_stride ();
+                unowned uint8[]? surface_data = sf.get_data ();
+                
+                if (surface_data != null) {
+                    // Cairo Format.ARGB32 stores pixels as native-endian 32-bit ARGB
+                    // On little-endian systems (most common), this is BGRA in memory
+                    // Copy data with proper stride handling
+                    uint8[] rgba_data = new uint8[width * height * 4];
+                    for (int y = 0; y < height; y++) {
+                        for (int x = 0; x < width; x++) {
+                            int src_idx = y * stride + x * 4;
+                            int dst_idx = (y * width + x) * 4;
+                            // Native endian ARGB32 -> BGRA8 (already in correct byte order on little-endian)
+                            rgba_data[dst_idx + 0] = surface_data[src_idx + 0]; // B
+                            rgba_data[dst_idx + 1] = surface_data[src_idx + 1]; // G
+                            rgba_data[dst_idx + 2] = surface_data[src_idx + 2]; // R
+                            rgba_data[dst_idx + 3] = surface_data[src_idx + 3]; // A
+                        }
+                    }
+                    
+                    var bytes = new GLib.Bytes.take ((owned)rgba_data);
+                    var mt = new Gdk.MemoryTexture (width, height, Gdk.MemoryFormat.B8G8R8A8, bytes, width * 4);
+                    
+                    var display = Gdk.Display.get_default ();
+                    unowned var clipboard = display.get_clipboard ();
+                    clipboard.set_texture (mt);
+                }
             }
         }
 

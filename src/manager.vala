@@ -171,14 +171,14 @@ namespace Emulsion {
 
             try {
                 // Validate and build JSON
-                var b = new Json.Builder ();
-                builder = b;
+            var b = new Json.Builder ();
+            builder = b;
 
-                builder.begin_array ();
-                uint i, n = liststore.get_n_items ();
+            builder.begin_array ();
+	        uint i, n = liststore.get_n_items ();
                 int valid_palettes = 0;
 
-                for (i = 0; i < n; i++) {
+            for (i = 0; i < n; i++) {
                     var item = liststore.get_item (i);
                     if (item == null) {
                         continue;
@@ -220,21 +220,21 @@ namespace Emulsion {
                         continue;
                     }
 
-                    builder.begin_array ();
+                builder.begin_array ();
                     builder.add_string_value (sanitized_name);
-                    builder.begin_array ();
+                builder.begin_array ();
                     foreach (var col in valid_colors.entries) {
-                        builder.begin_object ();
-                        builder.set_member_name (col.key);
-                        builder.add_string_value (col.value);
-                        builder.end_object ();
-                    }
-                    builder.end_array ();
-                    builder.end_array ();
-
-                    valid_palettes++;
+                    builder.begin_object ();
+                    builder.set_member_name (col.key);
+                    builder.add_string_value (col.value);
+                    builder.end_object ();
                 }
                 builder.end_array ();
+                builder.end_array ();
+
+                    valid_palettes++;
+            }
+            builder.end_array ();
 
                 if (valid_palettes == 0) {
                     debug ("No valid palettes to save\n");
@@ -242,9 +242,9 @@ namespace Emulsion {
                     return;
                 }
 
-                Json.Generator generator = new Json.Generator ();
-                Json.Node root = builder.get_root ();
-                generator.set_root (root);
+            Json.Generator generator = new Json.Generator ();
+            Json.Node root = builder.get_root ();
+            generator.set_root (root);
                 generator.set_pretty (false);
                 string json_string = generator.to_data (null);
 
@@ -289,7 +289,7 @@ namespace Emulsion {
                     // Verify temp file was written correctly
                     if (!temp_file.query_exists ()) {
                         throw new IOError.FAILED ("Temp file was not created");
-                    }
+                }
 
                     // Read back and verify
                     string? verify_contents = null;
@@ -321,8 +321,6 @@ namespace Emulsion {
                         warning ("Failed to restore from backup: %s\n", restore_error.message);
                     }
                 }
-            } catch (Error e) {
-                warning ("Failed to save palettes: %s\n", e.message);
             } finally {
                 is_saving = false;
             }
@@ -371,115 +369,110 @@ namespace Emulsion {
                 int skipped_count = 0;
 
                 foreach (var t in array.get_elements ()) {
-                    try {
-                        if (t.get_node_type () != Json.NodeType.ARRAY) {
-                            warning ("Skipping invalid palette entry: expected array\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    if (t.get_node_type () != Json.NodeType.ARRAY) {
+                        warning ("Skipping invalid palette entry: expected array\n");
+                        skipped_count++;
+                        continue;
+                    }
 
                         var pi = t.get_array ();
-                        
-                        // Validate array structure
-                        if (pi.get_length () < 2) {
-                            warning ("Skipping invalid palette entry: array too short\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    
+                    // Validate array structure
+                    if (pi.get_length () < 2) {
+                        warning ("Skipping invalid palette entry: array too short\n");
+                        skipped_count++;
+                        continue;
+                    }
 
-                        var name_node = pi.get_element (0);
-                        var color_node = pi.get_element (1);
+                    var name_node = pi.get_element (0);
+                    var color_node = pi.get_element (1);
 
-                        if (name_node == null || name_node.get_node_type () != Json.NodeType.VALUE ||
-                            color_node == null || color_node.get_node_type () != Json.NodeType.ARRAY) {
-                            warning ("Skipping invalid palette entry: invalid structure\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    if (name_node == null || name_node.get_node_type () != Json.NodeType.VALUE ||
+                        color_node == null || color_node.get_node_type () != Json.NodeType.ARRAY) {
+                        warning ("Skipping invalid palette entry: invalid structure\n");
+                        skipped_count++;
+                        continue;
+                    }
 
-                        string? name = name_node.get_string ();
-                        if (name == null || !is_valid_name (name)) {
-                            warning ("Skipping palette with invalid name\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    string? name = name_node.get_string ();
+                    if (name == null || !is_valid_name (name)) {
+                        warning ("Skipping palette with invalid name\n");
+                        skipped_count++;
+                        continue;
+                    }
 
-                        string sanitized_name = sanitize_name (name);
-                        if (sanitized_name == "") {
-                            sanitized_name = "Unnamed Palette";
-                        }
+                    string sanitized_name = sanitize_name (name);
+                    if (sanitized_name == "") {
+                        sanitized_name = "Unnamed Palette";
+                    }
 
                         var am = new PaletteInfo ();
-                        am.palname = sanitized_name;
+                    am.palname = sanitized_name;
                         am.colors = new Gee.HashMap<string, string> ();
 
-                        var color_array = color_node.get_array ();
-                        var settings = new Settings ();
-                        bool has_valid_colors = false;
+                    var color_array = color_node.get_array ();
+                            var settings = new Settings ();
+                    bool has_valid_colors = false;
 
-                        if (settings.schema_version == 0) {
-                            // Old schema: array of strings
-                            color_array.foreach_element ((arr, index, element) => {
-                                string? color_val = element.get_string ();
-                                if (color_val != null && is_valid_hex_color (color_val)) {
-                                    string? normalized = normalize_hex_color (color_val);
-                                    if (normalized != null) {
-                                        am.colors.set (normalized, normalized);
-                                        has_valid_colors = true;
-                                    }
-                                }
-                            });
-                            settings.schema_version = 1;
-                        } else {
-                            // Current schema: array of objects {name: color}
-                            foreach (var c in color_array.get_elements ()) {
-                                if (c.get_node_type () != Json.NodeType.OBJECT) {
-                                    continue;
-                                }
-
-                                var color_obj = c.get_object ();
-                                color_obj.foreach_member ((obj, color_name, color_value) => {
-                                    if (color_name == null || color_name.length == 0) {
-                                        return;
-                                    }
-
-                                    if (color_value.get_node_type () != Json.NodeType.VALUE) {
-                                        return;
-                                    }
-
-                                    string? color_hex = color_value.get_string ();
-                                    if (color_hex == null || !is_valid_hex_color (color_hex)) {
-                                        warning ("Skipping invalid color '%s' in palette '%s'\n", 
-                                                 color_hex ?? "null", sanitized_name);
-                                        return;
-                                    }
-
-                                    string? normalized_color = normalize_hex_color (color_hex);
-                                    if (normalized_color == null) {
-                                        return;
-                                    }
-
-                                    string sanitized_color_name = sanitize_name (color_name);
-                                    if (sanitized_color_name == "") {
-                                        sanitized_color_name = "Color";
-                                    }
-
-                                    am.colors.set (sanitized_color_name, normalized_color);
+                            if (settings.schema_version == 0) {
+                        // Old schema: array of strings
+                        color_array.foreach_element ((arr, index, element) => {
+                            string? color_val = element.get_string ();
+                            if (color_val != null && is_valid_hex_color (color_val)) {
+                                string? normalized = normalize_hex_color (color_val);
+                                if (normalized != null) {
+                                    am.colors.set (normalized, normalized);
                                     has_valid_colors = true;
-                                });
+                                }
                             }
-                        }
+                                });
+                                settings.schema_version = 1;
+                            } else {
+                        // Current schema: array of objects {name: color}
+                        foreach (var c in color_array.get_elements ()) {
+                            if (c.get_node_type () != Json.NodeType.OBJECT) {
+                                continue;
+                            }
 
-                        // Only add palettes with at least one valid color
-                        if (has_valid_colors && am.colors.size > 0) {
-                            win.palettestore.append (am);
-                            loaded_count++;
-                        } else {
-                            warning ("Skipping palette '%s' with no valid colors\n", sanitized_name);
-                            skipped_count++;
+                            var color_obj = c.get_object ();
+                            color_obj.foreach_member ((obj, color_name, color_value) => {
+                                if (color_name == null || color_name.length == 0) {
+                                    return;
+                                }
+
+                                if (color_value.get_node_type () != Json.NodeType.VALUE) {
+                                    return;
+                                }
+
+                                string? color_hex = color_value.get_string ();
+                                if (color_hex == null || !is_valid_hex_color (color_hex)) {
+                                    warning ("Skipping invalid color '%s' in palette '%s'\n", 
+                                             color_hex ?? "null", sanitized_name);
+                                    return;
+                                }
+
+                                string? normalized_color = normalize_hex_color (color_hex);
+                                if (normalized_color == null) {
+                                    return;
+                                }
+
+                                string sanitized_color_name = sanitize_name (color_name);
+                                if (sanitized_color_name == "") {
+                                    sanitized_color_name = "Color";
+                                }
+
+                                am.colors.set (sanitized_color_name, normalized_color);
+                                has_valid_colors = true;
+                            });
                         }
-                    } catch (Error e) {
-                        warning ("Error loading palette entry: %s\n", e.message);
+                    }
+
+                    // Only add palettes with at least one valid color
+                    if (has_valid_colors && am.colors.size > 0) {
+                        win.palettestore.append (am);
+                        loaded_count++;
+                    } else {
+                        warning ("Skipping palette '%s' with no valid colors\n", sanitized_name);
                         skipped_count++;
                     }
                 }
@@ -668,16 +661,14 @@ namespace Emulsion {
                         if (backup.query_exists ()) {
                             if (main_file.query_exists ()) {
                                 main_file.delete ();
-                            }
+                                }
                             backup.copy (main_file, FileCopyFlags.OVERWRITE, null, null);
                             warning ("Restored collections from backup after save failure\n");
-                        }
+                            }
                     } catch (Error restore_error) {
                         warning ("Failed to restore collections from backup: %s\n", restore_error.message);
                     }
                 }
-            } catch (Error e) {
-                warning ("Failed to save collections: %s\n", e.message);
             } finally {
                 is_saving = false;
             }
@@ -723,56 +714,51 @@ namespace Emulsion {
                 int skipped_count = 0;
 
                 foreach (var t in array.get_elements ()) {
-                    try {
-                        if (t.get_node_type () != Json.NodeType.OBJECT) {
-                            warning ("Skipping invalid collection entry: expected object\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    if (t.get_node_type () != Json.NodeType.OBJECT) {
+                        warning ("Skipping invalid collection entry: expected object\n");
+                        skipped_count++;
+                        continue;
+                    }
 
-                        var obj = t.get_object ();
-                        string? name = null;
-                        Json.Array? palette_names_array = null;
+                    var obj = t.get_object ();
+                    string? name = null;
+                    Json.Array? palette_names_array = null;
 
-                        if (obj.has_member ("name")) {
-                            name = obj.get_string_member ("name");
-                        }
-                        if (obj.has_member ("palette_names")) {
-                            palette_names_array = obj.get_array_member ("palette_names");
-                        }
+                    if (obj.has_member ("name")) {
+                        name = obj.get_string_member ("name");
+                    }
+                    if (obj.has_member ("palette_names")) {
+                        palette_names_array = obj.get_array_member ("palette_names");
+                    }
 
-                        if (name == null || !is_valid_name (name)) {
-                            warning ("Skipping collection with invalid name\n");
-                            skipped_count++;
-                            continue;
-                        }
+                    if (name == null || !is_valid_name (name)) {
+                        warning ("Skipping collection with invalid name\n");
+                        skipped_count++;
+                        continue;
+                    }
 
-                        string sanitized_name = sanitize_name (name);
-                        if (sanitized_name == "") {
-                            sanitized_name = "Unnamed Collection";
-                        }
+                    string sanitized_name = sanitize_name (name);
+                    if (sanitized_name == "") {
+                        sanitized_name = "Unnamed Collection";
+                    }
 
-                        var collection = new CollectionInfo ();
-                        collection.name = sanitized_name;
-                        collection.palette_names = new Gee.ArrayList<string> ();
+                    var collection = new CollectionInfo ();
+                    collection.name = sanitized_name;
+                    collection.palette_names = new Gee.ArrayList<string> ();
 
-                        if (palette_names_array != null) {
-                            foreach (var pname_node in palette_names_array.get_elements ()) {
-                                if (pname_node.get_node_type () == Json.NodeType.VALUE) {
-                                    string? pname = pname_node.get_string ();
-                                    if (pname != null && is_valid_name (pname)) {
-                                        collection.palette_names.add (sanitize_name (pname));
-                                    }
+                    if (palette_names_array != null) {
+                        foreach (var pname_node in palette_names_array.get_elements ()) {
+                            if (pname_node.get_node_type () == Json.NodeType.VALUE) {
+                                string? pname = pname_node.get_string ();
+                                if (pname != null && is_valid_name (pname)) {
+                                    collection.palette_names.add (sanitize_name (pname));
                                 }
                             }
                         }
-
-                        win.collections_store.append (collection);
-                        loaded_count++;
-                    } catch (Error e) {
-                        warning ("Error loading collection entry: %s\n", e.message);
-                        skipped_count++;
                     }
+
+                    win.collections_store.append (collection);
+                    loaded_count++;
                 }
 
                 if (loaded_count > 0) {

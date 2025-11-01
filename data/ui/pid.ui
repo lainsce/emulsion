@@ -5,56 +5,32 @@
   <template class="EmulsionPaletteImportDialog" parent="HeWindow">
     <property name="can-focus">0</property>
     <property name="title"> </property>
-    <property name="resizable">0</property>
+    <property name="resizable">1</property>
     <property name="modal">1</property>
-    <property name="default-width">360</property>
+    <property name="default-width">700</property>
+    <property name="default-height">500</property>
     <property name="destroy-with-parent">1</property>
     <style>
       <class name="eml-view"/>
     </style>
-    <child>
+    <property name="child">
       <object class="GtkBox">
-        <property name="orientation">vertical</property>
+        <property name="orientation">horizontal</property>
         <property name="visible">1</property>
+        <property name="hexpand">1</property>
+        <property name="vexpand">1</property>
+        <!-- Main Content Area -->
         <child>
-          <object class="HeAppBar">
-            <property name="can-focus">0</property>
-            <property name="valign">start</property>
-            <property name="visible">1</property>
-            <property name="show-right-title-buttons">0</property>
-            <style>
-              <class name="eml-title"/>
-            </style>
-            <child>
-              <object class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">Cancel</property>
-                <property name="visible">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="ok_button">
-                <property name="label" translatable="yes">Import Palette</property>
-                <property name="visible">1</property>
-                <style>
-                  <class name="suggested-action"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="palette_drag_place">
-            <property name="can-focus">0</property>
+          <object class="GtkBox" id="main_content">
             <property name="orientation">vertical</property>
-            <child>
-            </child>
+            <property name="hexpand">1</property>
+            <property name="vexpand">1</property>
             <child>
               <object class="GtkButton" id="image">
-                <property name="valign">center</property>
-                <property name="halign">center</property>
-                <property name="margin-bottom">6</property>
-                <property name="width-request">350</property>
-                <property name="height-request">206</property>
+                <property name="valign">fill</property>
+                <property name="halign">fill</property>
+                <property name="hexpand">1</property>
+                <property name="vexpand">1</property>
                 <property name="tooltip-text" translatable="yes">Choose image</property>
                 <signal name="clicked" handler="on_clicked" swapped="no"/>
                 <style>
@@ -69,7 +45,7 @@
                     <child>
                       <object class="GtkImage" id="file_image">
                         <property name="icon-name">image-x-generic-symbolic</property>
-                        <property name="pixel-size">64</property>
+                        <property name="pixel-size">256</property>
                         <style>
                           <class name="dim-label"/>
                         </style>
@@ -98,14 +74,168 @@
             </child>
             <child>
               <object class="GtkBox" id="color_box">
-                <property name="hexpand">0</property>
+                <property name="orientation">horizontal</property>
+                <property name="hexpand">1</property>
                 <property name="halign">center</property>
                 <property name="can-focus">0</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="spacing">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <!-- Advanced Settings Sidebar -->
+        <child>
+          <object class="GtkBox" id="sidebar">
+            <property name="orientation">vertical</property>
+            <property name="width-request">200</property>
+            <property name="vexpand">1</property>
+            <style>
+              <class name="sidebar"/>
+            </style>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Advanced Settings</property>
+                <property name="halign">start</property>
+                <property name="margin-start">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">6</property>
+                <attributes>
+                  <attribute name="weight" value="bold"></attribute>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Pick:</property>
+                        <property name="halign">start</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="pick_spin">
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">4</property>
+                            <property name="upper">16</property>
+                            <property name="step-increment">1</property>
+                            <property name="value">8</property>
+                          </object>
+                        </property>
+                        <property name="numeric">1</property>
+                        <property name="climb-rate">1</property>
+                        <property name="digits">0</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Prefer:</property>
+                        <property name="halign">start</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkDropDown" id="prefer_dropdown">
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Order by:</property>
+                        <property name="halign">start</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkDropDown" id="order_dropdown">
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="distinct_check">
+                    <property name="label" translatable="yes">Only distinct colors</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="avoid_white_check">
+                    <property name="label" translatable="yes">Avoid white</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="avoid_black_check">
+                    <property name="label" translatable="yes">Avoid black</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="button_box">
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <child>
+                  <object class="GtkButton" id="apply_button">
+                    <property name="label" translatable="yes">Apply</property>
+                    <property name="halign">center</property>
+                    <property name="sensitive">0</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkButton" id="cancel_button">
+                        <property name="label" translatable="yes">Cancel</property>
+                        <property name="hexpand">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="ok_button">
+                        <property name="label" translatable="yes">Import</property>
+                        <property name="hexpand">1</property>
+                        <property name="sensitive">0</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </template>
 </interface>
