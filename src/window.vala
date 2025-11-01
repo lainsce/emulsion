@@ -131,7 +131,30 @@ namespace Emulsion {
                 label.xalign = 0;
                 label.hexpand = true;
 
+                // Create menu button for context menu
+                var menu_button = new Gtk.MenuButton ();
+                menu_button.icon_name = "view-more-symbolic";
+                menu_button.vexpand = false;
+                menu_button.valign = Gtk.Align.CENTER;
+                
+                // Create menu model for this collection
+                var menu = new Menu ();
+                menu.append (_("Edit Collection"), "win.edit_collection");
+                menu.append (_("Delete Collection"), "win.delete_collection");
+                menu_button.menu_model = menu;
+                
+                // Connect activate signal to update selection model when menu button is clicked
+                uint collection_index = i;
+                menu_button.activate.connect (() => {
+                    collections_list.select_row (row);
+                    // Update the GridView selection model as well
+                    if (collection_index < collections_store.get_n_items ()) {
+                        collections_model.selected = collection_index;
+                    }
+                });
+
                 box.append (label);
+                box.append (menu_button);
                 row.set_child (box);
                 collections_list.append (row);
             }
@@ -152,7 +175,12 @@ namespace Emulsion {
                 color_label.set_visible (false);
                 add_to_collection_button.set_visible (false);
                 if (view_title_label != null) {
-                    view_title_label.label = _("Palettes");
+                    // Show collection name if filtering by collection
+                    if (current_collection_filter != null) {
+                        view_title_label.label = current_collection_filter.name;
+                    } else {
+                        view_title_label.label = _("Palettes");
+                    }
                     view_title_label.set_visible (true);
                 }
             } else if (visible_child == "colbody") {
@@ -706,6 +734,101 @@ namespace Emulsion {
             // Initialize collections view
             collections_model.set_model (collections_store);
             collections_fb.hscroll_policy = collections_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
+            
+            // Track which menu buttons we've already connected to avoid duplicates
+            var connected_buttons = new Gee.HashSet<Gtk.Widget> ();
+            
+            // Helper function to connect menu buttons in collection items
+            void connect_menu_buttons () {
+                var children = collections_fb.observe_children ();
+                uint n = children.get_n_items ();
+                for (uint i = 0; i < n; i++) {
+                    var child = children.get_item (i);
+                    if (child is Gtk.ListItem) {
+                        var list_item = child as Gtk.ListItem;
+                        var vertical_box = list_item.get_child () as Gtk.Box;
+                        if (vertical_box != null && vertical_box.get_orientation () == Gtk.Orientation.VERTICAL) {
+                            // Get the first child (horizontal box containing label and menu button)
+                            var horizontal_box = vertical_box.get_first_child () as Gtk.Box;
+                            if (horizontal_box != null) {
+                                // Find the menu button (it's the second child, after the label)
+                                var widget = horizontal_box.get_first_child ();
+                                while (widget != null) {
+                                    if (widget is Gtk.MenuButton) {
+                                        var button = widget as Gtk.MenuButton;
+                                        // Check if we already connected to this button
+                                        if (!connected_buttons.contains (button)) {
+                                            // Store the position for this button
+                                            uint item_pos = list_item.position != Gtk.INVALID_LIST_POSITION ? 
+                                                           (uint)list_item.position : 0;
+                                            
+                                            // Connect to the activate signal when menu button is clicked
+                                            button.activate.connect (() => {
+                                                // Update selection model when menu button is activated
+                                                if (item_pos < collections_store.get_n_items ()) {
+                                                    collections_model.selected = item_pos;
+                                                }
+                                            });
+                                            
+                                            connected_buttons.add (button);
+                                        }
+                                        break;
+                                    }
+                                    widget = widget.get_next_sibling ();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Connect to GridView's item creation/realization
+            // Use a timeout to periodically check for new items (since BuilderListItemFactory doesn't expose signals)
+            // This is called after a short delay to ensure items are created
+            Timeout.add (50, () => {
+                connect_menu_buttons ();
+                return Source.CONTINUE; // Keep checking periodically
+            });
+            
+            // Also check when model items change
+            collections_store.items_changed.connect ((pos, removed, added) => {
+                // Small delay to let GridView create new items
+                Timeout.add (50, () => {
+                    connect_menu_buttons ();
+                    return false;
+                });
+            });
+            
+            // Handle collection activation (click) - filter palettes by collection
+            collections_fb.activate.connect ((pos) => {
+                if (pos != Gtk.INVALID_LIST_POSITION && pos < collections_store.get_n_items ()) {
+                    // Update selection model to match the clicked position
+                    collections_model.selected = pos;
+                    
+                    var collection = (CollectionInfo)collections_store.get_item (pos);
+                    if (collection != null) {
+                        // Filter palettes by collection
+                        current_collection_filter = collection;
+                        var filter_obj = palette_filter_model.get_filter ();
+                        if (filter_obj is Gtk.MultiFilter) {
+                            var multi_filter = (Gtk.MultiFilter)filter_obj;
+                            if (multi_filter.get_n_items () > 0) {
+                                var filter_item = multi_filter.get_item (0);
+                                if (filter_item is Gtk.CustomFilter) {
+                                    var coll_filter = (Gtk.CustomFilter)filter_item;
+                                    coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                                }
+                            }
+                        }
+                        // Switch to palettes view
+                        // Don't modify library_list selection as it would clear the filter
+                        // The filter will show only palettes in this collection
+                        main_stack.set_visible_child_name ("palbody");
+                        palette_stack.set_visible_child_name ("palfull");
+                        update_appbar_title ();
+                    }
+                }
+            });
 
             // Populate collections sidebar list
             populate_collections_sidebar ();
@@ -753,7 +876,37 @@ namespace Emulsion {
                 }
             });
 
-            // Collections list selection handler
+            // Collections list - handle single-click activation
+            collections_list.row_activated.connect ((row) => {
+                if (row != null) {
+                    int pos = row.get_index ();
+                    if (pos >= 0 && pos < (int)collections_store.get_n_items ()) {
+                        var collection = (CollectionInfo)collections_store.get_item ((uint)pos);
+                        if (collection != null) {
+                            // Filter palettes by collection
+                            current_collection_filter = collection;
+                            var filter_obj = palette_filter_model.get_filter ();
+                            if (filter_obj is Gtk.MultiFilter) {
+                                var multi_filter = (Gtk.MultiFilter)filter_obj;
+                                if (multi_filter.get_n_items () > 0) {
+                                    var filter_item = multi_filter.get_item (0);
+                                    if (filter_item is Gtk.CustomFilter) {
+                                        var coll_filter = (Gtk.CustomFilter)filter_item;
+                                        coll_filter.changed (Gtk.FilterChange.DIFFERENT);
+                                    }
+                                }
+                            }
+                            // Deselect library items
+                            library_list.unselect_all ();
+                            main_stack.set_visible_child_name ("palbody");
+                            palette_stack.set_visible_child_name ("palfull");
+                            update_appbar_title ();
+                        }
+                    }
+                }
+            });
+            
+            // Collections list selection handler (for visual feedback and immediate filtering)
             collections_list.row_selected.connect ((row) => {
                 if (row != null) {
                     int pos = row.get_index ();
@@ -1219,8 +1372,13 @@ namespace Emulsion {
             var name_label = new Gtk.Label (_("Collection Name:"));
             name_label.halign = Gtk.Align.START;
             var name_entry = new He.TextField ();
-            name_entry.text = collection.name;
             name_entry.is_outline = true;
+            
+            // Set initial text using internal entry
+            var ientry = name_entry.get_internal_entry ();
+            if (ientry != null) {
+                ientry.text = collection.name;
+            }
 
             content.append (name_label);
             content.append (name_entry);
@@ -1238,14 +1396,24 @@ namespace Emulsion {
                 string? text = entry != null ? entry.text : null;
                 if (text != null && text.strip () != "") {
                     collection.name = text.strip ();
+                    // Update title if this collection is currently being filtered
+                    if (current_collection_filter == collection) {
+                        update_appbar_title ();
+                    }
                     m.save_collections.begin (collections_store);
                     dialog.hide_dialog ();
                 }
+            });
+            
+            // Allow Enter key to save
+            name_entry.entry.activate.connect (() => {
+                save_button.clicked ();
             });
 
             dialog.add (content);
             dialog.present ();
             name_entry.entry.grab_focus ();
+            name_entry.entry.select_region (0, -1);
         }
 
         public void delete_collection () {
@@ -1284,6 +1452,8 @@ namespace Emulsion {
                         }
                     }
                     library_list.select_row (all_palettes_row);
+                    // Update title to show "Palettes" instead of collection name
+                    update_appbar_title ();
                 }
 
                 collections_store.remove (pos);
