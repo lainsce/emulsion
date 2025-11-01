@@ -176,8 +176,9 @@ namespace Emulsion.Utils {
                 pixels = convert_pixels_to_rgb (pixel_data.data, has_alpha);
             }
 
-            // Use k-means with k-means++ initialization (better than simple Wu for now)
-            _swatches = yield kmeans_cluster (pixels, max_colors);
+            // Build histogram-based palette directly (simpler than k-means, filters handle quality)
+            // Start with many more colors to ensure enough survive filtering
+            _swatches = build_histogram_palette (pixels, max_colors);
             
             // Filter out antialiasing artifacts and low-quality colors
             _swatches = filter_artifacts (_swatches);
@@ -193,21 +194,83 @@ namespace Emulsion.Utils {
                 return c2.population - c1.population;
             });
 
-            // Ensure we have at least 4 colors (if available) and limit to maximum 16 colors
-            const int min_colors = 4;
-            const int max_colors = 16;
+            // Ensure ROYGBIV coverage (if colors exist in the image)
+            ensure_roygbiv_coverage ();
             
-            // If we have fewer colors than minimum, keep what we have
-            // Otherwise, limit to max_colors
-            if (_swatches.size > max_colors) {
+            // Ensure saturation coverage (at least 4 steps if they exist)
+            ensure_saturation_coverage ();
+            
+            // Ensure lightness coverage (at least 4 steps if they exist)
+            ensure_lightness_coverage ();
+            
+            // Re-sort after potentially adding colors
+            _swatches.sort ((c1, c2) => {
+                return c2.population - c1.population;
+            });
+            
+            // Ensure we have enough colors for the dialog
+            // Use the requested max_colors as the target, but allow up to MAX_COLORS
+            int target_colors = (int)max_colors;
+            int max_limit = (int)MAX_COLORS;
+            
+            // If we have more than the maximum allowed, limit to that
+            if (_swatches.size > max_limit) {
                 var top_swatches = new Gee.ArrayList<Swatch> ();
-                for (int i = 0; i < max_colors; i++) {
+                for (int i = 0; i < max_limit; i++) {
                     top_swatches.add (_swatches[i]);
                 }
                 _swatches = top_swatches;
-            } else if (_swatches.size < min_colors && _swatches.size > 0) {
-                // If we have some colors but less than minimum, that's okay - keep them
-                // (Better to have accurate colors than force bad ones)
+            } 
+            // If we have fewer than requested but some colors exist, try to get more from histogram
+            // This ensures the dialog always has a reasonable number of colors to choose from
+            else if (_swatches.size < target_colors && _swatches.size < max_limit) {
+                // Get more colors from histogram (histogram is already built during pixel conversion)
+                var all_swatches = new Gee.ArrayList<Swatch> ();
+                histogram.@foreach ((entry) => {
+                    var color = entry.key;
+                    int population = entry.value;
+                    uint8 red = (uint8)((color >> 16) & 0xFF);
+                    uint8 green = (uint8)((color >> 8) & 0xFF);
+                    uint8 blue = (uint8)(color & 0xFF);
+                    var swatch = new Swatch (red, green, blue, population);
+                    all_swatches.add (swatch);
+                    return true;
+                });
+                
+                // Sort all by population
+                all_swatches.sort ((c1, c2) => {
+                    return c2.population - c1.population;
+                });
+                
+                // Add colors that aren't already in _swatches, up to target_colors
+                var existing_colors = new Gee.HashSet<int> ();
+                foreach (var existing in _swatches) {
+                    existing_colors.add (existing.to_rgb ());
+                }
+                
+                // Take up to (target_colors * 3) from histogram to have enough candidates
+                int candidates_count = int.min (target_colors * 3, all_swatches.size);
+                for (int i = 0; i < candidates_count && _swatches.size < max_limit; i++) {
+                    var swatch = all_swatches[i];
+                    if (!existing_colors.contains (swatch.to_rgb ())) {
+                        _swatches.add (swatch);
+                        existing_colors.add (swatch.to_rgb ());
+                    }
+                }
+                
+                // Re-sort after adding
+                _swatches.sort ((c1, c2) => {
+                    return c2.population - c1.population;
+                });
+                
+                // Trim to max_limit if we exceeded it
+                if (_swatches.size > max_limit) {
+                    var top_swatches = new Gee.ArrayList<Swatch> ();
+                    for (int i = 0; i < max_limit; i++) {
+                        top_swatches.add (_swatches[i]);
+                    }
+                    _swatches = top_swatches;
+                }
             }
 
             if (_swatches.size > 0) {
@@ -270,9 +333,6 @@ namespace Emulsion.Utils {
 
                     var color = new Swatch (red, green, blue, 0);
                     
-                    // Don't filter by saturation at pixel level - let k-means handle it
-                    // Blue-gray images have low saturation, so we need these pixels
-                    
                     int rgb = color.to_rgb ();
                     if (histogram.has_key (rgb)) {
                         histogram[rgb] = histogram[rgb] + 1;
@@ -329,9 +389,6 @@ namespace Emulsion.Utils {
 
                 var color = new Swatch (red, green, blue, 0);
                 
-                // Don't filter by saturation at pixel level - let k-means handle it
-                // Blue-gray images have low saturation, so we need these pixels
-                
                 int rgb = color.to_rgb ();
                 if (histogram.has_key (rgb)) {
                     histogram[rgb] = histogram[rgb] + 1;
@@ -351,6 +408,38 @@ namespace Emulsion.Utils {
             return list;
         }
 
+
+        // Build palette directly from histogram (simple and fast, filters handle quality)
+        private Gee.ArrayList<Swatch> build_histogram_palette (Gee.List<Swatch> pixels, uint16 max_colors) {
+            var swatches = new Gee.ArrayList<Swatch> ();
+            
+            // The histogram is already populated during pixel conversion
+            // Create swatches from histogram entries with their populations
+            histogram.@foreach ((entry) => {
+                var color = entry.key;
+                int population = entry.value;
+                uint8 red = (uint8)((color >> 16) & 0xFF);
+                uint8 green = (uint8)((color >> 8) & 0xFF);
+                uint8 blue = (uint8)(color & 0xFF);
+                var swatch = new Swatch (red, green, blue, population);
+                swatches.add (swatch);
+                return true;
+            });
+            
+            // Sort by population (most to least)
+            swatches.sort ((c1, c2) => {
+                return c2.population - c1.population;
+            });
+            
+            // Limit to max_colors * 4 initially to ensure enough survive aggressive filtering
+            int take_count = int.min ((int)max_colors * 4, swatches.size); // Take many more initially, filters will reduce
+            var result = new Gee.ArrayList<Swatch> ();
+            for (int i = 0; i < take_count; i++) {
+                result.add (swatches[i]);
+            }
+            
+            return result;
+        }
 
         // Calculate squared Euclidean distance in RGB space
         private static double color_distance_squared (Swatch a, Swatch b) {
@@ -583,270 +672,158 @@ namespace Emulsion.Utils {
             return filtered.size > 0 ? filtered : new Gee.ArrayList<Swatch>.wrap ((Swatch[])swatches.to_array ());
         }
 
-        // K-means++ initialization for better initial centroids
-        private Gee.ArrayList<Swatch> kmeans_plusplus_init (Gee.List<Swatch> pixels, int k) {
-            var centroids = new Gee.ArrayList<Swatch> ();
-            var rand = new GLib.Rand ();
+        // Calculate hue in degrees (0-360) from RGB
+        private static double get_hue (Swatch color) {
+            double r = color.R;
+            double g = color.G;
+            double b = color.B;
+            double max = double.max (double.max (r, g), b);
+            double min = double.min (double.min (r, g), b);
+            double delta = max - min;
             
-            if (pixels.size == 0 || k == 0) {
-                return centroids;
+            if (delta == 0.0) return 0.0; // Grayscale
+            
+            double hue = 0.0;
+            if (max == r) {
+                hue = ((g - b) / delta) % 6.0;
+            } else if (max == g) {
+                hue = ((b - r) / delta) + 2.0;
+            } else {
+                hue = ((r - g) / delta) + 4.0;
             }
             
-            // First centroid: random pixel weighted by population
-            var weighted_pixels = new Gee.ArrayList<Swatch> ();
-            foreach (var pixel in pixels) {
-                int pop = histogram[pixel.to_rgb ()];
-                for (int i = 0; i < pop; i++) {
-                    weighted_pixels.add (pixel);
+            hue *= 60.0;
+            if (hue < 0.0) hue += 360.0;
+            
+            return hue;
+        }
+        
+        // Get ROYGBIV category from hue (0-6: Red, Orange, Yellow, Green, Blue, Indigo, Violet)
+        private static int get_roygbiv_category (double hue) {
+            // Red: 0-15, 345-360
+            if (hue >= 345.0 || hue < 15.0) return 0; // Red
+            // Orange: 15-45
+            if (hue >= 15.0 && hue < 45.0) return 1; // Orange
+            // Yellow: 45-75
+            if (hue >= 45.0 && hue < 75.0) return 2; // Yellow
+            // Green: 75-150
+            if (hue >= 75.0 && hue < 150.0) return 3; // Green
+            // Blue: 150-240
+            if (hue >= 150.0 && hue < 240.0) return 4; // Blue
+            // Indigo: 240-270
+            if (hue >= 240.0 && hue < 270.0) return 5; // Indigo
+            // Violet: 270-345
+            if (hue >= 270.0 && hue < 345.0) return 6; // Violet
+            
+            return -1; // Should not happen
+        }
+        
+        // Ensure at least one color from each ROYGBIV category (if they exist in the image)
+        private void ensure_roygbiv_coverage () {
+            if (_swatches.size == 0) {
+                return;
+            }
+            
+            // Track which ROYGBIV categories we have
+            var category_found = new bool[7]; // 7 categories: R, O, Y, G, B, I, V
+            var category_colors = new Swatch?[7]; // Store best color for each category
+            
+            // Minimum saturation to consider a color "colorful" (not grayscale)
+            const double MIN_SATURATION = 0.15;
+            
+            // Check current swatches for ROYGBIV coverage
+            foreach (var swatch in _swatches) {
+                double sat = get_saturation (swatch);
+                if (sat < MIN_SATURATION) {
+                    continue; // Skip low-saturation colors (grays)
                 }
-            }
-            
-            if (weighted_pixels.size == 0) {
-                // Fallback to uniform sampling
-                int step = pixels.size / k;
-                for (int i = 0; i < k && i < pixels.size; i++) {
-                    centroids.add (pixels[i * step]);
-                }
-                return centroids;
-            }
-            
-            int first_idx = rand.int_range (0, weighted_pixels.size);
-            centroids.add (weighted_pixels[first_idx]);
-            
-            // Subsequent centroids: probability proportional to distance^2 from nearest centroid
-            for (int c = 1; c < k; c++) {
-                var distances = new Gee.ArrayList<double?> ();
-                double total_distance = 0.0;
-
-                foreach (var pixel in pixels) {
-                    double min_dist = double.MAX;
-                    foreach (var centroid in centroids) {
-                        double dist = color_distance_squared (pixel, centroid);
-                        min_dist = double.min (min_dist, dist);
+                
+                double hue = get_hue (swatch);
+                int category = get_roygbiv_category (hue);
+                
+                if (category >= 0 && category < 7) {
+                    // Keep the color with highest population for each category
+                    if (!category_found[category] || 
+                        (category_colors[category] != null && 
+                         swatch.population > category_colors[category].population)) {
+                        category_found[category] = true;
+                        category_colors[category] = swatch;
                     }
-                    distances.add (min_dist);
-                    total_distance += min_dist * histogram[pixel.to_rgb ()];
+                }
+            }
+            
+            // Check which categories are missing
+            var missing_categories = new Gee.ArrayList<int> ();
+            for (int i = 0; i < 7; i++) {
+                if (!category_found[i]) {
+                    missing_categories.add (i);
+                }
+            }
+            
+            // If we have all categories, nothing to do
+            if (missing_categories.size == 0) {
+                return;
+            }
+            
+            // Search histogram for colors in missing categories
+            var existing_colors = new Gee.HashSet<int> ();
+            foreach (var existing in _swatches) {
+                existing_colors.add (existing.to_rgb ());
+            }
+            
+            // Get all colors from histogram sorted by population
+            var all_swatches = new Gee.ArrayList<Swatch> ();
+            histogram.@foreach ((entry) => {
+                var color = entry.key;
+                int population = entry.value;
+                uint8 red = (uint8)((color >> 16) & 0xFF);
+                uint8 green = (uint8)((color >> 8) & 0xFF);
+                uint8 blue = (uint8)(color & 0xFF);
+                var swatch = new Swatch (red, green, blue, population);
+                all_swatches.add (swatch);
+                return true;
+            });
+            
+            // Sort by population
+            all_swatches.sort ((c1, c2) => {
+                return c2.population - c1.population;
+            });
+            
+            // Find colors for missing categories
+            foreach (var swatch in all_swatches) {
+                // Skip if already in palette
+                if (existing_colors.contains (swatch.to_rgb ())) {
+                    continue;
                 }
                 
-                if (total_distance <= 0.0) {
-                    break;
+                // Skip low-saturation colors
+                double sat = get_saturation (swatch);
+                if (sat < MIN_SATURATION) {
+                    continue;
                 }
                 
-                // Select next centroid with probability proportional to distance^2
-                double target = rand.double_range (0.0, total_distance);
-                double cumulative = 0.0;
-                for (int i = 0; i < pixels.size; i++) {
-                    double weighted_dist = (double)distances[i] * histogram[pixels[i].to_rgb ()];
-                    cumulative += weighted_dist;
-                    if (cumulative >= target) {
-                        centroids.add (pixels[i]);
+                double hue = get_hue (swatch);
+                int category = get_roygbiv_category (hue);
+                
+                // If this color belongs to a missing category, add it
+                if (category >= 0 && missing_categories.contains (category)) {
+                    _swatches.add (swatch);
+                    existing_colors.add (swatch.to_rgb ());
+                    missing_categories.remove (category); // Remove from missing list
+                    
+                    // If we found all missing categories, we're done
+                    if (missing_categories.size == 0) {
                         break;
                     }
                 }
             }
-            
-            return centroids;
         }
 
-        // Wu's color quantizer - fast and high-quality quantization
-        private async Gee.List<Swatch> wu_quantize (Gee.List<Swatch> pixels, uint16 max_colors) {
-            // Simplified median-cut approach for now
-            // Full Wu's quantizer would use moment-preserving quantization
-            // This is a simplified version that splits the color space
-            
-            if (pixels.size == 0 || max_colors == 0) {
-                return new Gee.ArrayList<Swatch> ();
-            }
-            
-            // Build simple histogram and use median-cut like approach
-            var color_counts = new Gee.HashMap<int, int> ();
-            foreach (var pixel in pixels) {
-                int rgb = pixel.to_rgb ();
-                int pop = histogram[pixel.to_rgb ()];
-                if (color_counts.has_key (rgb)) {
-                    color_counts[rgb] = color_counts[rgb] + pop;
-            } else {
-                    color_counts[rgb] = pop;
-                }
-            }
-            
-            // Get unique colors sorted by population
-            var unique_colors = new Gee.ArrayList<Swatch> ();
-            foreach (var entry in color_counts.entries) {
-                var swatch = new Swatch.from_rgb (entry.key);
-                // Create new swatch with population
-                var swatch_with_pop = new Swatch (swatch.red, swatch.green, swatch.blue, entry.value);
-                unique_colors.add (swatch_with_pop);
-            }
-            
-            unique_colors.sort ((c1, c2) => {
-                return c2.population - c1.population;
-            });
-            
-            // Limit to top colors
-            int take_count = int.min ((int)max_colors, unique_colors.size);
-            var result = new Gee.ArrayList<Swatch> ();
-            for (int i = 0; i < take_count; i++) {
-                result.add (unique_colors[i]);
-            }
-            
-            return result;
-        }
-        
-        // K-means clustering algorithm with optional initial palette (Celebi optimization)
-        private async Gee.List<Swatch> kmeans_cluster (Gee.List<Swatch> pixels, uint16 k, Gee.List<Swatch>? initial_palette = null) {
-            if (pixels.size == 0 || k == 0) {
-                return new Gee.ArrayList<Swatch> ();
-            }
-            
-            // Use initial palette if provided (from Wu's quantizer), otherwise k-means++ initialization
-            var centroids = new Gee.ArrayList<Swatch> ();
-            if (initial_palette != null && initial_palette.size > 0) {
-                // Use Wu's quantizer results as initial centroids (Celebi's optimization)
-                int take_count = int.min ((int)k, initial_palette.size);
-                for (int i = 0; i < take_count; i++) {
-                    centroids.add (initial_palette[i]);
-                }
-            } else {
-                centroids = kmeans_plusplus_init (pixels, (int)k);
-            }
-            
-            // Limit k to actual available centroids
-            k = (uint16)centroids.size;
-            if (k == 0) {
-                return new Gee.ArrayList<Swatch> ();
-            }
-            
-            const int MAX_ITERATIONS = 20;
-            const double CONVERGENCE_THRESHOLD = 0.5;
-            
-            // Main k-means loop
-            for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
-                // Assign pixels to nearest centroid
-                var clusters = new Gee.ArrayList<Gee.ArrayList<Swatch>> ();
-                var cluster_populations = new Gee.ArrayList<int> ();
-                
-                for (int i = 0; i < k; i++) {
-                    clusters.add (new Gee.ArrayList<Swatch> ());
-                    cluster_populations.add (0);
-                }
-                
-                foreach (var pixel in pixels) {
-                    int nearest_cluster = 0;
-                    double min_dist = double.MAX;
-                    
-                    for (int i = 0; i < centroids.size; i++) {
-                        double dist = color_distance_squared (pixel, centroids[i]);
-                        if (dist < min_dist) {
-                            min_dist = dist;
-                            nearest_cluster = i;
-                        }
-                    }
-                    
-                    clusters[nearest_cluster].add (pixel);
-                    cluster_populations[nearest_cluster] += histogram[pixel.to_rgb ()];
-                }
-                
-                // Recalculate centroids
-                bool converged = true;
-                for (int i = 0; i < k; i++) {
-                    if (clusters[i].size == 0) {
-                        continue;
-                    }
-                    
-                    double red_sum = 0.0;
-                    double green_sum = 0.0;
-                    double blue_sum = 0.0;
-                    int total_pop = 0;
-                    
-                    foreach (var pixel in clusters[i]) {
-                        int pop = histogram[pixel.to_rgb ()];
-                        red_sum += pixel.red * pop;
-                        green_sum += pixel.green * pop;
-                        blue_sum += pixel.blue * pop;
-                        total_pop += pop;
-                    }
-                    
-                    if (total_pop == 0) {
-                        continue;
-                    }
-                    
-                    uint8 new_red = (uint8)Math.round (red_sum / total_pop);
-                    uint8 new_green = (uint8)Math.round (green_sum / total_pop);
-                    uint8 new_blue = (uint8)Math.round (blue_sum / total_pop);
-                    
-                    var new_centroid = new Swatch (new_red, new_green, new_blue, 0);
-                    
-                    // Check convergence
-                    double dist = color_distance_squared (centroids[i], new_centroid);
-                    if (dist > CONVERGENCE_THRESHOLD) {
-                        converged = false;
-                    }
-                    
-                    centroids[i] = new_centroid;
-                }
-                
-                // Yield to keep UI responsive during long computations
-                if (iteration % 5 == 0) {
-                    Idle.add (kmeans_cluster.callback);
-                    yield;
-                }
-                
-                if (converged) {
-                    break;
-                }
-            }
-            
-            // Create final swatches with populations
-            var swatches = new Gee.ArrayList<Swatch> ();
-            var clusters_final = new Gee.ArrayList<Gee.ArrayList<Swatch>> ();
-            var cluster_populations_final = new Gee.ArrayList<int> ();
-            
-            for (int i = 0; i < k; i++) {
-                clusters_final.add (new Gee.ArrayList<Swatch> ());
-                cluster_populations_final.add (0);
-            }
-            
-            foreach (var pixel in pixels) {
-                int nearest_cluster = 0;
-                double min_dist = double.MAX;
-                
-                for (int i = 0; i < centroids.size; i++) {
-                    double dist = color_distance_squared (pixel, centroids[i]);
-                    if (dist < min_dist) {
-                        min_dist = dist;
-                        nearest_cluster = i;
-                    }
-                }
-                
-                clusters_final[nearest_cluster].add (pixel);
-                cluster_populations_final[nearest_cluster] += histogram[pixel.to_rgb ()];
-            }
-            
-            for (int i = 0; i < k; i++) {
-                if (clusters_final[i].size > 0 && cluster_populations_final[i] > 0) {
-                    double red_sum = 0.0;
-                    double green_sum = 0.0;
-                    double blue_sum = 0.0;
-                    int total_pop = cluster_populations_final[i];
-                    
-                    foreach (var pixel in clusters_final[i]) {
-                        int pop = histogram[pixel.to_rgb ()];
-                        red_sum += pixel.red * pop;
-                        green_sum += pixel.green * pop;
-                        blue_sum += pixel.blue * pop;
-                    }
-                    
-                    uint8 final_red = (uint8)Math.round (red_sum / total_pop);
-                    uint8 final_green = (uint8)Math.round (green_sum / total_pop);
-                    uint8 final_blue = (uint8)Math.round (blue_sum / total_pop);
-                    
-                    var swatch = new Swatch (final_red, final_green, final_blue, total_pop);
-                    swatches.add (swatch);
-                }
-            }
-            
-            return swatches;
+        // Calculate lightness (0-1) from RGB
+        private static double get_lightness (Swatch color) {
+            double max = double.max (double.max (color.R, color.G), color.B);
+            double min = double.min (double.min (color.R, color.G), color.B);
+            return (max + min) / 2.0;
         }
 
         private static double get_saturation (Swatch color) {
@@ -882,6 +859,194 @@ namespace Emulsion.Utils {
             }
 
             return s;
+        }
+        
+        // Get saturation bucket (0-3) from saturation value (0-1)
+        private static int get_saturation_bucket (double saturation) {
+            // Divide saturation range into 4 buckets
+            if (saturation < 0.25) return 0;      // Very low saturation
+            if (saturation < 0.50) return 1;      // Low saturation
+            if (saturation < 0.75) return 2;      // Medium saturation
+            return 3;                             // High saturation
+        }
+        
+        // Get lightness bucket (0-3) from lightness value (0-1)
+        private static int get_lightness_bucket (double lightness) {
+            // Divide lightness range into 4 buckets
+            if (lightness < 0.25) return 0;      // Very dark
+            if (lightness < 0.50) return 1;      // Dark
+            if (lightness < 0.75) return 2;      // Light
+            return 3;                            // Very light
+        }
+        
+        // Ensure at least one color from each saturation bucket (if they exist in the image)
+        private void ensure_saturation_coverage () {
+            if (_swatches.size == 0) {
+                return;
+            }
+            
+            // Track which saturation buckets we have
+            var bucket_found = new bool[4]; // 4 buckets
+            var bucket_colors = new Swatch?[4]; // Store best color for each bucket
+            
+            // Check current swatches for saturation coverage
+            foreach (var swatch in _swatches) {
+                double sat = get_saturation (swatch);
+                int bucket = get_saturation_bucket (sat);
+                
+                // Keep the color with highest population for each bucket
+                if (!bucket_found[bucket] || 
+                    (bucket_colors[bucket] != null && 
+                     swatch.population > bucket_colors[bucket].population)) {
+                    bucket_found[bucket] = true;
+                    bucket_colors[bucket] = swatch;
+                }
+            }
+            
+            // Check which buckets are missing
+            var missing_buckets = new Gee.ArrayList<int> ();
+            for (int i = 0; i < 4; i++) {
+                if (!bucket_found[i]) {
+                    missing_buckets.add (i);
+                }
+            }
+            
+            // If we have all buckets, nothing to do
+            if (missing_buckets.size == 0) {
+                return;
+            }
+            
+            // Search histogram for colors in missing buckets
+            var existing_colors = new Gee.HashSet<int> ();
+            foreach (var existing in _swatches) {
+                existing_colors.add (existing.to_rgb ());
+            }
+            
+            // Get all colors from histogram sorted by population
+            var all_swatches = new Gee.ArrayList<Swatch> ();
+            histogram.@foreach ((entry) => {
+                var color = entry.key;
+                int population = entry.value;
+                uint8 red = (uint8)((color >> 16) & 0xFF);
+                uint8 green = (uint8)((color >> 8) & 0xFF);
+                uint8 blue = (uint8)(color & 0xFF);
+                var swatch = new Swatch (red, green, blue, population);
+                all_swatches.add (swatch);
+                return true;
+            });
+            
+            // Sort by population
+            all_swatches.sort ((c1, c2) => {
+                return c2.population - c1.population;
+            });
+            
+            // Find colors for missing buckets
+            foreach (var swatch in all_swatches) {
+                // Skip if already in palette
+                if (existing_colors.contains (swatch.to_rgb ())) {
+                    continue;
+                }
+                
+                double sat = get_saturation (swatch);
+                int bucket = get_saturation_bucket (sat);
+                
+                // If this color belongs to a missing bucket, add it
+                if (missing_buckets.contains (bucket)) {
+                    _swatches.add (swatch);
+                    existing_colors.add (swatch.to_rgb ());
+                    missing_buckets.remove (bucket); // Remove from missing list
+                    
+                    // If we found all missing buckets, we're done
+                    if (missing_buckets.size == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Ensure at least one color from each lightness bucket (if they exist in the image)
+        private void ensure_lightness_coverage () {
+            if (_swatches.size == 0) {
+                return;
+            }
+            
+            // Track which lightness buckets we have
+            var bucket_found = new bool[4]; // 4 buckets
+            var bucket_colors = new Swatch?[4]; // Store best color for each bucket
+            
+            // Check current swatches for lightness coverage
+            foreach (var swatch in _swatches) {
+                double light = get_lightness (swatch);
+                int bucket = get_lightness_bucket (light);
+                
+                // Keep the color with highest population for each bucket
+                if (!bucket_found[bucket] || 
+                    (bucket_colors[bucket] != null && 
+                     swatch.population > bucket_colors[bucket].population)) {
+                    bucket_found[bucket] = true;
+                    bucket_colors[bucket] = swatch;
+                }
+            }
+            
+            // Check which buckets are missing
+            var missing_buckets = new Gee.ArrayList<int> ();
+            for (int i = 0; i < 4; i++) {
+                if (!bucket_found[i]) {
+                    missing_buckets.add (i);
+                }
+            }
+            
+            // If we have all buckets, nothing to do
+            if (missing_buckets.size == 0) {
+                return;
+            }
+            
+            // Search histogram for colors in missing buckets
+            var existing_colors = new Gee.HashSet<int> ();
+            foreach (var existing in _swatches) {
+                existing_colors.add (existing.to_rgb ());
+            }
+            
+            // Get all colors from histogram sorted by population
+            var all_swatches = new Gee.ArrayList<Swatch> ();
+            histogram.@foreach ((entry) => {
+                var color = entry.key;
+                int population = entry.value;
+                uint8 red = (uint8)((color >> 16) & 0xFF);
+                uint8 green = (uint8)((color >> 8) & 0xFF);
+                uint8 blue = (uint8)(color & 0xFF);
+                var swatch = new Swatch (red, green, blue, population);
+                all_swatches.add (swatch);
+                return true;
+            });
+            
+            // Sort by population
+            all_swatches.sort ((c1, c2) => {
+                return c2.population - c1.population;
+            });
+            
+            // Find colors for missing buckets
+            foreach (var swatch in all_swatches) {
+                // Skip if already in palette
+                if (existing_colors.contains (swatch.to_rgb ())) {
+                    continue;
+                }
+                
+                double light = get_lightness (swatch);
+                int bucket = get_lightness_bucket (light);
+                
+                // If this color belongs to a missing bucket, add it
+                if (missing_buckets.contains (bucket)) {
+                    _swatches.add (swatch);
+                    existing_colors.add (swatch.to_rgb ());
+                    missing_buckets.remove (bucket); // Remove from missing list
+                    
+                    // If we found all missing buckets, we're done
+                    if (missing_buckets.size == 0) {
+                        break;
+                    }
+                }
+            }
         }
 
     }

@@ -321,38 +321,38 @@ namespace Emulsion {
             }
 
             // If "Only distinct colors" is checked, remove very similar colors
-            // Optimize: use a HashMap with quantized colors for faster lookup (O(n) instead of O(n²))
             if (distinct_check.active && filtered.size > 1) {
-                var color_buckets = new Gee.HashMap<int, Utils.Palette.Swatch> ();
+                // Sort by population first (most common colors first)
+                filtered.sort ((c1, c2) => {
+                    return c2.population - c1.population;
+                });
                 
+                // Threshold for considering colors "very similar" (squared distance)
+                // 2500 = ~50 RGB units, which is quite similar visually
+                const double SIMILARITY_THRESHOLD = 2500.0;
+                
+                var distinct_colors = new Gee.ArrayList<Utils.Palette.Swatch> ();
+                
+                // Iterate through colors, only adding if sufficiently different from all previously added
                 foreach (var swatch in filtered) {
-                    // Quantize RGB to buckets (divide by 16, so 16*16*16 = 4096 buckets)
-                    // This groups similar colors together for faster comparison
-                    int bucket = ((swatch.red >> 4) << 8) | ((swatch.green >> 4) << 4) | (swatch.blue >> 4);
+                    bool is_similar = false;
                     
-                    bool should_add = true;
-                    if (color_buckets.has_key (bucket)) {
-                        // Check if similar to existing color in bucket
-                        double dist = color_distance_squared (swatch, color_buckets[bucket]);
-                        if (dist < 100.0) {
-                            should_add = false;
-                            // Keep the one with higher population
-                            if (swatch.population > color_buckets[bucket].population) {
-                                color_buckets[bucket] = swatch;
-                            }
+                    // Check against all colors we've already accepted
+                    foreach (var existing in distinct_colors) {
+                        double dist = color_distance_squared (swatch, existing);
+                        if (dist < SIMILARITY_THRESHOLD) {
+                            is_similar = true;
+                            break; // No need to check further, already found a similar color
                         }
                     }
                     
-                    if (should_add) {
-                        color_buckets[bucket] = swatch;
+                    // Only add if it's different enough from all existing colors
+                    if (!is_similar) {
+                        distinct_colors.add (swatch);
                     }
                 }
                 
-                // Rebuild list from buckets
-                filtered = new Gee.ArrayList<Utils.Palette.Swatch> ();
-                foreach (var swatch in color_buckets.values) {
-                    filtered.add (swatch);
-                }
+                filtered = distinct_colors;
             }
 
             // Apply ordering - optimize by pre-computing sort keys to avoid repeated calculations

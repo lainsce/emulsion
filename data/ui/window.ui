@@ -336,6 +336,12 @@
     <menu id="pmenu">
       <section>
       <item>
+        <attribute name="label" translatable="yes">Rename Palette</attribute>
+        <attribute name="action">win.edit_palette</attribute>
+      </item>
+      </section>
+      <section>
+      <item>
         <attribute name="label" translatable="yes">Copy Palette to Clipboard</attribute>
         <attribute name="action">win.action_ex_txt</attribute>
       </item>

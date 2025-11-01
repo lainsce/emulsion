@@ -257,6 +257,7 @@ namespace Emulsion {
         public const string ACTION_EXC_TXT = "action_exc_txt";
         public const string ACTION_EXC_TXT_RGB = "action_exc_txt_rgb";
         public const string ACTION_DELETE_PALETTE = "delete_palette";
+        public const string ACTION_EDIT_PALETTE = "edit_palette";
         public const string ACTION_DELETE_COLOR = "delete_color";
         public const string ACTION_EDIT_COLLECTION = "edit_collection";
         public const string ACTION_DELETE_COLLECTION = "delete_collection";
@@ -268,6 +269,7 @@ namespace Emulsion {
               {ACTION_EXC_TXT, action_exc_txt},
               {ACTION_EXC_TXT_RGB, action_exc_txt_rgb},
               {ACTION_DELETE_PALETTE, delete_palette},
+              {ACTION_EDIT_PALETTE, edit_palette},
               {ACTION_DELETE_COLOR, delete_color},
               {ACTION_EDIT_COLLECTION, edit_collection},
               {ACTION_DELETE_COLLECTION, delete_collection},
@@ -393,51 +395,172 @@ namespace Emulsion {
 
             color_label.entry.set_tooltip_text (_("Set New Palette Name"));
             color_label.entry.activate.connect (() => {
-                var pitem = palettestore.get_item (palette_model.get_selected ());
-                ((PaletteInfo)pitem).palname = color_label.text ?? "";
+                if (palette_model.get_selected () != Gtk.INVALID_LIST_POSITION) {
+                    var pitem = palettestore.get_item (palette_model.get_selected ());
+                    if (pitem != null) {
+                        var entry = color_label.get_internal_entry ();
+                        string? new_name = entry != null ? entry.text : null;
+                        if (new_name != null && new_name.strip () != "") {
+                            string sanitized_name = new_name.strip ();
+                            ((PaletteInfo)pitem).palname = sanitized_name;
+                            // Update the text field to match the saved name (in case of sanitization)
+                            if (entry != null) {
+                                entry.text = sanitized_name;
+                            }
+                            m.save_palettes.begin (palettestore);
+                            update_appbar_title (); // Update title bar if it shows palette name
+                        }
+                    }
+                }
             });
 
             color_fb.activate.connect ((pos) => {
-                if (color_model.is_selected (pos)) {
+                // Open popover for any clicked color, not just selected ones
+                // This makes editing easier - just click the color you want to edit
+                if (pos != Gtk.INVALID_LIST_POSITION && pos < colorstore.get_n_items ()) {
                     var cep = new ColorEditPopover (this);
                     var item = colorstore.get_item (pos);
-                    cep.color_info = ((ColorInfo)item);
-                    // GTK4 automatically positions the popover relative to its parent
-                    cep.popup ();
-
-                    cep.closed.connect (() => {
-                        // Ensure we're still in the color view after popover closes
-                        if (main_stack.get_visible_child_name () != "colbody") {
-                            main_stack.set_visible_child_name ("colbody");
-                            update_appbar_title ();
-                        }
+                    if (item != null) {
+                        var original_color_info = (ColorInfo)item;
+                        // Store original values before editing (color_info is modified by reference)
+                        string original_name = original_color_info.name;
+                        string original_color = original_color_info.color;
+                        string original_uid = original_color_info.uid;
                         
-                        // Return focus to color grid view
-                        color_fb.grab_focus ();
+                        cep.color_info = original_color_info;
                         
-                        colorstore.remove (pos);
-                        colorstore.insert (pos, cep.color_info);
-                        add_to_recent_colors (cep.color_info.name, cep.color_info.color);
-                        update_all_colors_store ();
-
-                        int j;
-                        uint i, n = palettestore.get_n_items ();
-                        for (i = 0; i < n; i++) {
-                            var pitem = palettestore.get_item (i);
-
-                            var arrco = ((PaletteInfo)pitem).colors.values.to_array();
-                            for (j = 0; j < arrco.length; j++) {
-                                if (((ColorInfo)item).uid == ((PaletteInfo)pitem).palname) {
-                                    if (arrco[j] != ((ColorInfo)item).color) {
-                                        ((PaletteInfo)pitem).colors.set (cep.color_info.name, cep.color_info.color);
-                                    }
+                        // Ensure this position is selected so the popover knows which item it's editing
+                        color_model.selected = pos;
+                        
+                        // Set parent to window for coordinate calculations
+                        cep.set_parent (this);
+                        
+                        // Function to calculate and set pointing rectangle using grid layout
+                        void position_popover_from_grid () {
+                            if (!color_fb.get_realized () || !this.get_realized ()) {
+                                return;
+                            }
+                            
+                            // Get GridView position in window coordinates
+                            double grid_x = 0, grid_y = 0;
+                            if (!color_fb.translate_coordinates (this, 0, 0, out grid_x, out grid_y)) {
+                                return;
+                            }
+                            
+                            // GridView has max-columns=5, so items are arranged in rows of 5
+                            const int COLUMNS = 5;
+                            int row = (int)pos / COLUMNS;
+                            int col = (int)pos % COLUMNS;
+                            
+                            // Item size: ColorRenderer is 128x128 with 6px margins, GtkBox container has 12px spacing
+                            // Total item width/height = 128 (renderer) + margins + container spacing
+                            const int ITEM_WIDTH = 128 + 12; // 128px renderer + 6px margin each side
+                            const int ITEM_HEIGHT = 128 + 24; // 128px renderer + 6px margins + ~12px for label below
+                            const int GRID_SPACING = 12; // Spacing between items in grid
+                            
+                            // Calculate position within the grid
+                            int item_x = col * (ITEM_WIDTH + GRID_SPACING);
+                            int item_y = row * (ITEM_HEIGHT + GRID_SPACING);
+                            
+                            // Convert to window coordinates
+                            int window_x = (int)grid_x + item_x;
+                            int window_y = (int)grid_y + item_y;
+                            
+                            // Account for scroll position if GridView is in a ScrolledWindow
+                            // When scrolled, items move relative to viewport
+                            if (color_window != null && color_window.get_realized ()) {
+                                var vadj = color_window.vadjustment;
+                                if (vadj != null) {
+                                    window_y -= (int)vadj.get_value ();
+                                }
+                                var hadj = color_window.hadjustment;
+                                if (hadj != null) {
+                                    window_x -= (int)hadj.get_value ();
                                 }
                             }
+                            
+                            // Use actual item bounds (just the color renderer size for pointing)
+                            const int POINT_WIDTH = 128;
+                            const int POINT_HEIGHT = 128;
+                            
+                            // Create rectangle for pointing (just the color square)
+                            var rect = Gdk.Rectangle () {
+                                x = window_x + 6, // Account for margin
+                                y = window_y + 6, // Account for margin
+                                width = POINT_WIDTH,
+                                height = POINT_HEIGHT
+                            };
+                            
+                            cep.set_pointing_to (rect);
                         }
+                        
+                        // Show popover first
+                        cep.popup ();
+                        
+                        // Position after popover is shown (multiple attempts to ensure it works)
+                        Timeout.add (10, () => {
+                            position_popover_from_grid ();
+                            return false;
+                        });
+                        
+                        Timeout.add (50, () => {
+                            position_popover_from_grid ();
+                            return false;
+                        });
+                        
+                        Timeout.add (100, () => {
+                            position_popover_from_grid ();
+                            return false;
+                        });
 
-                        palette_fb.queue_draw ();
-                        color_fb.queue_draw ();
-                    });
+                        cep.closed.connect (() => {
+                            // Ensure we're still in the color view after popover closes
+                            if (main_stack.get_visible_child_name () != "colbody") {
+                                main_stack.set_visible_child_name ("colbody");
+                                update_appbar_title ();
+                            }
+                            
+                            // Return focus to color grid view
+                            color_fb.grab_focus ();
+                            
+                            colorstore.remove (pos);
+                            colorstore.insert (pos, cep.color_info);
+                            add_to_recent_colors (cep.color_info.name, cep.color_info.color);
+                            
+                            // Update the palette that contains this color
+                            // Find the palette by matching the original uid (palette name)
+                            uint i, palette_count = palettestore.get_n_items ();
+                            for (i = 0; i < palette_count; i++) {
+                                var pitem = palettestore.get_item (i);
+                                if (pitem == null) continue;
+                                
+                                // Check if this color belongs to this palette
+                                if (original_uid == ((PaletteInfo)pitem).palname) {
+                                    // Check if name or color changed
+                                    bool name_changed = (original_name != cep.color_info.name);
+                                    bool color_changed = (original_color != cep.color_info.color);
+                                    
+                                    if (name_changed || color_changed) {
+                                        // If name changed, remove the old entry
+                                        if (name_changed && ((PaletteInfo)pitem).colors.has_key (original_name)) {
+                                            ((PaletteInfo)pitem).colors.unset (original_name);
+                                        }
+                                        // Set the new entry (with potentially new name and/or color)
+                                        ((PaletteInfo)pitem).colors.set (cep.color_info.name, cep.color_info.color);
+                                    }
+                                    break; // Found the palette, no need to continue
+                                }
+                            }
+                            
+                            update_all_colors_store ();
+                            
+                            // Save palettes after updating color
+                            m.save_palettes.begin (palettestore);
+
+                            palette_fb.queue_draw ();
+                            color_fb.queue_draw ();
+                        });
+                    }
                 }
             });
 
@@ -711,9 +834,11 @@ namespace Emulsion {
                     null);
 
                 create_button.clicked.connect (() => {
-                    if (name_entry.text != null && name_entry.text.strip () != "") {
+                    var entry = name_entry.get_internal_entry ();
+                    string? text = entry != null ? entry.text : null;
+                    if (text != null && text.strip () != "") {
                         var collection = new CollectionInfo ();
-                        collection.name = name_entry.text.strip ();
+                        collection.name = text.strip ();
                         collections_store.append (collection);
                         m.save_collections.begin (collections_store);
                         dialog.hide_dialog ();
@@ -996,6 +1121,53 @@ namespace Emulsion {
             }
         }
 
+        public void edit_palette () {
+            if (palette_model.selected == Gtk.INVALID_LIST_POSITION) {
+                return;
+            }
+
+            uint pos = palette_model.selected;
+            var palette = (PaletteInfo)palettestore.get_item (pos);
+            if (palette == null) {
+                return;
+            }
+
+            // Create a simple dialog to edit palette name
+            var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+
+            var name_label = new Gtk.Label (_("Palette Name:"));
+            name_label.halign = Gtk.Align.START;
+            var name_entry = new He.TextField ();
+            name_entry.text = palette.palname;
+            name_entry.is_outline = true;
+
+            content.append (name_label);
+            content.append (name_entry);
+
+            var save_button = new He.Button (null, _("Save"));
+            var dialog = new He.Dialog (this,
+                _("Edit Palette"),
+                null,
+                null,
+                save_button,
+                null);
+            
+            save_button.clicked.connect (() => {
+                var entry = name_entry.get_internal_entry ();
+                string? text = entry != null ? entry.text : null;
+                if (text != null && text.strip () != "") {
+                    palette.palname = text.strip ();
+                    m.save_palettes.begin (palettestore);
+                    dialog.hide_dialog ();
+                }
+            });
+
+            dialog.add (content);
+            dialog.present ();
+            name_entry.entry.grab_focus ();
+            name_entry.entry.select_region (0, -1);
+        }
+
         public void delete_palette () {
             palettestore.remove (palette_model.selected);
             update_all_colors_store ();
@@ -1062,8 +1234,10 @@ namespace Emulsion {
                 null);
             
             save_button.clicked.connect (() => {
-                if (name_entry.text != null && name_entry.text.strip () != "") {
-                    collection.name = name_entry.text.strip ();
+                var entry = name_entry.get_internal_entry ();
+                string? text = entry != null ? entry.text : null;
+                if (text != null && text.strip () != "") {
+                    collection.name = text.strip ();
                     m.save_collections.begin (collections_store);
                     dialog.hide_dialog ();
                 }
