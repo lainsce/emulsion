@@ -7,7 +7,7 @@
   <object class="GtkAdjustment" id="coloradj">
   </object>
   <template class="EmulsionMainWindow" parent="HeApplicationWindow">
-    <property name="default-width">950</property>
+    <property name="default-width">1265</property>
     <property name="default-height">650</property>
     <property name="title">Emulsion</property>
     <style>
@@ -175,6 +175,7 @@
                 <property name="show-left-title-buttons">0</property>
                 <property name="show-right-title-buttons">1</property>
                 <property name="valign">start</property>
+                <property name="hexpand">1</property>
                 <child type="titlebar-menu">
                   <object class="GtkMenuButton" id="menu_button">
                     <property name="icon-name">open-menu-symbolic</property>
@@ -814,11 +815,11 @@
           </child>
           <child>
             <object class="GtkBox">
-              <property name="halign">center</property>
-              <property name="width-request">100</property>
-              <property name="hexpand">0</property>
+              <property name="orientation">horizontal</property>
+              <property name="hexpand">1</property>
               <child>
                 <object class="GtkBox">
+                  <property name="halign">start</property>
                   <property name="valign">center</property>
                   <property name="orientation">vertical</property>
                   <property name="spacing">6</property>
@@ -853,6 +854,7 @@
               </child>
               <child>
                 <object class="GtkMenuButton" id="color_button">
+                  <property name="halign">end</property>
                   <property name="icon-name">view-more-symbolic</property>
                   <property name="menu-model">cmenu</property>
                   <property name="valign">center</property>
@@ -885,6 +887,20 @@
           </object>
         </child>
       </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="color_edit_revealer">
+            <property name="reveal-child">0</property>
+            <property name="visible">0</property>
+            <property name="transition-type">slide-left</property>
+            <property name="transition-duration">200</property>
+            <property name="hexpand-set">0</property>
+            <property name="width-request">0</property>
+            <child>
+              <object class="EmulsionColorEditPopover" id="color_edit_panel">
+              </object>
+            </child>
+          </object>
         </child>
       </object>
     </child>

@@ -18,7 +18,7 @@
 */
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/cep.ui")]
-    public class ColorEditPopover : He.Window {
+    public class ColorEditPopover : Gtk.Box {
         [GtkChild]
         public unowned He.Slider red_scale;
         [GtkChild]
@@ -41,8 +41,10 @@ namespace Emulsion {
         public unowned Gtk.Box color_preview;
         [GtkChild]
         public unowned Gtk.Label hex_preview_label;
+        [GtkChild]
+        public unowned He.AppBar color_edit_appbar;
 
-        public MainWindow win { get; construct; }
+        public MainWindow win { get; set; }
         public Gdk.RGBA color = {};
         public uint edit_position = Gtk.INVALID_LIST_POSITION;
 
@@ -120,14 +122,7 @@ namespace Emulsion {
             color_preview.queue_draw ();
         }
 
-        public ColorEditPopover (MainWindow win) {
-            Object( win: win );
-            
-            // Set up window properties
-            this.modal = true;
-            this.set_transient_for (win);
-            this.title = _("Edit Color");
-            
+        construct {
             // Set up adjustments for sliders
             var red_adj = new Gtk.Adjustment (0, 0, 255, 1, 1, 0);
             var green_adj = new Gtk.Adjustment (0, 0, 255, 1, 1, 0);
@@ -136,17 +131,31 @@ namespace Emulsion {
             green_scale.set_adjustment (green_adj);
             blue_scale.set_adjustment (blue_adj);
             
-            win.palette_fb.queue_draw ();
-            win.color_fb.queue_draw ();
-            queue_draw ();
-            
-            // Handle window close
-            this.close_request.connect (() => {
-                handle_close ();
-                return false; // Don't prevent default close behavior
-            });
+            // Set width-chars on text field internal entries
+            var red_entry_int = red_entry.get_internal_entry ();
+            if (red_entry_int != null) {
+                red_entry_int.width_chars = 4;
+                red_entry_int.max_width_chars = 4;
+            }
+            var green_entry_int = green_entry.get_internal_entry ();
+            if (green_entry_int != null) {
+                green_entry_int.width_chars = 4;
+                green_entry_int.max_width_chars = 4;
+            }
+            var blue_entry_int = blue_entry.get_internal_entry ();
+            if (blue_entry_int != null) {
+                blue_entry_int.width_chars = 4;
+                blue_entry_int.max_width_chars = 4;
+            }
+
+            var hex_entry_int = hex_entry.get_internal_entry ();
+            if (hex_entry_int != null) {
+                hex_entry_int.width_chars = 7;
+                hex_entry_int.max_width_chars = 7;
+            }
 
             red_scale.scale.value_changed.connect (() => {
+                if (win == null) return;
                 var red_entry_internal = red_entry.get_internal_entry ();
                 if (red_entry_internal != null) {
                     red_entry_internal.text = "%00.0f".printf(red_scale.scale.get_value ());
@@ -167,6 +176,7 @@ namespace Emulsion {
             });
 
             green_scale.scale.value_changed.connect (() => {
+                if (win == null) return;
                 var green_entry_internal = green_entry.get_internal_entry ();
                 if (green_entry_internal != null) {
                     green_entry_internal.text = "%00.0f".printf(green_scale.scale.get_value ());
@@ -187,6 +197,7 @@ namespace Emulsion {
             });
 
             blue_scale.scale.value_changed.connect (() => {
+                if (win == null) return;
                 var blue_entry_internal = blue_entry.get_internal_entry ();
                 if (blue_entry_internal != null) {
                     blue_entry_internal.text = "%00.0f".printf(blue_scale.scale.get_value ());
@@ -207,6 +218,7 @@ namespace Emulsion {
             });
 
             red_entry.entry.activate.connect (() => {
+                if (win == null) return;
                 var red_entry_internal = red_entry.get_internal_entry ();
                 string? red_text = red_entry_internal != null ? red_entry_internal.text : null;
                 color.red = (float)(double.parse(red_text ?? "0") / 255);
@@ -226,6 +238,7 @@ namespace Emulsion {
             });
 
             green_entry.entry.activate.connect (() => {
+                if (win == null) return;
                 var green_entry_internal = green_entry.get_internal_entry ();
                 string? green_text = green_entry_internal != null ? green_entry_internal.text : null;
                 color.green = (float)(double.parse(green_text ?? "0") / 255);
@@ -245,6 +258,7 @@ namespace Emulsion {
             });
 
             blue_entry.entry.activate.connect (() => {
+                if (win == null) return;
                 var blue_entry_internal = blue_entry.get_internal_entry ();
                 string? blue_text = blue_entry_internal != null ? blue_entry_internal.text : null;
                 color.blue = (float)(double.parse(blue_text ?? "0") / 255);
@@ -264,6 +278,7 @@ namespace Emulsion {
             });
 
             hex_entry.entry.activate.connect (() => {
+                if (win == null) return;
                 var hex_entry_internal = hex_entry.get_internal_entry ();
                 string? hex_text = hex_entry_internal != null ? hex_entry_internal.text : null;
                 if (hex_text == null || hex_text.length == 0) {
@@ -324,6 +339,7 @@ namespace Emulsion {
             });
 
             name_entry.entry.activate.connect (() => {
+                if (win == null) return;
                 var entry = name_entry.get_internal_entry ();
                 string? new_name = entry != null ? entry.text : null;
                 if (new_name != null) {
@@ -364,8 +380,20 @@ namespace Emulsion {
             });
 
             close_button.clicked.connect (() => {
-                close ();
+                hide_panel ();
             });
+        }
+        
+        public void show_panel () {
+            // Panel visibility is controlled by the revealer
+            // AppBar buttons are updated automatically via the revealer notify signal
+        }
+        
+        public void hide_panel () {
+            if (win == null) return;
+            handle_close ();
+            // Hide the revealer (this will also update AppBar buttons via notify signal)
+            win.color_edit_revealer.set_reveal_child (false);
         }
         
         private void update_palette_color () {

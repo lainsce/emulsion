@@ -91,6 +91,10 @@ namespace Emulsion {
         unowned Gtk.GridView colors_fb;
         [GtkChild]
         unowned Gtk.SingleSelection colors_model;
+        [GtkChild]
+        public unowned Gtk.Revealer color_edit_revealer;
+        [GtkChild]
+        unowned ColorEditPopover color_edit_panel;
 
 
         public GLib.ListStore palettestore;
@@ -446,19 +450,22 @@ namespace Emulsion {
                 // Open dialog for any clicked color, not just selected ones
                 // This makes editing easier - just click the color you want to edit
                 if (pos != Gtk.INVALID_LIST_POSITION && pos < colorstore.get_n_items ()) {
-                    var cep = new ColorEditPopover (this);
                     var item = colorstore.get_item (pos);
                     if (item != null) {
                         var original_color_info = (ColorInfo)item;
                         
-                        cep.edit_position = pos;
-                        cep.color_info = original_color_info;
+                        color_edit_panel.edit_position = pos;
+                        color_edit_panel.color_info = original_color_info;
                         
-                        // Ensure this position is selected so the dialog knows which item it's editing
+                        // Ensure this position is selected so the panel knows which item it's editing
                         color_model.selected = pos;
                         
-                        // Present the dialog
-                        cep.present ();
+                        // Show the panel
+                        color_edit_revealer.set_reveal_child (true);
+                        color_edit_panel.show_panel ();
+                        color_edit_revealer.set_visible (true);
+                    } else {
+                        color_edit_revealer.set_visible (false);
                     }
                 }
             });
@@ -506,6 +513,19 @@ namespace Emulsion {
 
             search_button.toggled.connect (() => {
                searchbar.set_reveal_child (search_button.get_active());
+            });
+            
+            // Initialize color edit panel (it's in the UI template, so we need to set win manually)
+            color_edit_panel.win = this;
+            
+            color_edit_revealer.set_visible (false);
+            // Connect to color edit revealer to coordinate AppBar buttons and width
+            color_edit_revealer.notify["reveal-child"].connect (() => {
+                // Update AppBar buttons based on panel visibility
+                palette_headerbar.show_right_title_buttons = !color_edit_revealer.reveal_child;
+                // Update width-request: 0 when hidden, 200 when shown
+                color_edit_revealer.width_request = color_edit_revealer.reveal_child ? 200 : 0;
+                color_edit_revealer.set_visible (color_edit_revealer.reveal_child);
             });
 
             palettestore.items_changed.connect (() => {
