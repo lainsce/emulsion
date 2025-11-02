@@ -2,142 +2,59 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="libhelium" version="1.0"/>
-  <template class="EmulsionColorEditPopover" parent="GtkPopover">
+  <template class="EmulsionColorEditPopover" parent="HeWindow">
+    <property name="resizable">0</property>
+    <property name="default-width">440</property>
+    <property name="default-height">294</property>
+    <property name="destroy-with-parent">1</property>
     <property name="child">
       <object class="GtkBox">
-        <property name="homogeneous">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
         <property name="visible">1</property>
         <child>
           <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <property name="visible">1</property>
+            <property name="orientation">horizontal</property>
+            <property name="spacing">12</property>
+            <property name="hexpand">1</property>
+            <property name="margin-start">24</property>
+            <property name="margin-end">24</property>
+            <property name="margin-top">24</property>
+            <property name="margin-bottom">24</property>
             <child>
-              <object class="GtkStackSwitcher" id="vs">
-                <property name="vexpand">1</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-top">6</property>
-                <property name="margin-bottom">6</property>
-                <property name="stack">stack</property>
+              <object class="GtkBox" id="color_preview">
+                <property name="width-request">64</property>
+                <property name="height-request">64</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <style>
+                  <class name="color-preview"/>
+                </style>
               </object>
             </child>
             <child>
-              <object class="GtkStack" id="stack">
-                <property name="vexpand">1</property>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
                 <child>
-                  <object class="GtkStackPage">
-                    <property name="name">rgb</property>
-                    <property name="title" translatable="yes">RGB</property>
-                    <property name="icon-name">rgb-symbolic</property>
-                    <property name="child">
-                      <object class="GtkBox" id="rgb">
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="halign">end</property>
-                            <property name="spacing">6</property>
-                            <property name="visible">1</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">end</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="yes">Red∶</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="HeTextField" id="red_entry">
-                                <property name="is-outline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="halign">end</property>
-                            <property name="spacing">6</property>
-                            <property name="visible">1</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">end</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="yes">Green∶</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="HeTextField" id="green_entry">
-                                <property name="is-outline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="halign">end</property>
-                            <property name="spacing">6</property>
-                            <property name="visible">1</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">end</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="yes">Blue∶</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="HeTextField" id="blue_entry">
-                                <property name="is-outline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
+                  <object class="GtkLabel" id="hex_preview_label">
+                    <property name="hexpand">1</property>
+                    <property name="xalign">0</property>
+                    <property name="valign">center</property>
+                    <property name="wrap">1</property>
+                    <style>
+                      <class name="view-title"/>
+                    </style>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStackPage">
-                    <property name="name">hex</property>
-                    <property name="title" translatable="yes">Hex</property>
-                    <property name="icon-name">hex-symbolic</property>
-                    <property name="child">
-                      <object class="GtkBox" id="hex">
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <property name="visible">1</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="halign">end</property>
-                            <property name="spacing">6</property>
-                            <property name="visible">1</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="halign">end</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="yes">Color Hexcode∶</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="HeTextField" id="hex_entry">
-                                <property name="is-outline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </property>
+                  <object class="HeTextField" id="name_entry">
+                    <property name="hexpand">1</property>
+                    <property name="valign">center</property>
+                    <property name="is-outline">1</property>
+                    <property name="placeholder-text" translatable="yes">Color Name</property>
                   </object>
                 </child>
               </object>
@@ -145,52 +62,163 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <property name="spacing">6</property>
-            <property name="visible">1</property>
+          <object class="GtkStackSwitcher" id="vs">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="margin-start">24</property>
+            <property name="margin-end">24</property>
+            <property name="margin-bottom">12</property>
+            <property name="stack">stack</property>
+            <style>
+              <class name="segmented-button"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="stack">
+            <property name="vexpand">1</property>
+            <property name="margin-start">24</property>
+            <property name="margin-end">24</property>
+            <property name="margin-bottom">24</property>
             <child>
-              <object class="GtkBox">
-              <property name="orientation">horizontal</property>
-              <property name="spacing">6</property>
-              <property name="visible">1</property>
-              <child>
-                <object class="HeTextField" id="name_entry">
-                  <property name="margin-top">6</property>
-                  <property name="margin-bottom">6</property>
-                  <property name="margin-start">6</property>
-                  <property name="margin-end">6</property>
-                  <property name="hexpand">1</property>
-                  <property name="is-outline">1</property>
-                  <property name="placeholder-text" translatable="yes">Color Name</property>
-                </object>
-              </child>
+              <object class="GtkStackPage">
+                <property name="name">rgb</property>
+                <property name="title" translatable="yes">RGB</property>
+                <property name="icon-name">rgb-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="rgb">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
+                    <property name="visible">1</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+                        <property name="visible">1</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="width-chars">5</property>
+                            <property name="label" translatable="yes">Red∶</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeSlider" id="red_scale">
+                            <property name="hexpand">1</property>
+                            <style>
+                              <class name="red"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeTextField" id="red_entry">
+                            <property name="is-outline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+                        <property name="visible">1</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="width-chars">5</property>
+                            <property name="label" translatable="yes">Green∶</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeSlider" id="green_scale">
+                            <property name="hexpand">1</property>
+                            <style>
+                              <class name="green"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeTextField" id="green_entry">
+                            <property name="is-outline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+                        <property name="visible">1</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="width-chars">5</property>
+                            <property name="label" translatable="yes">Blue∶</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeSlider" id="blue_scale">
+                            <property name="hexpand">1</property>
+                            <style>
+                              <class name="blue"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeTextField" id="blue_entry">
+                            <property name="is-outline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
               </object>
             </child>
             <child>
-              <object class="HeSlider" id="red_scale">
-                <property name="vexpand">1</property>
-                <style>
-                  <class name="red"/>
-                </style>
+              <object class="GtkStackPage">
+                <property name="name">hex</property>
+                <property name="title" translatable="yes">Hex</property>
+                <property name="icon-name">hex-symbolic</property>
+                <property name="child">
+                  <object class="GtkBox" id="hex">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="visible">1</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+                        <property name="visible">1</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="hexpand">1</property>
+                            <property name="label" translatable="yes">Color Hexcode∶</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="HeTextField" id="hex_entry">
+                            <property name="is-outline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
               </object>
             </child>
-            <child>
-              <object class="HeSlider" id="green_scale">
-                <property name="vexpand">1</property>
-                <style>
-                  <class name="green"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="HeSlider" id="blue_scale">
-                <property name="vexpand">1</property>
-                <style>
-                  <class name="blue"/>
-                </style>
-              </object>
-            </child>
+          </object>
+        </child>
+        <child>
+          <object class="HeButton" id="close_button">
+            <property name="label" translatable="yes">Close</property>
+            <property name="is-fill">1</property>
+            <property name="margin-bottom">24</property>
+            <property name="halign">end</property>
+            <property name="valign">end</property>
+            <property name="margin-end">24</property>
           </object>
         </child>
       </object>

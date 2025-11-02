@@ -13,6 +13,27 @@ namespace Emulsion {
     public class ColorRenderer : Gtk.Box {
         private Object? _color_obj;
         private string _color_string = "";
+        private ulong _notify_handler_id = 0;
+        
+        private void update_color_string () {
+            if (_color_obj is ColorInfo) {
+                _color_string = ((ColorInfo)_color_obj).color;
+            } else if (_color_obj is RecentColorInfo) {
+                _color_string = ((RecentColorInfo)_color_obj).color;
+            } else if (_color_obj != null) {
+                // Try to get "color" property via GObject
+                Value color_val = Value (typeof (string));
+                _color_obj.get_property ("color", ref color_val);
+                _color_string = color_val.get_string () ?? "";
+            } else {
+                _color_string = "";
+            }
+            queue_draw ();
+        }
+        
+        private void on_color_property_changed () {
+            update_color_string ();
+        }
         
         // Support for ColorInfo
         public ColorInfo? color {
@@ -23,13 +44,21 @@ namespace Emulsion {
                 if (_color_obj == value) {
                     return;
                 }
-                _color_obj = value;
-                if (value != null) {
-                    _color_string = value.color;
-                } else {
-                    _color_string = "";
+                
+                // Disconnect old notify signal
+                if (_notify_handler_id != 0 && _color_obj != null) {
+                    _color_obj.disconnect (_notify_handler_id);
+                    _notify_handler_id = 0;
                 }
-                queue_draw ();
+                
+                _color_obj = value;
+                
+                // Connect to property change notification
+                if (value != null) {
+                    _notify_handler_id = value.notify["color"].connect (on_color_property_changed);
+                }
+                
+                update_color_string ();
             }
         }
 
@@ -42,13 +71,21 @@ namespace Emulsion {
                 if (_color_obj == value) {
                     return;
                 }
-                _color_obj = value;
-                if (value != null) {
-                    _color_string = value.color;
-                } else {
-                    _color_string = "";
+                
+                // Disconnect old notify signal
+                if (_notify_handler_id != 0 && _color_obj != null) {
+                    _color_obj.disconnect (_notify_handler_id);
+                    _notify_handler_id = 0;
                 }
-                queue_draw ();
+                
+                _color_obj = value;
+                
+                // Connect to property change notification
+                if (value != null) {
+                    _notify_handler_id = value.notify["color"].connect (on_color_property_changed);
+                }
+                
+                update_color_string ();
             }
         }
 
@@ -61,21 +98,21 @@ namespace Emulsion {
                 if (_color_obj == value) {
                     return;
                 }
+                
+                // Disconnect old notify signal
+                if (_notify_handler_id != 0 && _color_obj != null) {
+                    _color_obj.disconnect (_notify_handler_id);
+                    _notify_handler_id = 0;
+                }
+                
                 _color_obj = value;
                 
-                if (value is ColorInfo) {
-                    _color_string = ((ColorInfo)value).color;
-                } else if (value is RecentColorInfo) {
-                    _color_string = ((RecentColorInfo)value).color;
-                } else if (value != null) {
-                    // Try to get "color" property via GObject
-                    Value color_val = Value (typeof (string));
-                    value.get_property ("color", ref color_val);
-                    _color_string = color_val.get_string () ?? "";
-                } else {
-                    _color_string = "";
+                // Connect to property change notification if object supports it
+                if (value != null && value is Object) {
+                    _notify_handler_id = ((Object)value).notify["color"].connect (on_color_property_changed);
                 }
-                queue_draw ();
+                
+                update_color_string ();
             }
         }
 

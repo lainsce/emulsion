@@ -18,7 +18,7 @@
 */
 namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/cep.ui")]
-    public class ColorEditPopover : Gtk.Popover {
+    public class ColorEditPopover : He.Window {
         [GtkChild]
         public unowned He.Slider red_scale;
         [GtkChild]
@@ -35,12 +35,22 @@ namespace Emulsion {
         public unowned He.TextField hex_entry;
         [GtkChild]
         public unowned He.TextField name_entry;
+        [GtkChild]
+        public unowned He.Button close_button;
+        [GtkChild]
+        public unowned Gtk.Box color_preview;
+        [GtkChild]
+        public unowned Gtk.Label hex_preview_label;
 
         public MainWindow win { get; construct; }
         public Gdk.RGBA color = {};
+        public uint edit_position = Gtk.INVALID_LIST_POSITION;
 
         public ColorInfo _color_info;
         private string _original_name = "";
+        private string _original_color = "";
+        private string _original_uid = "";
+        private Gtk.CssProvider? preview_css_provider = null;
         public ColorInfo color_info {
             get {
                 return _color_info;
@@ -53,7 +63,9 @@ namespace Emulsion {
 
                  _color_info = value;
                  _original_name = _color_info.name; // Store original name for updates
-                color.parse(_color_info.color);
+                 _original_color = _color_info.color; // Store original color for updates
+                 _original_uid = _color_info.uid; // Store original uid for updates
+                 color.parse(_color_info.color);
 
                 var red_entry_internal = red_entry.get_internal_entry ();
                 if (red_entry_internal != null) {
@@ -80,15 +92,41 @@ namespace Emulsion {
                 if (name_entry_internal != null) {
                     name_entry_internal.text = _color_info.name;
                 }
+                update_preview ();
                 win.palette_fb.queue_draw ();
                 win.color_fb.queue_draw ();
                 queue_draw ();
             }
         }
+        
+        private void update_preview () {
+            // Update preview box color via CSS
+            var style_context = color_preview.get_style_context ();
+            
+            // Remove old provider if it exists
+            if (preview_css_provider != null) {
+                style_context.remove_provider (preview_css_provider);
+            }
+            
+            // Create new provider with updated color
+            preview_css_provider = new Gtk.CssProvider ();
+            var css = "* { background: %s; border-radius: 25px; }".printf (_color_info.color);
+            preview_css_provider.load_from_data (css.data);
+            style_context.add_provider (preview_css_provider, 9999);
+            
+            // Update hex preview label
+            hex_preview_label.label = _color_info.color;
+            
+            color_preview.queue_draw ();
+        }
 
         public ColorEditPopover (MainWindow win) {
             Object( win: win );
-            this.set_parent (win);
+            
+            // Set up window properties
+            this.modal = true;
+            this.set_transient_for (win);
+            this.title = _("Edit Color");
             
             // Set up adjustments for sliders
             var red_adj = new Gtk.Adjustment (0, 0, 255, 1, 1, 0);
@@ -98,10 +136,15 @@ namespace Emulsion {
             green_scale.set_adjustment (green_adj);
             blue_scale.set_adjustment (blue_adj);
             
-            this.present ();
             win.palette_fb.queue_draw ();
             win.color_fb.queue_draw ();
             queue_draw ();
+            
+            // Handle window close
+            this.close_request.connect (() => {
+                handle_close ();
+                return false; // Don't prevent default close behavior
+            });
 
             red_scale.scale.value_changed.connect (() => {
                 var red_entry_internal = red_entry.get_internal_entry ();
@@ -113,6 +156,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -131,6 +176,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -149,6 +196,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -166,6 +215,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -183,6 +234,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -200,6 +253,8 @@ namespace Emulsion {
                 if (hex_entry_internal != null) {
                     hex_entry_internal.text = "%s".printf(Utils.make_hex((float)red_scale.scale.get_value (), (float)green_scale.scale.get_value (), (float)blue_scale.scale.get_value ()));
                     _color_info.color = hex_entry_internal.text ?? "";
+                    update_palette_color ();
+                    update_preview ();
                 }
 
                 win.m.save_palettes.begin (win.palettestore);
@@ -257,6 +312,8 @@ namespace Emulsion {
                         
                         // Update color info
                         _color_info.color = "#" + hex_text;
+                        update_palette_color ();
+                        update_preview ();
                         
                         win.m.save_palettes.begin (win.palettestore);
                         win.palette_fb.queue_draw ();
@@ -304,6 +361,133 @@ namespace Emulsion {
                         queue_draw ();
                     }
                 }
+            });
+
+            close_button.clicked.connect (() => {
+                close ();
+            });
+        }
+        
+        private void update_palette_color () {
+            // Update the palette's colors map with the current color value
+            uint i, palette_count = win.palettestore.get_n_items ();
+            for (i = 0; i < palette_count; i++) {
+                var pitem = win.palettestore.get_item (i);
+                if (pitem == null) continue;
+                
+                if (_color_info.uid == ((PaletteInfo)pitem).palname) {
+                    // Update the color value in the palette's colors map
+                    ((PaletteInfo)pitem).colors.set (_color_info.name, _color_info.color);
+                    break;
+                }
+            }
+            
+            // Trigger colorstore refresh by removing and reinserting the item
+            // This causes the GridView to redraw with the updated color
+            // Skip remove/insert for position 0 to avoid navigation issues
+            if (edit_position == Gtk.INVALID_LIST_POSITION) {
+                return; // Can't update if we don't know the position
+            }
+            
+            uint pos = edit_position;
+            
+            // For position 0, emit a property notification to trigger renderer update
+            // This avoids remove/insert which can trigger navigation checks
+            if (pos == 0) {
+                // Notify that the color property changed so renderers can update
+                _color_info.notify_property ("color");
+                win.color_fb.queue_draw ();
+                return;
+            }
+            
+            // For other positions, use remove/insert to trigger refresh
+            // Store state before operation
+            string? current_view = win.main_stack.get_visible_child_name ();
+            uint current_selected = win.color_model.selected;
+            uint store_size = win.colorstore.get_n_items ();
+            
+            // Verify position is still valid
+            if (pos >= store_size) {
+                return;
+            }
+            
+            // Use a very short timeout to ensure this happens after any synchronous checks
+            Timeout.add (10, () => {
+                // Verify we're still in the same view before proceeding
+                if (current_view != null && win.main_stack.get_visible_child_name () != current_view) {
+                    win.main_stack.set_visible_child_name (current_view);
+                }
+                
+                // Verify position is still valid (store might have changed)
+                if (pos >= win.colorstore.get_n_items ()) {
+                    return false;
+                }
+                
+                // Get a fresh reference to the color info (in case store changed)
+                var color_item = win.colorstore.get_item (pos);
+                if (color_item != _color_info) {
+                    // Store was rebuilt, can't safely update
+                    return false;
+                }
+                
+                // Preserve view
+                if (current_view != null) {
+                    win.main_stack.set_visible_child_name (current_view);
+                }
+                
+                win.colorstore.remove (pos);
+                
+                // Immediately restore view after remove
+                if (current_view != null) {
+                    win.main_stack.set_visible_child_name (current_view);
+                }
+                
+                win.colorstore.insert (pos, _color_info);
+                
+                // Restore selection (adjust for any shifts)
+                if (current_selected != Gtk.INVALID_LIST_POSITION) {
+                    if (current_selected > pos) {
+                        // Selection was after removed item, adjust
+                        win.color_model.selected = current_selected;
+                    } else if (current_selected == pos) {
+                        // Selection was the item we removed, restore it
+                        win.color_model.selected = pos;
+                    } else {
+                        // Selection was before removed item, unchanged
+                        win.color_model.selected = current_selected;
+                    }
+                }
+                
+                // Final view check
+                if (current_view != null && win.main_stack.get_visible_child_name () != current_view) {
+                    win.main_stack.set_visible_child_name (current_view);
+                }
+                
+                return false; // Don't repeat
+            });
+        }
+        
+        private void handle_close () {
+            // Store current view to preserve it - colors are already saved in real-time
+            string? current_view = win.main_stack.get_visible_child_name ();
+            
+            // Simply refresh the display after window closes - data is already updated
+            Idle.add (() => {
+                // Ensure we stay in the same view
+                if (current_view != null && win.main_stack.get_visible_child_name () != current_view) {
+                    win.main_stack.set_visible_child_name (current_view);
+                }
+                
+                // Refresh displays
+                win.palette_fb.queue_draw ();
+                win.color_fb.queue_draw ();
+                
+                // Return focus to color grid view
+                if (current_view == "colbody") {
+                    win.color_fb.grab_focus ();
+                }
+                
+                return false;
             });
         }
     }
