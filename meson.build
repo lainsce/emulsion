@@ -28,7 +28,6 @@ conf.set_quoted('GETTEXT_PACKAGE', app_id)
 conf.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set10('DEVELOPMENT', get_option('development'))
 configure_file(output: 'config.h', configuration: conf)
-config_h_dir = include_directories('.')
 
 add_project_arguments(
   '-include', 'config.h',
