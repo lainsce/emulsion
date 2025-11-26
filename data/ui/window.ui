@@ -177,8 +177,9 @@
                 <property name="valign">start</property>
                 <property name="hexpand">1</property>
                 <child type="titlebar-menu">
-                  <object class="GtkMenuButton" id="menu_button">
+                  <object class="HeMenuButton" id="menu_button">
                     <property name="icon-name">open-menu-symbolic</property>
+                    <property name="halign">center</property>
                     <property name="valign">center</property>
                   </object>
                 </child>

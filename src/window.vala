@@ -20,7 +20,7 @@ namespace Emulsion {
     [GtkTemplate (ui = "/io/github/lainsce/Emulsion/window.ui")]
     public class MainWindow : He.ApplicationWindow {
         [GtkChild]
-        unowned Gtk.MenuButton menu_button;
+        unowned He.MenuButton menu_button;
         [GtkChild]
         public unowned Gtk.ToggleButton search_button;
         [GtkChild]
@@ -136,25 +136,30 @@ namespace Emulsion {
                 label.hexpand = true;
 
                 // Create menu button for context menu
-                var menu_button = new Gtk.MenuButton ();
+                var menu_button = new He.MenuButton ();
                 menu_button.icon_name = "view-more-symbolic";
-                menu_button.vexpand = false;
-                menu_button.valign = Gtk.Align.CENTER;
-                
-                // Create menu model for this collection
-                var menu = new Menu ();
-                menu.append (_("Edit Collection"), "win.edit_collection");
-                menu.append (_("Delete Collection"), "win.delete_collection");
-                menu_button.menu_model = menu;
-                
-                // Connect activate signal to update selection model when menu button is clicked
+
+                // Create menu with He.Section and He.Item
                 uint collection_index = i;
-                menu_button.activate.connect (() => {
+                var edit_item = new He.Item (_("Edit Collection"), "win.edit_collection");
+                var delete_item = new He.Item (_("Delete Collection"), "win.delete_collection");
+
+                // Connect item signals to update selection before action
+                edit_item.activated.connect (() => {
                     collections_list.select_row (row);
-                    // Update the GridView selection model as well
                     if (collection_index < collections_store.get_n_items ()) {
                         collections_model.selected = collection_index;
                     }
+                });
+                delete_item.activated.connect (() => {
+                    collections_list.select_row (row);
+                    if (collection_index < collections_store.get_n_items ()) {
+                        collections_model.selected = collection_index;
+                    }
+                });
+
+                menu_button.set_layout ({
+                    new He.Section (null, { edit_item, delete_item })
                 });
 
                 box.append (label);
@@ -169,7 +174,7 @@ namespace Emulsion {
          */
         public void update_appbar_title () {
             var visible_child = main_stack.get_visible_child_name ();
-            
+
             if (visible_child == "palbody") {
                 // Main palettes view - hide back button, hide title
                 palette_headerbar.show_back = false;
@@ -239,12 +244,12 @@ namespace Emulsion {
          */
         public void update_all_colors_store () {
             all_colors_store.remove_all ();
-            
+
             uint n = palettestore.get_n_items ();
             for (uint i = 0; i < n; i++) {
                 var palette = (PaletteInfo)palettestore.get_item (i);
                 if (palette == null) continue;
-                
+
                 foreach (var entry in palette.colors.entries) {
                     var color_info = new ColorInfo ();
                     color_info.name = entry.key;
@@ -339,8 +344,11 @@ namespace Emulsion {
             weak Gtk.IconTheme default_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
             default_theme.add_resource_path ("/io/github/lainsce/Emulsion");
 
-            var builder = new Gtk.Builder.from_resource ("/io/github/lainsce/Emulsion/menu.ui");
-            menu_button.menu_model = (MenuModel)builder.get_object ("menu");
+            // Set up main menu using He.MenuButton API
+            var about_item = new He.Item (_("About Emulsion"), "win.action_about");
+            menu_button.set_layout ({
+                new He.Section (null, { about_item })
+            });
 
             palettestore = new GLib.ListStore (typeof (PaletteInfo));
             recent_colors_store = new GLib.ListStore (typeof (RecentColorInfo));
@@ -348,9 +356,9 @@ namespace Emulsion {
             all_colors_store = new GLib.ListStore (typeof (ColorInfo));
             palette_window.hscrollbar_policy = Gtk.PolicyType.NEVER;
             palette_fb.hscroll_policy = palette_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
-            
+
             palette_filter_model.set_model (palettestore);
-            
+
             // Create collection filter that will be applied on top of search filter
             var collection_filter = new Gtk.CustomFilter ((item) => {
                 if (current_collection_filter == null) {
@@ -359,10 +367,10 @@ namespace Emulsion {
                 var palette = (PaletteInfo)item;
                 return current_collection_filter.palette_names.contains (palette.palname);
             });
-            
+
             // Get the existing search filter (from UI binding)
             var existing_filter = palette_filter_model.get_filter ();
-            
+
             // Combine filters: first apply collection filter, then search filter
             // Use EveryFilter which is the concrete implementation of MultiFilter
             var every_filter = new Gtk.EveryFilter ();
@@ -387,7 +395,7 @@ namespace Emulsion {
                 });
                 return;
             }
-            
+
             palette_filter_model.set_filter (every_filter);
 
             palette_fb.activate.connect ((pos) => {
@@ -453,13 +461,13 @@ namespace Emulsion {
                     var item = colorstore.get_item (pos);
                     if (item != null) {
                         var original_color_info = (ColorInfo)item;
-                        
+
                         color_edit_panel.edit_position = pos;
                         color_edit_panel.color_info = original_color_info;
-                        
+
                         // Ensure this position is selected so the panel knows which item it's editing
                         color_model.selected = pos;
-                        
+
                         // Show the panel
                         color_edit_revealer.set_reveal_child (true);
                         color_edit_panel.show_panel ();
@@ -477,10 +485,10 @@ namespace Emulsion {
             });
 
             arrow.set_visible (false);
-            
+
             // Connect to stack changes to update title and back button
             main_stack.notify["visible-child-name"].connect (update_appbar_title);
-            
+
             // Handle AppBar back button with custom navigation
             // We manually control show_back, so we don't set the stack property
             // This prevents automatic stack navigation and lets us handle it manually
@@ -498,7 +506,7 @@ namespace Emulsion {
                     library_list.select_row (all_palettes_row);
                 }
             });
-            
+
             // Keep old back_button handler for color view navigation
             back_button.clicked.connect (() => {
                 main_stack.set_visible_child_name ("palbody");
@@ -507,17 +515,17 @@ namespace Emulsion {
                 arrow.set_visible (false);
                 update_appbar_title ();
             });
-            
+
             // Initialize AppBar state
             update_appbar_title ();
 
             search_button.toggled.connect (() => {
                searchbar.set_reveal_child (search_button.get_active());
             });
-            
+
             // Initialize color edit panel (it's in the UI template, so we need to set win manually)
             color_edit_panel.win = this;
-            
+
             color_edit_revealer.set_visible (false);
             // Connect to color edit revealer to coordinate AppBar buttons and width
             color_edit_revealer.notify["reveal-child"].connect (() => {
@@ -625,10 +633,10 @@ namespace Emulsion {
             // Initialize collections view
             collections_model.set_model (collections_store);
             collections_fb.hscroll_policy = collections_fb.vscroll_policy = Gtk.ScrollablePolicy.NATURAL;
-            
+
             // Track which menu buttons we've already connected to avoid duplicates
             var connected_buttons = new Gee.HashSet<Gtk.Widget> ();
-            
+
             // Helper function to connect menu buttons in collection items
             void connect_menu_buttons () {
                 var children = collections_fb.observe_children ();
@@ -650,9 +658,9 @@ namespace Emulsion {
                                         // Check if we already connected to this button
                                         if (!connected_buttons.contains (button)) {
                                             // Store the position for this button
-                                            uint item_pos = list_item.position != Gtk.INVALID_LIST_POSITION ? 
+                                            uint item_pos = list_item.position != Gtk.INVALID_LIST_POSITION ?
                                                            (uint)list_item.position : 0;
-                                            
+
                                             // Connect to the activate signal when menu button is clicked
                                             button.activate.connect (() => {
                                                 // Update selection model when menu button is activated
@@ -660,7 +668,7 @@ namespace Emulsion {
                                                     collections_model.selected = item_pos;
                                                 }
                                             });
-                                            
+
                                             connected_buttons.add (button);
                                         }
                                         break;
@@ -672,7 +680,7 @@ namespace Emulsion {
                     }
                 }
             }
-            
+
             // Connect to GridView's item creation/realization
             // Use a timeout to periodically check for new items (since BuilderListItemFactory doesn't expose signals)
             // This is called after a short delay to ensure items are created
@@ -680,7 +688,7 @@ namespace Emulsion {
                 connect_menu_buttons ();
                 return Source.CONTINUE; // Keep checking periodically
             });
-            
+
             // Also check when model items change
             collections_store.items_changed.connect ((pos, removed, added) => {
                 // Small delay to let GridView create new items
@@ -689,13 +697,13 @@ namespace Emulsion {
                     return false;
                 });
             });
-            
+
             // Handle collection activation (click) - filter palettes by collection
             collections_fb.activate.connect ((pos) => {
                 if (pos != Gtk.INVALID_LIST_POSITION && pos < collections_store.get_n_items ()) {
                     // Update selection model to match the clicked position
                     collections_model.selected = pos;
-                    
+
                     var collection = (CollectionInfo)collections_store.get_item (pos);
                     if (collection != null) {
                         // Filter palettes by collection
@@ -752,7 +760,7 @@ namespace Emulsion {
                 }
                 // Deselect any selected collection
                 collections_list.unselect_all ();
-                
+
                 if (row == all_palettes_row) {
                     main_stack.set_visible_child_name ("palbody");
                     palette_stack.set_visible_child_name (palettestore.get_n_items () > 0 ? "palfull" : "palempty");
@@ -796,7 +804,7 @@ namespace Emulsion {
                     }
                 }
             });
-            
+
             // Collections list selection handler (for visual feedback and immediate filtering)
             collections_list.row_selected.connect ((row) => {
                 if (row != null) {
@@ -900,32 +908,32 @@ namespace Emulsion {
                 if (pitem == null) {
                     return;
                 }
-                
+
                 var palette_name = ((PaletteInfo)pitem).palname;
-                
+
                 // Create dialog content
                 var content = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
                 content.margin_top = 12;
                 content.margin_bottom = 12;
                 content.margin_start = 12;
                 content.margin_end = 12;
-                
+
                 var label = new Gtk.Label (_("Select collections to add \"%s\" to:").printf (palette_name));
                 label.halign = Gtk.Align.START;
                 label.wrap = true;
                 content.append (label);
-                
+
                 var scrolled = new Gtk.ScrolledWindow ();
                 scrolled.height_request = 200;
                 scrolled.vexpand = true;
-                
+
                 var collections_list = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
                 scrolled.child = collections_list;
                 content.append (scrolled);
-                
+
                 // Store checkboxes and their corresponding collections
                 var checkboxes = new Gee.HashMap<Gtk.CheckButton, CollectionInfo> ();
-                
+
                 // Populate list with collections
                 uint n = collections_store.get_n_items ();
                 if (n == 0) {
@@ -940,19 +948,19 @@ namespace Emulsion {
                         if (item == null) {
                             continue;
                         }
-                        
+
                         var collection = (CollectionInfo)item;
                         var check = new Gtk.CheckButton ();
                         check.label = collection.name;
                         check.active = collection.palette_names.contains (palette_name);
                         check.halign = Gtk.Align.START;
                         check.margin_start = 6;
-                        
+
                         checkboxes.set (check, collection);
                         collections_list.append (check);
                     }
                 }
-                
+
                 var save_button = new He.Button (null, _("Save"));
                 var dialog = new He.Dialog (this,
                     _("Add to Collection"),
@@ -960,17 +968,17 @@ namespace Emulsion {
                     null,
                     save_button,
                     null);
-                
+
                 save_button.clicked.connect (() => {
                     bool changed = false;
-                    
+
                     foreach (var entry in checkboxes.entries) {
                         var checkbox = entry.key;
                         var collection = entry.value;
-                        
+
                         bool should_contain = checkbox.active;
                         bool currently_contains = collection.palette_names.contains (palette_name);
-                        
+
                         if (should_contain && !currently_contains) {
                             collection.palette_names.add (palette_name);
                             changed = true;
@@ -979,7 +987,7 @@ namespace Emulsion {
                             changed = true;
                         }
                     }
-                    
+
                     if (changed) {
                         m.save_collections.begin (collections_store);
                         // Update filter if we're viewing a collection
@@ -997,10 +1005,10 @@ namespace Emulsion {
                             }
                         }
                     }
-                    
+
                     dialog.hide_dialog ();
                 });
-                
+
                 dialog.add (content);
                 dialog.present ();
             });
@@ -1137,7 +1145,7 @@ namespace Emulsion {
                 int height = sf.get_height ();
                 int stride = sf.get_stride ();
                 unowned uint8[]? surface_data = sf.get_data ();
-                
+
                 if (surface_data != null) {
                     // Cairo Format.ARGB32 stores pixels as native-endian 32-bit ARGB
                     // On little-endian systems (most common), this is BGRA in memory
@@ -1154,10 +1162,10 @@ namespace Emulsion {
                             rgba_data[dst_idx + 3] = surface_data[src_idx + 3]; // A
                         }
                     }
-                    
+
                     var bytes = new GLib.Bytes.take ((owned)rgba_data);
                     var mt = new Gdk.MemoryTexture (width, height, Gdk.MemoryFormat.B8G8R8A8, bytes, width * 4);
-                    
+
                     var display = Gdk.Display.get_default ();
                     unowned var clipboard = display.get_clipboard ();
                     clipboard.set_texture (mt);
@@ -1195,7 +1203,7 @@ namespace Emulsion {
                 null,
                 save_button,
                 null);
-            
+
             save_button.clicked.connect (() => {
                 var entry = name_entry.get_internal_entry ();
                 string? text = entry != null ? entry.text : null;
@@ -1264,7 +1272,7 @@ namespace Emulsion {
             name_label.halign = Gtk.Align.START;
             var name_entry = new He.TextField ();
             name_entry.is_outline = true;
-            
+
             // Set initial text using internal entry
             var ientry = name_entry.get_internal_entry ();
             if (ientry != null) {
@@ -1281,7 +1289,7 @@ namespace Emulsion {
                 null,
                 save_button,
                 null);
-            
+
             save_button.clicked.connect (() => {
                 var entry = name_entry.get_internal_entry ();
                 string? text = entry != null ? entry.text : null;
@@ -1295,7 +1303,7 @@ namespace Emulsion {
                     dialog.hide_dialog ();
                 }
             });
-            
+
             // Allow Enter key to save
             name_entry.entry.activate.connect (() => {
                 save_button.clicked ();
@@ -1326,7 +1334,7 @@ namespace Emulsion {
                 null,
                 delete_button,
                 null);
-            
+
             delete_button.clicked.connect (() => {
                 // Clear filter if deleting current filter
                 if (current_collection_filter == collection) {
@@ -1380,7 +1388,7 @@ namespace Emulsion {
                     developers,
                     2021, // copyright_year
                     He.AboutWindow.Licenses.GPLV3,
-                    He.Colors.PURPLE
+                    He.Colors.GREEN
                 );
                 about_window.hidden.connect (() => {
                     about_window = null;
@@ -1458,4 +1466,3 @@ namespace Emulsion {
         }
     }
 }
-
